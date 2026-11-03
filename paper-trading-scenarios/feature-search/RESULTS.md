@@ -194,6 +194,7 @@ python -B paper-trading-scenarios/feature-search/search.py          # the grid, 
 python -B paper-trading-scenarios/feature-search/stress.py          # the stress tests, about 10 minutes
 python -B paper-trading-scenarios/feature-search/tm_filter.py       # the filter, about 80 minutes
 python -B paper-trading-scenarios/feature-search/write_results.py   # this file
+python -B paper-trading-scenarios/feature-search/make_report.py     # this file as feature-search.pdf
 ```
 
 A new download is a new 60-day window, so the numbers will change; with the same `data/` the runs repeat exactly.

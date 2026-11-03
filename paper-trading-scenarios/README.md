@@ -4,7 +4,7 @@ Thirteen paper-trading runs of the Day Trader skill, each over the same 39 recor
 
 > **Not financial advice.** These are replays of one stock over eight weeks, with simulated fills. They say what these rules did on these days, not what they will do next.
 
-The same choices on 30 stocks, in 852 combinations with an out-of-sample test, are in [feature-search/](feature-search/RESULTS.md).
+The same choices on 30 stocks, in 852 combinations with an out-of-sample test, are in [feature-search/](feature-search/RESULTS.md), with a report in [feature-search.pdf](feature-search/feature-search.pdf).
 
 ## What was run
 

@@ -19,7 +19,7 @@ In the findings, "confirmed" means the bug was reproduced, and "by reading" mean
 - **Feature search.** `paper-trading-scenarios/feature-search/` (2026-11-03) tests the pack's choices on 30 stocks and ETFs (Yahoo 5-minute bars, 59 sessions to 2 Nov 2026, `data/`), in every combination (832, plus 20 no-signal baselines):
   - `engine.py` calls the tools' functions in-process (`entry.evaluate`, `exit.compute`, `size.size_trade`/`limit_cap`, `check.check`, the runner's `paper_broker`), with a per-share cost and Alpaca's rejection of a bracket whose stop is already crossed;
   - `validate.py` proves it reproduces all 13 TSLA scenarios (507 sessions), so it is the same rules about 25 times faster;
-  - `search.py` picks per category on the first 39 sessions and scores the picks on the last 20; `stress.py` and `tm_filter.py` test the picks and the Time Machine filter; `write_results.py` writes `RESULTS.md` from `results/`.
+  - `search.py` picks per category on the first 39 sessions and scores the picks on the last 20; `stress.py` and `tm_filter.py` test the picks and the Time Machine filter; `write_results.py` writes `RESULTS.md` from `results/`; `make_report.py` turns `RESULTS.md` into `feature-search.pdf` word for word, with three charts, reusing `../make_report.py`'s look and printing (built on Linux with `chrome-headless-shell`, so Inter stands in for Segoe UI).
 - **This copy versus upstream** (checked 2026-11-02 against GitHub's tree, by blob hash). Whoever passed this copy on had stripped the author's attribution: the `LICENSE` file, `plugin.json`'s `author`, `homepage`, `repository` and `license` fields, `marketplace.json`'s `owner` (which Claude Code's marketplace format requires), and the README's install section, `git clone` line and credit line. No code or fixture differed. All of it is restored verbatim; MIT requires the copyright notice to stay.
 
 ## This machine
@@ -47,8 +47,9 @@ python -B paper-trading-scenarios/make_report.py             # rebuilds the comp
 python -B paper-trading-scenarios/feature-search/validate.py       # the fast engine vs the 13 scenarios, about 20 s
 python -B paper-trading-scenarios/feature-search/search.py         # 852 combos x 30 stocks, about 2 min on 4 cores
 python -B paper-trading-scenarios/feature-search/stress.py         # the picks' stress tests, about 9 min
-python -B paper-trading-scenarios/feature-search/tm_filter.py      # the Time Machine filter on 26 combos, about 25 min
+python -B paper-trading-scenarios/feature-search/tm_filter.py      # the Time Machine filter on 26 combos, about 80 min
 python -B paper-trading-scenarios/feature-search/write_results.py  # RESULTS.md from results/
+python -B paper-trading-scenarios/feature-search/make_report.py    # feature-search.pdf from RESULTS.md, about 10 s
 ```
 
 `-B` keeps `__pycache__` out of the tree. The tests chdir into temp folders and never touch `trader/`, and `tests/_load.py` clears `TRADER_HOME` before any test runs, so a `TRADER_HOME` set for real trading never receives test files. The scenario runner rewrites its scenario folders; its numbers are deterministic (pinned clock, offline data, the Time Machine's fixed seed), so a change in them after a code change is a change in behavior.
@@ -219,7 +220,7 @@ With Alpaca, a ticket is also READY only after today's `ticket.py account --numb
 
 ## Status (2026-11-02, Python 3.13.5)
 
-- **Tests:** 389 (384, plus five for the practice auto-yes and `fill --practice` on 2026-11-03), all pass on the PC (the two packaging failures are gone with B13). In the git copy (branch `claude/epic-gates-c4aoel`), `test_root_matches_the_reel` fails because `LICENSE` was never committed.
+- **Tests:** 389 (384, plus five for the practice auto-yes and `fill --practice` on 2026-11-03), all pass on the PC (the two packaging failures are gone with B13). In the git copy (`main`), `test_root_matches_the_reel` fails because `LICENSE` was never committed.
 - **Independent verification:** 129 checks, all pass. It is a scratch script, not part of the repo; the unit tests cover the same ground. Its corrupt-file sweep found four tracebacks the tests had missed (B14 below), now fixed and tested.
 - **Naming refactor (2026-11-02).** About 1,160 one- and two-letter names, and the cryptic helpers (`_f`, `_p`, `D`, `r2`, `hm`, `pc`, `_n`, ...), were given names that say what they hold, in all 11 scripts; the tests follow the new names. Nothing user-facing changed: flags, JSON and config keys, messages and exit codes are the same.
   - How it was checked: the renames were done by scope from the AST, refusing any rename that merged two names, took a builtin or module name, or changed which scope a reference binds to (that caught one real capture, in alerts' `cmd_add`). Line wrapping and re-alignment were proven AST-identical. The suite (384), the independent checks (129) and the reel replay all came out the same.

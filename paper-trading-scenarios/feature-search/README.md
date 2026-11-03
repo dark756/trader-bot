@@ -1,6 +1,6 @@
 # Feature search
 
-Which of the bot's choices made money, tested on 30 stocks instead of one. **The results are in [RESULTS.md](RESULTS.md).**
+Which of the bot's choices made money, tested on 30 stocks instead of one. **The results are in [RESULTS.md](RESULTS.md)**, and as a report with charts in [feature-search.pdf](feature-search.pdf).
 
 > **Not financial advice.** A replay of recorded sessions with simulated fills. It says what these rules did on these days, not what they will do next.
 
@@ -20,18 +20,22 @@ Which of the bot's choices made money, tested on 30 stocks instead of one. **The
   - **What it reports:** net, return, Sharpe, Sortino, drawdown, return per dollar of drawdown, win rate, profit factor, R per trade with its t-statistic, how many stocks made money, and the deflated Sharpe ratio for the number of combinations tried.
 - **The stress tests.** `stress.py` takes each pick, and the README's own rules, through other costs, a yes that takes 5 minutes, the Time Machine filter, $100 risk, in-sample stock picking, and one realistic $5,000 account that trades the whole list.
 - **The write-up.** `write_results.py` writes `RESULTS.md` from the result files.
+- **The report.** `make_report.py` turns `RESULTS.md` into `feature-search.pdf`, word for word, and adds three charts. The charts are every combination's Sharpe ratio in both halves, each choice's R per trade in both halves, and the Time Machine filter combo by combo. It uses the look, chart style and printing of `../make_report.py`: matplotlib, then Edge, or the program `REPORT_BROWSER` names.
 
 ## Files
 
 | path | what it holds |
 | --- | --- |
 | `RESULTS.md` | the findings, with every table |
+| `feature-search.pdf` | the same findings as a report with three charts |
 | `data/<SYMBOL>.json.gz` | the 60 days of 5-minute bars each run used |
 | `results/combos.csv` | one row per combination: in-sample, out-of-sample and whole-period metrics, with and without costs |
 | `results/features.csv` | each choice over every combination that has it |
 | `results/picks.json` | the run's summary: the split, the checks for luck, the baselines and every category's pick |
 | `results/stress.json` | the stress tests of the picks, and their results stock by stock |
-| `engine.py`, `validate.py`, `search.py`, `stress.py`, `write_results.py`, `fetch_data.py` | the code (standard library only) |
+| `results/tm_filter.json` | the Time Machine filter with and without, on 26 combos |
+| `engine.py`, `validate.py`, `search.py`, `stress.py`, `tm_filter.py`, `write_results.py`, `fetch_data.py` | the code (standard library only) |
+| `make_report.py` | builds the PDF (needs matplotlib and a browser) |
 
 ## Run it again
 
@@ -41,7 +45,9 @@ From the repo root:
 python -B paper-trading-scenarios/feature-search/validate.py        # the engine vs the 13 scenarios, about 20 s
 python -B paper-trading-scenarios/feature-search/search.py          # the grid, about 2 minutes on 4 cores
 python -B paper-trading-scenarios/feature-search/stress.py          # the stress tests, about 10 minutes
+python -B paper-trading-scenarios/feature-search/tm_filter.py       # the Time Machine filter, about 80 minutes
 python -B paper-trading-scenarios/feature-search/write_results.py   # RESULTS.md
+python -B paper-trading-scenarios/feature-search/make_report.py     # feature-search.pdf, about 10 s
 ```
 
 With the same `data/` the numbers repeat exactly. `fetch_data.py` downloads a new 60-day window, so after it the numbers change.
