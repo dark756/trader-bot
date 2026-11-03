@@ -236,6 +236,7 @@ With Alpaca, a ticket is also READY only after today's `ticket.py account --numb
   - per trade, both halves favored a 1R target, a limit at the cap, no volume check and the full window, all still losing;
   - the Time Machine filter (`tm_filter.py`, 26 combos with 1R, 40 sessions, a fair A/B on the same days) skipped 46 % of the trades and improved R per trade in 23 and the net in 25, but none made money with it or without it. It is the only choice that clearly made trades better.
   - Nothing there is a money-maker: don't present any combo as one.
+  - **Against the original** (`compare_upstream.py`, upstream commit 3d0f4ef of 2026-10-20): its own tools give identical trades on all 436 combinations it can run (no `--limit cap` there), so the fixes changed safety, not trading. It passes a trade over a max loss of `0` or `"50$"`, takes "yes never mind" as a yes, and one bad alert rule stops the stop alert; this copy blocks, refuses, and rings. The cap entry (this copy only) beat its market twin in 61 % of pairs (78 % per trade), but made no combination profitable.
 
 ## Possible vulnerabilities (all fixed or mitigated; re-verified 2026-11-02)
 

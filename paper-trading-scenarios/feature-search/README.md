@@ -20,6 +20,7 @@ Which of the bot's choices made money, tested on 30 stocks instead of one. **The
   - **What it reports:** net, return, Sharpe, Sortino, drawdown, return per dollar of drawdown, win rate, profit factor, R per trade with its t-statistic, how many stocks made money, and the deflated Sharpe ratio for the number of combinations tried.
 - **The stress tests.** `stress.py` takes each pick, and the README's own rules, through other costs, a yes that takes 5 minutes, the Time Machine filter, $100 risk, in-sample stock picking, and one realistic $5,000 account that trades the whole list.
 - **The write-up.** `write_results.py` writes `RESULTS.md` from the result files.
+- **The original, compared.** `compare_upstream.py` runs the original day-trader-skill's own tools (a clone of Jakeschincariol/day-trader-skill) through the same engine, data and costs, for every combination it can run (it has no limit entry at the cap). It also reruns three of CLAUDE.md's bugs on both versions. Result, in `results/upstream.json`: all 436 combinations trade identically, so this copy's fixes changed safety, not trading. The original passes a trade over a max loss of `0` or `"50$"`, takes "yes never mind" as a yes, and lets one bad alert rule silence the stop alert; this copy does none of that.
 - **The report.** `make_report.py` turns `RESULTS.md` into `feature-search.pdf`, word for word, and adds three charts. The charts are every combination's Sharpe ratio in both halves, each choice's R per trade in both halves, and the Time Machine filter combo by combo. It uses the look, chart style and printing of `../make_report.py`: matplotlib, then Edge, or the program `REPORT_BROWSER` names.
 
 ## Files
@@ -34,8 +35,10 @@ Which of the bot's choices made money, tested on 30 stocks instead of one. **The
 | `results/picks.json` | the run's summary: the split, the checks for luck, the baselines and every category's pick |
 | `results/stress.json` | the stress tests of the picks, and their results stock by stock |
 | `results/tm_filter.json` | the Time Machine filter with and without, on 26 combos |
+| `results/upstream.json` | the original repo against this copy: the safety repros and every shared combination |
 | `engine.py`, `validate.py`, `search.py`, `stress.py`, `tm_filter.py`, `write_results.py`, `fetch_data.py` | the code (standard library only) |
 | `make_report.py` | builds the PDF (needs matplotlib and a browser) |
+| `compare_upstream.py` | the original repo through the same backtest, and three bug repros on both |
 
 ## Run it again
 
@@ -48,6 +51,8 @@ python -B paper-trading-scenarios/feature-search/stress.py          # the stress
 python -B paper-trading-scenarios/feature-search/tm_filter.py       # the Time Machine filter, about 80 minutes
 python -B paper-trading-scenarios/feature-search/write_results.py   # RESULTS.md
 python -B paper-trading-scenarios/feature-search/make_report.py     # feature-search.pdf, about 10 s
+git clone --depth 1 https://github.com/Jakeschincariol/day-trader-skill ../day-trader-skill
+python -B paper-trading-scenarios/feature-search/compare_upstream.py ../day-trader-skill   # about 1 minute
 ```
 
 With the same `data/` the numbers repeat exactly. `fetch_data.py` downloads a new 60-day window, so after it the numbers change.

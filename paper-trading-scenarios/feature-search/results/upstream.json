@@ -1,0 +1,89 @@
+{
+  "upstream": {
+    "repo": "https://github.com/Jakeschincariol/day-trader-skill",
+    "commit": "3d0f4ef6986f4984b7c6bd46f7ff4f87744c3abd"
+  },
+  "safety": {
+    "upstream": {
+      "V1 max loss 0": "PASS, risk $234.4",
+      "V1 max loss \"50$\"": "PASS, risk $234.4",
+      "V3 reply 'yes never mind'": "taken as a yes",
+      "V3 reply 'yes buy NVDA'": "taken as a yes",
+      "V3 reply 'yes 8 shares and 500 NVDA'": "taken as a yes",
+      "B5 one bad alert rule": "the stop alert did not ring: AlertError: rule typo needs a numeric price"
+    },
+    "this copy": {
+      "V1 max loss 0": "BLOCK, risk $234.4; loss",
+      "V1 max loss \"50$\"": "stops with an error: RiskError: config: max_loss_per_trade_usd must be a number like 50, without quotes or $, or null to switch it off (it is \"50$\"). Nothing was checked: fix trader/config.jso",
+      "V3 reply 'yes never mind'": "not a yes",
+      "V3 reply 'yes buy NVDA'": "not a yes",
+      "V3 reply 'yes 8 shares and 500 NVDA'": "not a yes",
+      "B5 one bad alert rule": "the stop alert rang"
+    }
+  },
+  "trading": {
+    "combos": 436,
+    "identical": 436,
+    "different": [],
+    "upstream_positive_all": 6,
+    "upstream_positive_both": 0,
+    "upstream_best": [
+      {
+        "id": "orb15 atr:1 2R market novol until1100",
+        "upstream_trades": 647,
+        "this_trades": 647,
+        "upstream_net": 235.23,
+        "this_net": 235.23,
+        "upstream_is_net": -127.13,
+        "upstream_oos_net": 362.36,
+        "upstream_sharpe": 0.561,
+        "this_sharpe": 0.561
+      },
+      {
+        "id": "orb15 atr:2 1R market novol until1100",
+        "upstream_trades": 697,
+        "this_trades": 697,
+        "upstream_net": 74.34,
+        "this_net": 74.34,
+        "upstream_is_net": 126.85,
+        "upstream_oos_net": -52.51,
+        "upstream_sharpe": 0.179,
+        "this_sharpe": 0.179
+      },
+      {
+        "id": "orb15 atr:1.5 1.5R market novol until1100",
+        "upstream_trades": 678,
+        "this_trades": 678,
+        "upstream_net": 46.87,
+        "this_net": 46.87,
+        "upstream_is_net": -293.48,
+        "upstream_oos_net": 340.35,
+        "upstream_sharpe": 0.102,
+        "this_sharpe": 0.102
+      },
+      {
+        "id": "orb5 atr:1 1R market novol until1100",
+        "upstream_trades": 830,
+        "this_trades": 830,
+        "upstream_net": 27.12,
+        "this_net": 27.12,
+        "upstream_is_net": 317.58,
+        "upstream_oos_net": -290.46,
+        "upstream_sharpe": 0.073,
+        "this_sharpe": 0.073
+      },
+      {
+        "id": "orb30 atr:1 2R market novol until1100",
+        "upstream_trades": 488,
+        "this_trades": 488,
+        "upstream_net": 17.56,
+        "this_net": 17.56,
+        "upstream_is_net": -607.0,
+        "upstream_oos_net": 624.56,
+        "upstream_sharpe": 0.049,
+        "this_sharpe": 0.049
+      }
+    ],
+    "strategy_combos": 416
+  }
+}
