@@ -232,7 +232,8 @@ With Alpaca, a ticket is also READY only after today's `ticket.py account --numb
   - the in-sample and out-of-sample Sharpe ranks correlate at -0.04; the median combo lost 0.071R a trade;
   - the in-sample winner of nearly every category (5-minute range, 1 x ATR stop, 1R, market, until 11:00) made +$317.58 in-sample and lost $290.46 out-of-sample, with a deflated Sharpe of 3.5 %;
   - per trade, the signals did no better than buying every stock at 9:45 with the same exits; they lose less only by trading less;
-  - per trade, both halves favored a 1R target, a limit at the cap, no volume check and the full window, all still losing.
+  - per trade, both halves favored a 1R target, a limit at the cap, no volume check and the full window, all still losing;
+  - the Time Machine filter (`tm_filter.py`, 26 combos with 1R, 40 sessions, a fair A/B on the same days) skipped 46 % of the trades and improved R per trade in 23 and the net in 25, but none made money with it or without it. It is the only choice that clearly made trades better.
   - Nothing there is a money-maker: don't present any combo as one.
 
 ## Possible vulnerabilities (all fixed or mitigated; re-verified 2026-11-02)

@@ -130,11 +130,13 @@ def main():
     wide_path = os.path.join(OUT, "tm_filter.json")
     wide = json.load(open(wide_path, encoding="utf-8")) if os.path.exists(wide_path) else None
     if wide:
-        add("- **The Time Machine filter, tested on its own:** across %d combinations "
-            "it improved R per trade in %d and the net in %d, mostly by skipping trades it rated stop-first. "
-            "With it, %d of the %d made money over its %d sessions (%d without it)."
-            % (wide["count"], wide["better_r"], wide["better_net"], wide["positive_with"], wide["count"],
-               wide["sessions"], wide["positive_without"]))
+        kept = (sum(item["with"]["trades"] for item in wide["combos"])
+                / float(sum(item["without"]["trades"] for item in wide["combos"])))
+        add("- **The Time Machine filter was the only choice that clearly made trades better.** Tested on its own across "
+            "%d combinations, it skipped %s of the trades, and the ones it kept were better: R per trade improved "
+            "in %d and the net in %d. Still, with it %d of the %d made money over its %d sessions (%d without it)."
+            % (wide["count"], percent(1 - kept), wide["better_r"], wide["better_net"], wide["positive_with"],
+               wide["count"], wide["sessions"], wide["positive_without"]))
     add("")
     add("So the honest pick in every category is a rule that lost least, not one that makes money. "
         "The tables below show the in-sample winners anyway, next to what they did afterwards.")

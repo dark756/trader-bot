@@ -9,6 +9,7 @@
 - **The best in-sample Sharpe ratio, 1.25, is within luck.** From 39 sessions a Sharpe ratio's own standard error is about 2.5 (annualized), so one try lands that high by chance easily, and this was the best of 832. Its deflated Sharpe ratio, the chance it is real after that many tries, is 3.5 %.
 - **The typical trade lost money.** The median combination averaged -0.071R a trade over the whole period after costs (-0.053R before costs), where 1R is the loss the risk check allowed at the stop.
 - **Costs matter but are not the whole story.** With no cost at all, 2.3 % of combinations made money in-sample and 44.0 % out-of-sample; 11 made money in both halves.
+- **The Time Machine filter was the only choice that clearly made trades better.** Tested on its own across 26 combinations, it skipped 46 % of the trades, and the ones it kept were better: R per trade improved in 23 and the net in 25. Still, with it 0 of the 26 made money over its 40 sessions (0 without it).
 
 So the honest pick in every category is a rule that lost least, not one that makes money. The tables below show the in-sample winners anyway, next to what they did afterwards.
 
@@ -131,11 +132,48 @@ The Time Machine filter (trade only when it has target-first above stop-first), 
 - **Stock picking** keeps only the stocks a combination made money on in-sample. If good stocks stayed good, that column would beat the next one in every row; it does in 3 of 5.
 - **One account** is a single $5,000 account trading the whole list the way one person would: each session the first signal among the 30 stocks, one trade a day. Over the 59 sessions these ended between -$155.49 and +$106.67. The in-sample winner's account lost in-sample and made money out-of-sample, the opposite of the 30-account book: at this size the result is mostly which trades happened to come first.
 
+## The Time Machine filter, tested wider
+
+It was the one choice that made trades better in the stress tests, so it got a test of its own: every setup and stop with a 1R target, market entry, no volume check and entries until 15:30 (26 combos), with and without the filter, over the 40 sessions from 2026-09-08 to 2026-11-02.
+
+| Combination | Trades without / with | Net without | Net with | R per trade without | R per trade with | Sharpe without | Sharpe with |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 5-minute range, stop at the range midpoint, target 1R, market entry, no volume check, entries until 15:30 | 647 / 362 | -$1,276.26 | -$306.24 | -0.083 | -0.020 | -5.60 | -1.62 |
+| 5-minute range, stop at the range low, target 1R, market entry, no volume check, entries until 15:30 | 664 / 374 | -$1,400.18 | -$829.02 | -0.042 | -0.036 | -4.39 | -3.65 |
+| 5-minute range, stop 0.5% under, target 1R, market entry, no volume check, entries until 15:30 | 635 / 301 | -$889.98 | -$308.38 | -0.079 | -0.058 | -4.61 | -2.28 |
+| 5-minute range, stop 1% under, target 1R, market entry, no volume check, entries until 15:30 | 590 / 327 | -$737.43 | -$766.36 | -0.036 | -0.066 | -2.03 | -3.02 |
+| 5-minute range, stop 1 x ATR, target 1R, market entry, no volume check, entries until 15:30 | 637 / 361 | -$698.07 | -$154.95 | -0.073 | -0.040 | -2.89 | -0.79 |
+| 5-minute range, stop 1.5 x ATR, target 1R, market entry, no volume check, entries until 15:30 | 648 / 389 | -$1,252.40 | -$704.68 | -0.045 | -0.012 | -3.81 | -2.89 |
+| 5-minute range, stop 2 x ATR, target 1R, market entry, no volume check, entries until 15:30 | 669 / 379 | -$1,008.36 | -$277.63 | -0.027 | 0.003 | -2.79 | -1.21 |
+| 15-minute range, stop at the range midpoint, target 1R, market entry, no volume check, entries until 15:30 | 570 / 298 | -$1,414.88 | -$406.02 | -0.083 | -0.041 | -5.09 | -1.83 |
+| 15-minute range, stop at the range low, target 1R, market entry, no volume check, entries until 15:30 | 605 / 283 | -$1,273.21 | -$340.66 | -0.041 | -0.016 | -3.98 | -1.66 |
+| 15-minute range, stop 0.5% under, target 1R, market entry, no volume check, entries until 15:30 | 570 / 290 | -$972.53 | -$129.99 | -0.096 | -0.027 | -5.23 | -0.99 |
+| 15-minute range, stop 1% under, target 1R, market entry, no volume check, entries until 15:30 | 518 / 282 | -$1,135.01 | -$243.96 | -0.061 | -0.024 | -3.59 | -1.09 |
+| 15-minute range, stop 1 x ATR, target 1R, market entry, no volume check, entries until 15:30 | 603 / 319 | -$449.16 | -$212.78 | -0.088 | -0.081 | -2.03 | -1.26 |
+| 15-minute range, stop 1.5 x ATR, target 1R, market entry, no volume check, entries until 15:30 | 585 / 323 | -$972.51 | -$207.38 | -0.059 | 0.015 | -3.34 | -1.02 |
+| 15-minute range, stop 2 x ATR, target 1R, market entry, no volume check, entries until 15:30 | 597 / 311 | -$825.67 | -$80.39 | -0.054 | -0.018 | -2.50 | -0.35 |
+| 30-minute range, stop at the range midpoint, target 1R, market entry, no volume check, entries until 15:30 | 485 / 238 | -$1,281.38 | -$435.82 | -0.073 | -0.038 | -4.09 | -2.05 |
+| 30-minute range, stop at the range low, target 1R, market entry, no volume check, entries until 15:30 | 529 / 233 | -$1,218.31 | -$329.91 | -0.053 | -0.022 | -3.64 | -1.80 |
+| 30-minute range, stop 0.5% under, target 1R, market entry, no volume check, entries until 15:30 | 483 / 242 | -$1,506.80 | -$558.66 | -0.175 | -0.130 | -7.83 | -4.35 |
+| 30-minute range, stop 1% under, target 1R, market entry, no volume check, entries until 15:30 | 450 / 215 | -$1,691.24 | -$620.41 | -0.105 | -0.081 | -4.85 | -2.90 |
+| 30-minute range, stop 1 x ATR, target 1R, market entry, no volume check, entries until 15:30 | 508 / 277 | -$1,052.32 | -$334.72 | -0.177 | -0.085 | -5.51 | -2.27 |
+| 30-minute range, stop 1.5 x ATR, target 1R, market entry, no volume check, entries until 15:30 | 484 / 260 | -$1,337.25 | -$181.67 | -0.130 | -0.004 | -5.06 | -0.96 |
+| 30-minute range, stop 2 x ATR, target 1R, market entry, no volume check, entries until 15:30 | 501 / 240 | -$1,089.94 | -$179.72 | -0.106 | -0.047 | -3.49 | -0.90 |
+| prior-day high, stop 0.5% under, target 1R, market entry, no volume check, entries until 15:30 | 419 / 211 | -$720.82 | -$553.61 | -0.094 | -0.142 | -4.08 | -4.83 |
+| prior-day high, stop 1% under, target 1R, market entry, no volume check, entries until 15:30 | 420 / 249 | -$828.34 | -$388.46 | -0.056 | -0.044 | -2.46 | -1.62 |
+| prior-day high, stop 1 x ATR, target 1R, market entry, no volume check, entries until 15:30 | 418 / 256 | -$1,146.67 | -$775.80 | -0.118 | -0.117 | -5.75 | -4.97 |
+| prior-day high, stop 1.5 x ATR, target 1R, market entry, no volume check, entries until 15:30 | 424 / 270 | -$1,412.44 | -$1,064.07 | -0.062 | -0.068 | -4.48 | -4.49 |
+| prior-day high, stop 2 x ATR, target 1R, market entry, no volume check, entries until 15:30 | 431 / 267 | -$1,147.11 | -$257.05 | -0.027 | 0.012 | -3.69 | -1.19 |
+
+- **R per trade was better with the filter in 23 of 26 combos**, the net in 25. With the filter 0 of 26 made money.
+- Both columns are the same 40 sessions and the filter's rule was fixed in advance (it is the pack's own), so this is a fair A/B test, not a pick. It is still one stretch of market, and the filter was not part of the in-sample search.
+
 ## What this means for the bot
 
 - **Don't expect these rules to make money.** On these 30 stocks and 59 sessions, no choice of setup, stop, target, entry, volume check or window made money in both halves, or picked better trades than buying at 9:45 with no signal at all.
 - **Raising the risk per trade only scales the result.** It moves the losses and the gains together; it is not a way to profit.
 - **If you keep paper trading it,** the choices the two halves agreed on per trade were a 1R target, a limit entry at the cap, no volume check and entries until 15:30. Treat them as the least-bad defaults, not as a strategy.
+- **The Time Machine filter is worth keeping on** (the pack's S13 scenario): it improved R per trade in 23 of 26 combinations. It did not turn the rules into a money-maker, and each check takes about a second.
 - **What was not tested, and could change the picture:**
   - the scanner's choice of stocks: `scan.py orb` picks the day's movers from the whole market, and the repo has a market-wide scan for one morning only, so this search used a fixed list of 30 large names;
   - more history: Yahoo keeps 5-minute bars for 60 days only, so this is one stretch of market. A longer test needs another data source;
@@ -154,7 +192,7 @@ python -B paper-trading-scenarios/feature-search/fetch_data.py      # new 60-day
 python -B paper-trading-scenarios/feature-search/validate.py        # the engine vs the 13 scenarios
 python -B paper-trading-scenarios/feature-search/search.py          # the grid, about 2 minutes
 python -B paper-trading-scenarios/feature-search/stress.py          # the stress tests, about 10 minutes
-python -B paper-trading-scenarios/feature-search/tm_filter.py       # the filter on 26 combos, about 80 minutes
+python -B paper-trading-scenarios/feature-search/tm_filter.py       # the filter, about 80 minutes
 python -B paper-trading-scenarios/feature-search/write_results.py   # this file
 ```
 
