@@ -6,7 +6,8 @@ A fake Alpaca server on this machine serves the feature search's 30 stocks (feat
 in Alpaca's format, with a 429 and a 500 thrown in, and the checks are:
 
   1. the universe rules on made-up series: a split never moves the daily statistics, the relative-volume
-     ranking, the asset filter, Alpaca's time stamps;
+     ranking, the asset filter, Alpaca's time stamps; and the key lookup (the terminal, then .env.local or
+     .env) on made-up keys;
   2. fetch.py against the fake server, stopped part way and run again, ends with exactly the data of one
      clean run;
   3. every stored session is the one engine.load_symbol builds from the Yahoo file, bar for bar;
@@ -240,6 +241,38 @@ def check_rules():
     check("the asset filter", all(universe.keep_asset(asset, status) == want for asset, status, want in assets))
 
 
+def check_keys(folder):
+    """The key lookup on made-up keys: the terminal first, then .env.local, then .env, in the folders given."""
+    first, second = os.path.join(folder, "keys-one"), os.path.join(folder, "keys-two")
+    for path in (first, second):
+        os.makedirs(path)
+    with open(os.path.join(first, ".env.local"), "w", encoding="utf-8-sig", newline="\r\n") as file:
+        file.write("# Alpaca paper keys\nexport APCA_API_KEY_ID=\"fake-id-1\"  # from the dashboard\n"
+                   "APCA_API_SECRET_KEY = 'fake-secret-1'\n")
+    with open(os.path.join(first, ".env"), "w", encoding="utf-8") as file:
+        file.write("APCA_API_KEY_ID=not-this-one\nAPCA_API_SECRET_KEY=not-this-one\n")
+    with open(os.path.join(second, ".env"), "w", encoding="utf-8") as file:
+        file.write('$env:ALPACA_API_KEY = "fake-id-2"\n$env:ALPACA_SECRET_KEY = "fake-secret-2"\n')
+    found = alpaca.find_keys(environ={}, folders=[first, second])
+    check(".env.local: a byte-order mark, Windows line ends, export, quotes and comments",
+          found == ("fake-id-1", "fake-secret-1", os.path.join(first, ".env.local")), repr(found[2:]))
+    found = alpaca.find_keys(environ={}, folders=[second])
+    check(".env with PowerShell's $env: lines and the MCP server's names", found[:2] == ("fake-id-2", "fake-secret-2"))
+    found = alpaca.find_keys(environ={"APCA_API_KEY_ID": "from-terminal", "APCA_API_SECRET_KEY": "from-terminal"},
+                             folders=[first])
+    check("keys set in the terminal come before any file", found == ("from-terminal", "from-terminal",
+                                                                     "the terminal's environment"))
+    with open(os.path.join(second, ".env"), "w", encoding="utf-8") as file:
+        file.write("MY_KEY=fake-id-3\nMY_SECRET=fake-secret-3\n")
+    try:
+        alpaca.find_keys(environ={}, folders=[second])
+        message = ""
+    except alpaca.AlpacaError as error:
+        message = str(error)
+    check("keys under other names: a one-line error that names the file and never the values",
+          "2 NAME=value lines" in message and "fake-" not in message and "MY_KEY" not in message, message)
+
+
 def fetch_settings(fake):
     return {"daily_from": fake.days[0], "opening_from": fake.days[0], "start": fake.days[0], "end": fake.days[-1],
             "fixed": list(plan.FIXED)}
@@ -408,6 +441,7 @@ def main(argv):
     folder = tempfile.mkdtemp(prefix="large-backtest-selftest-")
     try:
         check_rules()
+        check_keys(folder)
         fake = FakeAlpaca(load_fake_market())
         server, url = serve(fake)
         try:

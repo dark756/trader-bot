@@ -50,7 +50,9 @@ class Repo(unittest.TestCase):
         self.assertEqual(found, sorted(SKILLS))
 
     def test_root_matches_the_reel(self):
-        root = sorted(d for d in os.listdir(ROOT) if not d.startswith(".git"))
+        # .env and .env.local hold the user's own API keys: git ignores them and they never ship
+        root = sorted(d for d in os.listdir(ROOT) if not d.startswith(".git") and d != ".env"
+                      and not d.startswith(".env."))
         shipped = sorted([".claude-plugin", "LICENSE", "README.md", "tests"] + SKILLS)
         self.assertEqual([d for d in root if d in shipped], shipped)
         self.assertEqual([d for d in root if d not in shipped and d not in LOCAL_DOCS], [])

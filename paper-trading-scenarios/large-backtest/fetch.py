@@ -3,7 +3,8 @@
     python -B paper-trading-scenarios/large-backtest/fetch.py            # every step; rerun it to resume
     python -B paper-trading-scenarios/large-backtest/fetch.py status     # what is done so far
 
-Needs your Alpaca paper keys in the environment (APCA_API_KEY_ID and APCA_API_SECRET_KEY); see the README.
+Needs your Alpaca paper keys: APCA_API_KEY_ID and APCA_API_SECRET_KEY, set in the terminal or written in a
+.env.local file in the repo root (git ignores it); see the README.
 It only reads market data, the asset list and the calendar: no order, no account.
 
 The steps, each resumable (a stop loses at most the batch in flight):
@@ -274,7 +275,8 @@ def main(argv=None):
             print("fetch.py: unknown step %r (the steps are %s)" % (step, ", ".join(STEPS)))
             return 2
     try:
-        key, secret = alpaca.keys_from_environment()
+        key, secret, where = alpaca.find_keys()
+        print("keys: from %s" % where)
         client = alpaca.Client(key, secret, args.data_url, args.trading_url, args.per_minute, args.feed)
         run(client, db, settings, steps=[step for step in STEPS if step in steps])
     except alpaca.AlpacaError as error:

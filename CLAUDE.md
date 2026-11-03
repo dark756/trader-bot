@@ -62,7 +62,7 @@ python -B paper-trading-scenarios/large-backtest/backtest.py       # the develop
 python -B paper-trading-scenarios/large-backtest/backtest.py --holdout   # once, only if RESULTS.md says something passed
 ```
 
-The large backtest runs on the user's PC. Before `fetch.py`, they set their Alpaca paper keys in that terminal, in PowerShell with `$env:APCA_API_KEY_ID = "..."` and `$env:APCA_API_SECRET_KEY = "..."`, or in Git Bash with `export`. Never ask for the keys in the chat, and never write them into a file.
+The large backtest runs on the user's PC. `fetch.py` takes their Alpaca paper keys from the terminal (`$env:APCA_API_KEY_ID = "..."` and `$env:APCA_API_SECRET_KEY = "..."` in PowerShell, `export` in Git Bash), or else from `.env.local` or `.env` in the large-backtest folder, the repo root or the current folder (`alpaca.find_keys`; names in `ID_NAMES` and `SECRET_NAMES`). It prints which file it used, never the keys. The user keeps theirs in `.env.local` at the repo root. The root `.gitignore` ignores `.env` and `.env.*`, and `test_root_matches_the_reel` skips them. Never ask for the keys in the chat, never open or print `.env.local` or `.env`, and never write keys into a file.
 
 `-B` keeps `__pycache__` out of the tree. The tests chdir into temp folders and never touch `trader/`, and `tests/_load.py` clears `TRADER_HOME` before any test runs, so a `TRADER_HOME` set for real trading never receives test files. The scenario runner rewrites its scenario folders; its numbers are deterministic (pinned clock, offline data, the Time Machine's fixed seed), so a change in them after a code change is a change in behavior.
 
@@ -233,7 +233,7 @@ With Alpaca, a ticket is also READY only after today's `ticket.py account --numb
 ## Status (2026-11-02, Python 3.13.5)
 
 - **Tests:** 389 (384, plus five for the practice auto-yes and `fill --practice` on 2026-11-03), all pass on the PC (the two packaging failures are gone with B13). In the git copy (`main`), `test_root_matches_the_reel` fails because `LICENSE` was never committed.
-- **Large backtest (2026-11-03):** the plan and the code are committed; the user hasn't run it yet (it needs their Alpaca keys). `selftest.py` passes all 19 of its checks in the cloud session.
+- **Large backtest (2026-11-03):** the plan and the code are committed; the user hasn't run it yet (it needs their Alpaca keys). `selftest.py` passes all 23 of its checks in the cloud session (four of them for the key lookup, on made-up keys).
 - **Independent verification:** 129 checks, all pass. It is a scratch script, not part of the repo; the unit tests cover the same ground. Its corrupt-file sweep found four tracebacks the tests had missed (B14 below), now fixed and tested.
 - **Naming refactor (2026-11-02).** About 1,160 one- and two-letter names, and the cryptic helpers (`_f`, `_p`, `D`, `r2`, `hm`, `pc`, `_n`, ...), were given names that say what they hold, in all 11 scripts; the tests follow the new names. Nothing user-facing changed: flags, JSON and config keys, messages and exit codes are the same.
   - How it was checked: the renames were done by scope from the AST, refusing any rename that merged two names, took a builtin or module name, or changed which scope a reference binds to (that caught one real capture, in alerts' `cmd_add`). Line wrapping and re-alignment were proven AST-identical. The suite (384), the independent checks (129) and the reel replay all came out the same.
@@ -335,7 +335,7 @@ What is left, on purpose:
   - run check.py or ticket.py with `--now`/`--today` when a real order is wanted;
   - write `alpaca_account` unless the user confirmed that number in the Alpaca dashboard;
   - use a plain `ticket.py fill` to practice (it records a real fill; `fill --practice` is the practice one);
-  - ask for, read or write the user's Alpaca API keys (the large backtest reads them from the terminal's environment).
+  - ask for, read or write the user's Alpaca API keys, or open `.env.local` or `.env` (the large backtest reads the keys itself, from the terminal or those files).
 - **When fixing a finding:**
   - change every duplicated copy;
   - keep Python 3.8 syntax and the plain-text style;
