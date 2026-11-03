@@ -61,5 +61,16 @@
   "end_cash": 4937.48,
   "tm_avg_p_target": 0.447,
   "tm_avg_p_stop": 0.377,
-  "actual_target_share": 0.4
+  "actual_target_share": 0.4,
+  "not_approved": 0,
+  "auto_yes_entries": 19,
+  "exits_by_fill_practice": 15,
+  "exits_by_flatten": 4,
+  "exits_recorded_otherwise": [],
+  "books_mismatches": [],
+  "practice_log": {
+    "approved": 23,
+    "filled": 38,
+    "placed": 23
+  }
 }

@@ -277,6 +277,8 @@ These names exist in more than one script but do different things. Read the file
   - `--config` (default `trader/config.json`);
   - `--today` (check, ticket, ptr `new`). On check and ticket, `--now` or `--today` makes a practice run (`clock: pinned`).
 - **ticket `account --number`** takes the `account_number` that Alpaca's `get_account_info` shows.
+- **ticket `approve`** takes exactly one of `--reply` (the user's words) and `--auto-yes` (an automatic yes, `args.auto_yes`, for unattended replays; refused unless the clock is pinned and `"paper"` is true).
+- **ticket `fill --practice`** (`args.practice`) records a practice fill in `trader/practice/`. Without it a fill is real, even with `--now`, which only dates it.
 - **Saving:**
   - `--write [PATH]` is optional, and a bare `--write` uses the default path: entry `check`, exit `plan`, timemachine `run`, size, alerts `quote`.
   - Tools that save by default take `--no-write` (scan, check, alerts `check`) or `--dry-run` (news, ptr `new`). These two words mean the same thing.
@@ -296,7 +298,7 @@ These names exist in more than one script but do different things. Read the file
 | `trader/portfolio.json` | (broker) | `cash`, `positions[] {ticker, shares, lots[] {id, date, shares, cost}}` |
 | `trader/alerts.json` | (alerts) | `rules[] {id, type, symbol, price, pct, direction, at, label, before_close, date, rearm, note}` |
 | `trader/state/risk.json` | (risk) | `date`, `now_new_york`, `now_utc`, `clock` (`real` or `pinned`), `paper`, `results[] {index, symbol, side, kind, fingerprint, verdict, reasons, warnings, info, max_loss, ...}`, `pass`, `block`, `checked_at`, `orders_file`. After a check that stopped with an error: `{error, clock, checked_at, results: []}` |
-| `trader/state/broker.json` | (broker) | `orders[]`: records with `at`, `date`, `index`, `fingerprint`, `symbol`, `side`, `qty`, `kind`, `max_loss`, `stop`, `plain`, `status` (`approved`, `declined`, `placed`, `denied`, `failed`, `filled`), `reply`, `broker_order_id`, `practice` (true on every record a practice run writes, fills and noes included; a real run ignores those), `account` (the account checked that day), `filled_price` (a placed entry recorded with its fill). `accounts[]`: the daily Alpaca checks, `{at, date, account_number, paper}` |
+| `trader/state/broker.json` | (broker) | `orders[]`: records with `at`, `date`, `index`, `fingerprint`, `symbol`, `side`, `qty`, `kind`, `max_loss`, `stop`, `plain`, `status` (`approved`, `declined`, `placed`, `denied`, `failed`, `filled`), `reply`, `auto_yes` (true on a yes from `approve --auto-yes`, which has no `reply`, and on its `placed` record), `broker_order_id`, `practice` (true on every record a practice run writes, fills and noes included, and on `fill --practice`; a real run ignores those), `account` (the account checked that day), `filled_price` (a placed entry recorded with its fill). `accounts[]`: the daily Alpaca checks, `{at, date, account_number, paper}` |
 | `trader/state/news.json`, `alerts.json`, `pelosi.json` | (their tool) | news: `seen {fingerprint: when}` (only what was shown), `ciks`, `last_check`. alerts: `rung {id: when}`, `last_check`. pelosi: `seen [DocID]` (only what was shown), `last_check` (`"2026-10-13 09:00 New York"`) |
 | `trader/practice/...` | (risk, broker) | a practice run's own `portfolio.json`, `state/risk.json` and `state/broker.json`, in the same shapes |
 
@@ -515,7 +517,7 @@ Every script also has `home(*parts)`, right after its error class: a path in the
   - `order_kind`.
 - **rendering:** `render`, `ticket_json` (both take `now` and `pinned`).
 - **fills -> portfolio:** `apply_fill` (finds the position by `ticker` or `symbol`), `log_fill` (marks a practice fill).
-- **commands:** `run_clock` (now, today, pinned), `load_orders`, `pick_order`, `PRACTICE`, `cmd_show`, `cmd_approve`, `cmd_account`, `cmd_decline`, `cmd_result`, `cmd_fill`, `cmd_flatten`, `cmd_log`, `main`.
+- **commands:** `run_clock` (now, today, pinned), `load_orders`, `pick_order`, `PRACTICE`, `cmd_show`, `auto_yes_gap` (why `--auto-yes` is refused: not a practice run, or `"paper": false`), `cmd_approve`, `cmd_account`, `cmd_decline`, `cmd_result`, `cmd_fill`, `cmd_flatten`, `cmd_log`, `main`.
 
 ### `trader-alerts/alerts.py`
 

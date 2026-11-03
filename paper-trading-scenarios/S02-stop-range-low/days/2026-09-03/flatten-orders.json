@@ -1,0 +1,18 @@
+{
+  "created_by": "trader-broker",
+  "created_at": "2026-09-03T19:55:00Z",
+  "status": "proposed",
+  "paper": true,
+  "note": "Flatten ticket. Nothing is placed until trader-risk passes it and you say yes in the chat.",
+  "source": "ticket.py flatten TSLA on 2026-09-03",
+  "orders": [
+    {
+      "symbol": "TSLA",
+      "side": "sell",
+      "qty": "4",
+      "type": "market",
+      "time_in_force": "day",
+      "why": "flat by 15:55 New York: closes the TSLA day trade before the close (qty from $TRADER_HOME/practice/portfolio.json)"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+[
+  {
+    "index": 1,
+    "ready": true,
+    "status": "READY: trader-risk PASS, waiting for your yes",
+    "plain": "SELL 9 shares of TSLA, market order, good for today",
+    "fingerprint": "b3ff007a0b701d07",
+    "paper": true,
+    "broker": "alpaca",
+    "tool": "place_stock_order",
+    "tool_input": {
+      "symbol": "TSLA",
+      "side": "sell",
+      "qty": "9",
+      "type": "market",
+      "time_in_force": "day"
+    },
+    "why": "flat by 15:55 New York: closes the TSLA day trade before the close (qty from $TRADER_HOME/practice/portfolio.json)",
+    "bracket": false,
+    "max_loss": null,
+    "stop": null,
+    "practice": true,
+    "account": null
+  }
+]

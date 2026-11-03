@@ -40,6 +40,6 @@
     "day_trades_5d": null
   },
   "clock": "pinned",
-  "checked_at": "2026-11-01T21:06:15Z",
-  "orders_file": "C:\\Users\\gurka\\Desktop\\day-trader-skill-main\\paper-trading-scenarios\\S07-limit-entry\\trader-home\\orders.json"
+  "checked_at": "2026-11-03T09:46:44Z",
+  "orders_file": "$TRADER_HOME/orders.json"
 }

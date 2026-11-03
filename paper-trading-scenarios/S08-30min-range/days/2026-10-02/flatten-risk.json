@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-02",
+  "now_new_york": "2026-10-02 15:55",
+  "now_utc": "2026-10-02T19:55:00Z",
+  "paper": true,
+  "results": [
+    {
+      "index": 1,
+      "symbol": "TSLA",
+      "side": "sell",
+      "kind": "exit",
+      "amount": "8 shares",
+      "value_usd": null,
+      "entry_ref": null,
+      "entry_ref_from": null,
+      "stop": null,
+      "target": null,
+      "risk_per_share": null,
+      "max_loss": null,
+      "reward_risk": null,
+      "fingerprint": "e671dce55203c7af",
+      "verdict": "PASS",
+      "reasons": [],
+      "warnings": [],
+      "info": []
+    }
+  ],
+  "pass": 1,
+  "block": 0,
+  "warnings": [
+    "no price for TSLA: valued at its cost basis $2,970.96"
+  ],
+  "cash_after": 1915.08,
+  "today": {
+    "orders_placed": 1,
+    "entries_placed": 1,
+    "loss_at_risk": 48.0,
+    "day_trades_5d": null
+  },
+  "clock": "pinned",
+  "checked_at": "2026-11-03T09:47:50Z",
+  "orders_file": "$TRADER_HOME/orders.json"
+}

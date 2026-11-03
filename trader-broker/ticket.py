@@ -21,12 +21,19 @@ work around the one moment that matters, your yes:
             order's own symbol, side, numbers and ticket words. It refuses
             "yes to all", "sure", "ok", a yes with a doubt, another stock or a
             different amount in it, and any order that is not READY.
+            --auto-yes records an automatic yes instead, for unattended
+            replays (paper-trading-scenarios): only on a practice run (--now
+            or --today) with "paper": true, so nothing is ever placed. It is
+            refused on the real clock and with "paper": false, and the record
+            says auto_yes, never that the user replied.
   decline   records a no.
   result    records what happened after the Allow once / Deny card:
             placed (with the broker's order id), denied, or failed. A failed,
             denied or declined order can be tried again the same day, but only
             after a new trader-risk check (newer than that record) and a new yes.
-  fill      records a fill in trader/portfolio.json (cash and shares).
+  fill      records a fill in trader/portfolio.json (cash and shares). It is
+            a real fill even with --now (which dates it); --practice records
+            a practice one in trader/practice/ instead, for replays.
   flatten   builds a sell ticket that closes a symbol's open position by
             flat_by. It still goes through trader-risk and your yes.
   log       prints today's decisions.
@@ -35,6 +42,7 @@ work around the one moment that matters, your yes:
     python3 ticket.py show --index 1 --json   # one ticket as JSON
     python3 ticket.py account --number PA1234ABCD
     python3 ticket.py approve --index 1 --reply "yes"
+    python3 ticket.py approve --index 1 --auto-yes --now "2026-10-19 10:15"   # replays only
     python3 ticket.py result --index 1 --status placed --broker-id 61e6...
     python3 ticket.py fill --symbol TSLA --side buy --qty 8 --price 364.20
     python3 ticket.py flatten --symbol TSLA --qty 8
@@ -526,7 +534,8 @@ def status_of(order, risk, state, today, now=None, pinned=False, config=None):
     status = (record or {}).get("status")
     if record and not (status in RETRY_STATUSES and checked_after(risk, record)):
         if status == "approved":
-            return False, "APPROVED by you at %s, waiting for the place_stock_order call" % record.get("at"), verdict
+            who = "automatically (--auto-yes, a practice run)" if record.get("auto_yes") else "by you"
+            return False, "APPROVED %s at %s, waiting for the place_stock_order call" % (who, record.get("at")), verdict
         again = "; a new risk check (check.py) makes it READY for a new yes" if status in RETRY_STATUSES else ""
         return False, "DONE: %s at %s%s" % (status, record.get("at"), again), verdict
     gap = account_gap(config, state, today, pinned)
@@ -717,22 +726,43 @@ def cmd_show(args):
     return 0 if any_ready else 1
 
 
+def auto_yes_gap(config, pinned):
+    """Why --auto-yes is refused here, or None. An automatic yes is for unattended
+    replays only: a practice run, which never places anything, on a paper config."""
+    if not pinned:
+        return ("--auto-yes is for practice runs only (--now or --today), where nothing is ever placed; "
+                "a real order needs the user's own typed yes")
+    if not config.get("paper", True):
+        return ("--auto-yes is for paper trading only, and your config says \"paper\": false; "
+                "every order needs the user's own typed yes")
+    return None
+
+
 def cmd_approve(args):
     orders, config, risk, state, today, now, pinned = load_orders(args)
     order = pick_order(orders, args.index)
+    if args.auto_yes:
+        refused = auto_yes_gap(config, pinned)
+        if refused:
+            raise TicketError(refused)
     ready, label, verdict = status_of(order, risk, state, today, now, pinned, config)
     if not ready:
         raise TicketError("order %d is not ready: %s" % (args.index, label))
-    ok, why = parse_yes(args.reply, order, [other.get("symbol", "") for other in orders], verdict)
-    if not ok:
-        print("Not recorded: %s. Ask the user again with the ticket for order %d." % (why, args.index))
-        return 1
+    if not args.auto_yes:
+        ok, why = parse_yes(args.reply, order, [other.get("symbol", "") for other in orders], verdict)
+        if not ok:
+            print("Not recorded: %s. Ask the user again with the ticket for order %d." % (why, args.index))
+            return 1
     loss, stop = max_loss(order, verdict)
     record = {"at": ny_iso(now), "date": today, "index": args.index, "fingerprint": fingerprint(order),
               "symbol": str(order.get("symbol", "")).upper(), "side": order.get("side"),
               "qty": order.get("qty"), "kind": order_kind(order, verdict), "max_loss": loss, "stop": stop,
-              "plain": plain(order, verdict), "status": "approved", "reply": args.reply,
-              "paper": bool(config.get("paper", True)), "broker": config.get("broker", "alpaca")}
+              "plain": plain(order, verdict), "status": "approved"}
+    if args.auto_yes:
+        record["auto_yes"] = True              # nobody typed it, so there is no reply to keep
+    else:
+        record["reply"] = args.reply
+    record.update(paper=bool(config.get("paper", True)), broker=config.get("broker", "alpaca"))
     if pinned:
         record["practice"] = True
     else:
@@ -741,7 +771,11 @@ def cmd_approve(args):
             record["account"] = account_record.get("account_number")
     state.setdefault("orders", []).append(record)
     write_json(args.state, state)
-    print("Recorded your yes for order %d: %s." % (args.index, plain(order, verdict)))
+    if args.auto_yes:
+        print("Recorded an automatic yes for order %d (--auto-yes: a practice run, paper per your config): %s."
+              % (args.index, plain(order, verdict)))
+    else:
+        print("Recorded your yes for order %d: %s." % (args.index, plain(order, verdict)))
     if pinned:
         print(PRACTICE)
         print("There is nothing to place. Practice the rest with: ticket.py result --index %d --status "
@@ -807,7 +841,7 @@ def cmd_result(args):
     new = {"at": ny_iso(now), "date": today, "index": args.index, "fingerprint": order_fingerprint,
            "symbol": record["symbol"],
            "side": record["side"], "plain": record["plain"], "status": args.status}
-    for key in ("qty", "kind", "max_loss", "stop", "practice", "account"):
+    for key in ("qty", "kind", "max_loss", "stop", "practice", "auto_yes", "account"):
         if record.get(key) is not None:
             new[key] = record[key]
     if args.broker_id:
@@ -849,10 +883,11 @@ def cmd_fill(args):
     if not re.match(r"^\d{4}-\d{2}-\d{2}$", date):
         raise TicketError("--date wants a date like 2026-10-19")
     portfolio = apply_fill(args.portfolio, config, args.symbol, args.side, args.qty, args.price, date)
-    log_fill(args.state, now, date, args.symbol, args.side, args.qty, args.price)
-    print("Recorded %s %s %s at %s on %s in %s. Cash now %s." % (args.side, args.qty, args.symbol.upper(),
-                                                                dollars(args.price), date, args.portfolio,
-                                                                dollars(portfolio["cash"])))
+    log_fill(args.state, now, date, args.symbol, args.side, args.qty, args.price, args.practice)
+    print("Recorded %s%s %s %s at %s on %s in %s. Cash now %s." % ("a practice fill: " if args.practice else "",
+                                                                  args.side, args.qty, args.symbol.upper(),
+                                                                  dollars(args.price), date, args.portfolio,
+                                                                  dollars(portfolio["cash"])))
     return 0
 
 
@@ -919,6 +954,8 @@ def cmd_log(args):
         extra = (" id " + record["broker_order_id"]) if record.get("broker_order_id") else ""
         reply = ((' reply "%s"' % record["reply"])
                  if record.get("reply") and record["status"] in ("approved", "declined") else "")
+        if record.get("auto_yes") and record["status"] == "approved":
+            reply = " auto-yes"
         loss = ((" max loss %s" % dollars(record["max_loss"]))
                 if record.get("max_loss") is not None and record["status"] == "placed" else "")
         index_text = ("#%s" % record["index"]) if record.get("index") is not None else "  "
@@ -957,7 +994,11 @@ def main(argv=None):
     command = commands.add_parser("approve", help="record the user's explicit yes for one order")
     common(command)
     command.add_argument("--index", type=int, required=True)
-    command.add_argument("--reply", required=True, help="the user's reply, word for word")
+    answer = command.add_mutually_exclusive_group(required=True)
+    answer.add_argument("--reply", help="the user's reply, word for word")
+    answer.add_argument("--auto-yes", action="store_true",
+                        help="an automatic yes for an unattended replay: only on a practice run (--now or --today) "
+                             "with \"paper\": true, and nothing is ever placed")
     command = commands.add_parser("decline", help="record a no")
     common(command)
     command.add_argument("--index", type=int, required=True)
@@ -971,17 +1012,20 @@ def main(argv=None):
     command.add_argument("--filled-qty")
     command.add_argument("--filled-price")
     command.add_argument("--portfolio")
-    command = commands.add_parser("fill",
-                                  help="record a fill from your broker in trader/portfolio.json (never practice)")
+    command = commands.add_parser("fill", help="record a fill from your broker in trader/portfolio.json "
+                                               "(--practice: a practice fill, in trader/practice/)")
     command.add_argument("--symbol", required=True)
     command.add_argument("--side", required=True, choices=["buy", "sell"])
     command.add_argument("--qty", required=True)
     command.add_argument("--price", required=True)
     command.add_argument("--date", help="YYYY-MM-DD (default: today in New York)")
-    command.add_argument("--now")
-    command.add_argument("--portfolio", default=home("portfolio.json"))
+    command.add_argument("--now", help="when it filled (it dates the record; a fill is real unless --practice)")
+    command.add_argument("--practice", action="store_true",
+                         help="a practice fill for a replay: marked practice, in trader/practice/ unless paths "
+                              "are passed")
+    command.add_argument("--portfolio", help="default trader/portfolio.json (--practice: trader/practice/)")
     command.add_argument("--config", default=home("config.json"))
-    command.add_argument("--state", default=home("state", "broker.json"))
+    command.add_argument("--state", help="default trader/state/broker.json (--practice: trader/practice/)")
     command = commands.add_parser("flatten", help="a sell ticket that closes a symbol's position by flat_by")
     command.add_argument("--symbol", required=True)
     command.add_argument("--qty", help="shares you hold, from get_open_position (default: trader/portfolio.json)")
@@ -998,13 +1042,14 @@ def main(argv=None):
     if not args.cmd:
         parser.print_help()
         return 1
-    if args.cmd != "fill":
-        # a practice run (--now or --today) keeps its own verdicts, log and account
-        room = ("practice",) if (args.now or args.today) else ()
-        for key, parts in (("risk", ("state", "risk.json")), ("state", ("state", "broker.json")),
-                           ("portfolio", ("portfolio.json",))):
-            if hasattr(args, key) and getattr(args, key) is None:
-                setattr(args, key, home(*room, *parts))
+    # a practice run (--now or --today) keeps its own verdicts, log and account. A fill is
+    # dated by --now but stays real: only fill --practice records a practice one.
+    practice = args.practice if args.cmd == "fill" else bool(args.now or args.today)
+    room = ("practice",) if practice else ()
+    for key, parts in (("risk", ("state", "risk.json")), ("state", ("state", "broker.json")),
+                       ("portfolio", ("portfolio.json",))):
+        if hasattr(args, key) and getattr(args, key) is None:
+            setattr(args, key, home(*room, *parts))
     try:
         return {"show": cmd_show, "account": cmd_account, "approve": cmd_approve, "decline": cmd_decline,
                 "result": cmd_result, "fill": cmd_fill, "flatten": cmd_flatten, "log": cmd_log}[args.cmd](args)

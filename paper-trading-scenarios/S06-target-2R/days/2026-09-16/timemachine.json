@@ -35,7 +35,7 @@
     "stop_rule": "or_mid",
     "interval": "5m",
     "flat_by": "15:55",
-    "from": "C:\\Users\\gurka\\Desktop\\day-trader-skill-main\\paper-trading-scenarios\\S06-target-2R\\trader-home/plan.json"
+    "from": "$TRADER_HOME/plan.json"
   },
   "mc": {
     "replays": 10000,

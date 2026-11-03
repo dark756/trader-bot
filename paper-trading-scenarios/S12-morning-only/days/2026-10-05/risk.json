@@ -40,6 +40,6 @@
     "day_trades_5d": null
   },
   "clock": "pinned",
-  "checked_at": "2026-11-01T21:06:01Z",
-  "orders_file": "C:\\Users\\gurka\\Desktop\\day-trader-skill-main\\paper-trading-scenarios\\S12-morning-only\\trader-home\\orders.json"
+  "checked_at": "2026-11-03T09:49:15Z",
+  "orders_file": "$TRADER_HOME/orders.json"
 }

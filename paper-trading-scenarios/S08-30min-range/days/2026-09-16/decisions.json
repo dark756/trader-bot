@@ -1,0 +1,60 @@
+[
+  {
+    "at": "2026-09-16T10:15:00-04:00",
+    "date": "2026-09-16",
+    "index": 1,
+    "fingerprint": "00c40e2b35a16f49",
+    "symbol": "TSLA",
+    "side": "buy",
+    "qty": "9",
+    "kind": "entry",
+    "max_loss": 48.6,
+    "stop": 358.04,
+    "plain": "BUY 9 TSLA, market, good for today / stop-loss 358.04 / take-profit 368.84 / max loss about $48.60 if the stop fills at 358.04 (it can fill worse in a fast market)",
+    "status": "approved",
+    "auto_yes": true,
+    "paper": true,
+    "broker": "alpaca",
+    "practice": true
+  },
+  {
+    "at": "2026-09-16T10:15:00-04:00",
+    "date": "2026-09-16",
+    "index": 1,
+    "fingerprint": "00c40e2b35a16f49",
+    "symbol": "TSLA",
+    "side": "buy",
+    "plain": "BUY 9 TSLA, market, good for today / stop-loss 358.04 / take-profit 368.84 / max loss about $48.60 if the stop fills at 358.04 (it can fill worse in a fast market)",
+    "status": "placed",
+    "qty": "9",
+    "kind": "entry",
+    "max_loss": 48.6,
+    "stop": 358.04,
+    "practice": true,
+    "auto_yes": true,
+    "broker_order_id": "SIM-S08-2026-09-16",
+    "filled_price": 363.44
+  },
+  {
+    "at": "2026-09-16T10:15:00-04:00",
+    "date": "2026-09-16",
+    "status": "filled",
+    "symbol": "TSLA",
+    "side": "buy",
+    "qty": "9",
+    "price": 363.44,
+    "plain": "BUY 9 TSLA at 363.44",
+    "practice": true
+  },
+  {
+    "at": "2026-09-16T14:35:00-04:00",
+    "date": "2026-09-16",
+    "status": "filled",
+    "symbol": "TSLA",
+    "side": "sell",
+    "qty": "9",
+    "price": 358.04,
+    "plain": "SELL 9 TSLA at 358.04",
+    "practice": true
+  }
+]

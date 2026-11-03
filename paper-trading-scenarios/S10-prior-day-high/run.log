@@ -1,7 +1,7 @@
 S10-prior-day-high: Setup
 Level setup: a close above the previous session's high, stop 1 % under
-Every command below ran from the repo root with TRADER_HOME=paper-trading-scenarios\S10-prior-day-high\trader-home.
-Practice runs (pinned clock); nothing was approved or placed.
+Every command below ran from the repo root with TRADER_HOME=paper-trading-scenarios/S10-prior-day-high/trader-home.
+Practice runs (pinned clock). Each READY ticket got an automatic yes (ticket.py approve --auto-yes, practice runs on paper only); nothing was sent to a broker.
 
 ====================================================================================================
 Mon 2026-08-24  account cash $5000.00
@@ -269,7 +269,7 @@ Opening range 9:30-9:45: high $348.24, low $345.45 (1 of 3 bars, still forming).
 10:20 bar  closed $352.17  TRIGGERED: closed above $351.93 (+0.07%). Get in now if you take it: 10:25 AM, $352.17
 This is the moment to get in, if you take the trade. Nothing was placed.
 Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\entry.json.
+Wrote $TRADER_HOME/entry.json.
 [exit 0]
 
 $ python trader-exit/exit.py plan --now "2026-08-27 10:25" --write --stop pct:1 --target 1R
@@ -282,7 +282,7 @@ Exit plan: TSLA long, Thu 2026-08-27, close above a level on 5-minute bars
   Flat by       15:55 ET, win or lose: no overnight hold
 Set before the entry. If price hits the stop, you are out; never move it further away.
 A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\plan.json.
+Wrote $TRADER_HOME/plan.json.
 Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
 [exit 0]
 
@@ -304,7 +304,7 @@ History: skipped: the history replay knows the opening-range breakout (orb) only
 Leans toward the target: target first 56.4 % vs stop first 37.0 %.
 
 A simulation built from TSLA's own last 23 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\timemachine.json.
+Wrote $TRADER_HOME/timemachine.json.
 Next: /trader-budget sizes it to your budget and your max loss per trade.
 [exit 0]
 
@@ -328,7 +328,7 @@ Flat by 15:55 New York: anything still open then gets closed (trader-alerts ring
 
 Next: trader-risk checks it, then trader-broker asks you yes or no.
 Education and tooling, not financial advice.
-Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\orders.json
+Wrote 1 proposed bracket order to $TRADER_HOME/orders.json
 [exit 0]
 
 $ python trader-risk/check.py --now "2026-08-27 10:25"
@@ -371,12 +371,27 @@ ORDER 1 of 1, PAPER account per your config, Alpaca
 One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
 [exit 0]
 
-[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+$ python trader-broker/ticket.py approve --index 1 --auto-yes --now "2026-08-27 10:25"
+Recorded an automatic yes for order 1 (--auto-yes: a practice run, paper per your config): BUY 10 TSLA, market, good for today / stop-loss 348.64 / take-profit 355.70 / max loss about $35.30 if the stop fills at 348.64 (it can fill worse in a fast market).
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+There is nothing to place. Practice the rest with: ticket.py result --index 1 --status placed|denied|failed --now ...
+[exit 0]
+
+[paper broker, simulated] the yes was automatic (ticket.py approve --auto-yes); this stands in for Allow once and Alpaca paper.
 place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "10", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "355.70", "stop_loss_stop_price": "348.64"}
   10:25 filled: bought 10 TSLA at 352.15 (market: the 10:25 bar's open)
   bracket legs working: stop-loss 348.64, take-profit 355.70
   14:45 take-profit filled: sold 10 at 355.70
   P&L +35.50; deepest open loss -16.50 at 10:45; best open gain +35.50 at 14:45
+
+$ python trader-broker/ticket.py result --index 1 --status placed --broker-id SIM-S10-2026-08-27 --filled-qty 10 --filled-price 352.15 --now "2026-08-27 10:25"
+Recorded order 1 as placed.
+Added the fill to $TRADER_HOME/practice/portfolio.json.
+[exit 0]
+
+$ python trader-broker/ticket.py fill --practice --symbol TSLA --side sell --qty 10 --price 355.70 --now "2026-08-27 14:45"
+Recorded a practice fill: sell 10 TSLA at $355.70 on 2026-08-27 in $TRADER_HOME/practice/portfolio.json. Cash now $5,035.50.
+[exit 0]
 
 ====================================================================================================
 Fri 2026-08-28  account cash $5035.50
@@ -390,7 +405,7 @@ Opening range 9:30-9:45: high $358.49, low $354.92 (1 of 3 bars, still forming).
  9:40 bar  closed $356.16  TRIGGERED: closed above $355.74 (+0.12%). Get in now if you take it: 9:45 AM, $356.16
 This is the moment to get in, if you take the trade. Nothing was placed.
 Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\entry.json.
+Wrote $TRADER_HOME/entry.json.
 [exit 0]
 
 $ python trader-exit/exit.py plan --now "2026-08-28 09:45" --write --stop pct:1 --target 1R
@@ -403,7 +418,7 @@ Exit plan: TSLA long, Fri 2026-08-28, close above a level on 5-minute bars
   Flat by       15:55 ET, win or lose: no overnight hold
 Set before the entry. If price hits the stop, you are out; never move it further away.
 A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\plan.json.
+Wrote $TRADER_HOME/plan.json.
 Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
 [exit 0]
 
@@ -425,7 +440,7 @@ History: skipped: the history replay knows the opening-range breakout (orb) only
 Leans toward the target: target first 57.2 % vs stop first 40.8 %.
 
 A simulation built from TSLA's own last 24 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\timemachine.json.
+Wrote $TRADER_HOME/timemachine.json.
 Next: /trader-budget sizes it to your budget and your max loss per trade.
 [exit 0]
 
@@ -449,7 +464,7 @@ Flat by 15:55 New York: anything still open then gets closed (trader-alerts ring
 
 Next: trader-risk checks it, then trader-broker asks you yes or no.
 Education and tooling, not financial advice.
-Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\orders.json
+Wrote 1 proposed bracket order to $TRADER_HOME/orders.json
 [exit 0]
 
 $ python trader-risk/check.py --now "2026-08-28 09:45"
@@ -492,12 +507,27 @@ ORDER 1 of 1, PAPER account per your config, Alpaca
 One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
 [exit 0]
 
-[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+$ python trader-broker/ticket.py approve --index 1 --auto-yes --now "2026-08-28 09:45"
+Recorded an automatic yes for order 1 (--auto-yes: a practice run, paper per your config): BUY 10 TSLA, market, good for today / stop-loss 352.59 / take-profit 359.73 / max loss about $35.70 if the stop fills at 352.59 (it can fill worse in a fast market).
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+There is nothing to place. Practice the rest with: ticket.py result --index 1 --status placed|denied|failed --now ...
+[exit 0]
+
+[paper broker, simulated] the yes was automatic (ticket.py approve --auto-yes); this stands in for Allow once and Alpaca paper.
 place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "10", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "359.73", "stop_loss_stop_price": "352.59"}
   09:45 filled: bought 10 TSLA at 356.06 (market: the 09:45 bar's open)
   bracket legs working: stop-loss 352.59, take-profit 359.73
   10:05 stop-loss filled: sold 10 at 352.59
   P&L -34.70; deepest open loss -34.70 at 10:05; best open gain +11.30 at 09:45
+
+$ python trader-broker/ticket.py result --index 1 --status placed --broker-id SIM-S10-2026-08-28 --filled-qty 10 --filled-price 356.06 --now "2026-08-28 09:45"
+Recorded order 1 as placed.
+Added the fill to $TRADER_HOME/practice/portfolio.json.
+[exit 0]
+
+$ python trader-broker/ticket.py fill --practice --symbol TSLA --side sell --qty 10 --price 352.59 --now "2026-08-28 10:05"
+Recorded a practice fill: sell 10 TSLA at $352.59 on 2026-08-28 in $TRADER_HOME/practice/portfolio.json. Cash now $5,000.80.
+[exit 0]
 
 ====================================================================================================
 Mon 2026-08-31  account cash $5000.80
@@ -512,7 +542,7 @@ Opening range 9:30-9:45: high $354.86, low $347.15 (1 of 3 bars, still forming).
  9:45 bar  closed $359.42  TRIGGERED: closed above $358.80 (+0.17%). Get in now if you take it: 9:50 AM, $359.42
 This is the moment to get in, if you take the trade. Nothing was placed.
 Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\entry.json.
+Wrote $TRADER_HOME/entry.json.
 [exit 0]
 
 $ python trader-exit/exit.py plan --now "2026-08-31 09:50" --write --stop pct:1 --target 1R
@@ -525,7 +555,7 @@ Exit plan: TSLA long, Mon 2026-08-31, close above a level on 5-minute bars
   Flat by       15:55 ET, win or lose: no overnight hold
 Set before the entry. If price hits the stop, you are out; never move it further away.
 A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\plan.json.
+Wrote $TRADER_HOME/plan.json.
 Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
 [exit 0]
 
@@ -547,7 +577,7 @@ History: skipped: the history replay knows the opening-range breakout (orb) only
 Close to a coin flip: target first 52.8 % vs stop first 44.4 %.
 
 A simulation built from TSLA's own last 25 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\timemachine.json.
+Wrote $TRADER_HOME/timemachine.json.
 Next: /trader-budget sizes it to your budget and your max loss per trade.
 [exit 0]
 
@@ -571,7 +601,7 @@ Flat by 15:55 New York: anything still open then gets closed (trader-alerts ring
 
 Next: trader-risk checks it, then trader-broker asks you yes or no.
 Education and tooling, not financial advice.
-Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\orders.json
+Wrote 1 proposed bracket order to $TRADER_HOME/orders.json
 [exit 0]
 
 $ python trader-risk/check.py --now "2026-08-31 09:50"
@@ -614,12 +644,27 @@ ORDER 1 of 1, PAPER account per your config, Alpaca
 One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
 [exit 0]
 
-[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+$ python trader-broker/ticket.py approve --index 1 --auto-yes --now "2026-08-31 09:50"
+Recorded an automatic yes for order 1 (--auto-yes: a practice run, paper per your config): BUY 10 TSLA, market, good for today / stop-loss 355.82 / take-profit 363.02 / max loss about $36 if the stop fills at 355.82 (it can fill worse in a fast market).
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+There is nothing to place. Practice the rest with: ticket.py result --index 1 --status placed|denied|failed --now ...
+[exit 0]
+
+[paper broker, simulated] the yes was automatic (ticket.py approve --auto-yes); this stands in for Allow once and Alpaca paper.
 place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "10", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "363.02", "stop_loss_stop_price": "355.82"}
   09:50 filled: bought 10 TSLA at 359.42 (market: the 09:50 bar's open)
   bracket legs working: stop-loss 355.82, take-profit 363.02
   10:15 take-profit filled: sold 10 at 363.02
   P&L +36.00; deepest open loss -8.50 at 09:50; best open gain +36.00 at 10:15
+
+$ python trader-broker/ticket.py result --index 1 --status placed --broker-id SIM-S10-2026-08-31 --filled-qty 10 --filled-price 359.42 --now "2026-08-31 09:50"
+Recorded order 1 as placed.
+Added the fill to $TRADER_HOME/practice/portfolio.json.
+[exit 0]
+
+$ python trader-broker/ticket.py fill --practice --symbol TSLA --side sell --qty 10 --price 363.02 --now "2026-08-31 10:15"
+Recorded a practice fill: sell 10 TSLA at $363.02 on 2026-08-31 in $TRADER_HOME/practice/portfolio.json. Cash now $5,036.80.
+[exit 0]
 
 ====================================================================================================
 Tue 2026-09-01  account cash $5036.80
@@ -797,7 +842,7 @@ Opening range 9:30-9:45: high $373.51, low $365.91 (1 of 3 bars, still forming).
  9:40 bar  closed $374.27  TRIGGERED: closed above $360.62 (+3.79%). Get in now if you take it: 9:45 AM, $374.27
 This is the moment to get in, if you take the trade. Nothing was placed.
 Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\entry.json.
+Wrote $TRADER_HOME/entry.json.
 [exit 0]
 
 $ python trader-exit/exit.py plan --now "2026-09-03 09:45" --write --stop pct:1 --target 1R
@@ -810,7 +855,7 @@ Exit plan: TSLA long, Thu 2026-09-03, close above a level on 5-minute bars
   Flat by       15:55 ET, win or lose: no overnight hold
 Set before the entry. If price hits the stop, you are out; never move it further away.
 A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\plan.json.
+Wrote $TRADER_HOME/plan.json.
 Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
 [exit 0]
 
@@ -832,7 +877,7 @@ History: skipped: the history replay knows the opening-range breakout (orb) only
 Leans toward the target: target first 58.3 % vs stop first 39.7 %.
 
 A simulation built from TSLA's own last 28 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\timemachine.json.
+Wrote $TRADER_HOME/timemachine.json.
 Next: /trader-budget sizes it to your budget and your max loss per trade.
 [exit 0]
 
@@ -856,7 +901,7 @@ Flat by 15:55 New York: anything still open then gets closed (trader-alerts ring
 
 Next: trader-risk checks it, then trader-broker asks you yes or no.
 Education and tooling, not financial advice.
-Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\orders.json
+Wrote 1 proposed bracket order to $TRADER_HOME/orders.json
 [exit 0]
 
 $ python trader-risk/check.py --now "2026-09-03 09:45"
@@ -899,12 +944,28 @@ ORDER 1 of 1, PAPER account per your config, Alpaca
 One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
 [exit 0]
 
-[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+$ python trader-broker/ticket.py approve --index 1 --auto-yes --now "2026-09-03 09:45"
+Recorded an automatic yes for order 1 (--auto-yes: a practice run, paper per your config): BUY 10 TSLA, market, good for today / stop-loss 370.52 / take-profit 378.02 / max loss about $37.50 if the stop fills at 370.52 (it can fill worse in a fast market).
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+There is nothing to place. Practice the rest with: ticket.py result --index 1 --status placed|denied|failed --now ...
+[exit 0]
+
+[paper broker, simulated] the yes was automatic (ticket.py approve --auto-yes); this stands in for Allow once and Alpaca paper.
 place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "10", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "378.02", "stop_loss_stop_price": "370.52"}
   09:45 filled: bought 10 TSLA at 374.35 (market: the 09:45 bar's open)
   bracket legs working: stop-loss 370.52, take-profit 378.02
   09:50 take-profit filled: sold 10 at 378.02
   P&L +36.70; deepest open loss -6.40 at 09:45; best open gain +36.70 at 09:50
+
+$ python trader-broker/ticket.py result --index 1 --status placed --broker-id SIM-S10-2026-09-03 --filled-qty 10 --filled-price 374.35 --now "2026-09-03 09:45"
+Recorded order 1 as placed.
+It filled at 374.35, so the max loss at the stop 370.52 is $38.30 now; today's loss limit counts that.
+Added the fill to $TRADER_HOME/practice/portfolio.json.
+[exit 0]
+
+$ python trader-broker/ticket.py fill --practice --symbol TSLA --side sell --qty 10 --price 378.02 --now "2026-09-03 09:50"
+Recorded a practice fill: sell 10 TSLA at $378.02 on 2026-09-03 in $TRADER_HOME/practice/portfolio.json. Cash now $5,073.50.
+[exit 0]
 
 ====================================================================================================
 Fri 2026-09-04  account cash $5073.50
@@ -1015,7 +1076,7 @@ Opening range 9:30-9:45: high $362.22, low $355.99 (1 of 3 bars, still forming).
 10:55 bar  closed $365.11  TRIGGERED: closed above $364.69 (+0.12%). Get in now if you take it: 11:00 AM, $365.11
 This is the moment to get in, if you take the trade. Nothing was placed.
 Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\entry.json.
+Wrote $TRADER_HOME/entry.json.
 [exit 0]
 
 $ python trader-exit/exit.py plan --now "2026-09-08 11:00" --write --stop pct:1 --target 1R
@@ -1028,7 +1089,7 @@ Exit plan: TSLA long, Tue 2026-09-08, close above a level on 5-minute bars
   Flat by       15:55 ET, win or lose: no overnight hold
 Set before the entry. If price hits the stop, you are out; never move it further away.
 A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\plan.json.
+Wrote $TRADER_HOME/plan.json.
 Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
 [exit 0]
 
@@ -1050,7 +1111,7 @@ History: skipped: the history replay knows the opening-range breakout (orb) only
 Close to a coin flip: target first 45.8 % vs stop first 39.0 %.
 
 A simulation built from TSLA's own last 30 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\timemachine.json.
+Wrote $TRADER_HOME/timemachine.json.
 Next: /trader-budget sizes it to your budget and your max loss per trade.
 [exit 0]
 
@@ -1074,7 +1135,7 @@ Flat by 15:55 New York: anything still open then gets closed (trader-alerts ring
 
 Next: trader-risk checks it, then trader-broker asks you yes or no.
 Education and tooling, not financial advice.
-Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\orders.json
+Wrote 1 proposed bracket order to $TRADER_HOME/orders.json
 [exit 0]
 
 $ python trader-risk/check.py --now "2026-09-08 11:00"
@@ -1117,12 +1178,27 @@ ORDER 1 of 1, PAPER account per your config, Alpaca
 One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
 [exit 0]
 
-[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+$ python trader-broker/ticket.py approve --index 1 --auto-yes --now "2026-09-08 11:00"
+Recorded an automatic yes for order 1 (--auto-yes: a practice run, paper per your config): BUY 10 TSLA, market, good for today / stop-loss 361.45 / take-profit 368.77 / max loss about $36.60 if the stop fills at 361.45 (it can fill worse in a fast market).
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+There is nothing to place. Practice the rest with: ticket.py result --index 1 --status placed|denied|failed --now ...
+[exit 0]
+
+[paper broker, simulated] the yes was automatic (ticket.py approve --auto-yes); this stands in for Allow once and Alpaca paper.
 place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "10", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "368.77", "stop_loss_stop_price": "361.45"}
   11:00 filled: bought 10 TSLA at 365.11 (market: the 11:00 bar's open)
   bracket legs working: stop-loss 361.45, take-profit 368.77
   12:25 take-profit filled: sold 10 at 368.77
   P&L +36.60; deepest open loss -8.30 at 11:05; best open gain +36.60 at 12:25
+
+$ python trader-broker/ticket.py result --index 1 --status placed --broker-id SIM-S10-2026-09-08 --filled-qty 10 --filled-price 365.11 --now "2026-09-08 11:00"
+Recorded order 1 as placed.
+Added the fill to $TRADER_HOME/practice/portfolio.json.
+[exit 0]
+
+$ python trader-broker/ticket.py fill --practice --symbol TSLA --side sell --qty 10 --price 368.77 --now "2026-09-08 12:25"
+Recorded a practice fill: sell 10 TSLA at $368.77 on 2026-09-08 in $TRADER_HOME/practice/portfolio.json. Cash now $5,110.10.
+[exit 0]
 
 ====================================================================================================
 Wed 2026-09-09  account cash $5110.10
@@ -1136,7 +1212,7 @@ Opening range 9:30-9:45: high $375.44, low $367.83 (1 of 3 bars, still forming).
  9:40 bar  closed $373.62  TRIGGERED: closed above $370.00 (+0.98%). Get in now if you take it: 9:45 AM, $373.62
 This is the moment to get in, if you take the trade. Nothing was placed.
 Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\entry.json.
+Wrote $TRADER_HOME/entry.json.
 [exit 0]
 
 $ python trader-exit/exit.py plan --now "2026-09-09 09:45" --write --stop pct:1 --target 1R
@@ -1149,7 +1225,7 @@ Exit plan: TSLA long, Wed 2026-09-09, close above a level on 5-minute bars
   Flat by       15:55 ET, win or lose: no overnight hold
 Set before the entry. If price hits the stop, you are out; never move it further away.
 A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\plan.json.
+Wrote $TRADER_HOME/plan.json.
 Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
 [exit 0]
 
@@ -1171,7 +1247,7 @@ History: skipped: the history replay knows the opening-range breakout (orb) only
 Leans toward the target: target first 58.1 % vs stop first 39.7 %.
 
 A simulation built from TSLA's own last 31 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\timemachine.json.
+Wrote $TRADER_HOME/timemachine.json.
 Next: /trader-budget sizes it to your budget and your max loss per trade.
 [exit 0]
 
@@ -1195,7 +1271,7 @@ Flat by 15:55 New York: anything still open then gets closed (trader-alerts ring
 
 Next: trader-risk checks it, then trader-broker asks you yes or no.
 Education and tooling, not financial advice.
-Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\orders.json
+Wrote 1 proposed bracket order to $TRADER_HOME/orders.json
 [exit 0]
 
 $ python trader-risk/check.py --now "2026-09-09 09:45"
@@ -1238,12 +1314,28 @@ ORDER 1 of 1, PAPER account per your config, Alpaca
 One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
 [exit 0]
 
-[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+$ python trader-broker/ticket.py approve --index 1 --auto-yes --now "2026-09-09 09:45"
+Recorded an automatic yes for order 1 (--auto-yes: a practice run, paper per your config): BUY 10 TSLA, market, good for today / stop-loss 369.88 / take-profit 377.36 / max loss about $37.40 if the stop fills at 369.88 (it can fill worse in a fast market).
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+There is nothing to place. Practice the rest with: ticket.py result --index 1 --status placed|denied|failed --now ...
+[exit 0]
+
+[paper broker, simulated] the yes was automatic (ticket.py approve --auto-yes); this stands in for Allow once and Alpaca paper.
 place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "10", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "377.36", "stop_loss_stop_price": "369.88"}
   09:45 filled: bought 10 TSLA at 373.64 (market: the 09:45 bar's open)
   bracket legs working: stop-loss 369.88, take-profit 377.36
   10:10 stop-loss filled: sold 10 at 369.88
   P&L -37.60; deepest open loss -37.60 at 10:10; best open gain +10.90 at 09:45
+
+$ python trader-broker/ticket.py result --index 1 --status placed --broker-id SIM-S10-2026-09-09 --filled-qty 10 --filled-price 373.64 --now "2026-09-09 09:45"
+Recorded order 1 as placed.
+It filled at 373.64, so the max loss at the stop 369.88 is $37.60 now; today's loss limit counts that.
+Added the fill to $TRADER_HOME/practice/portfolio.json.
+[exit 0]
+
+$ python trader-broker/ticket.py fill --practice --symbol TSLA --side sell --qty 10 --price 369.88 --now "2026-09-09 10:10"
+Recorded a practice fill: sell 10 TSLA at $369.88 on 2026-09-09 in $TRADER_HOME/practice/portfolio.json. Cash now $5,072.50.
+[exit 0]
 
 ====================================================================================================
 Thu 2026-09-10  account cash $5072.50
@@ -1591,7 +1683,7 @@ Opening range 9:30-9:45: high $358.58, low $354.89 (1 of 3 bars, still forming).
 10:10 bar  closed $363.44  TRIGGERED: closed above $362.39 (+0.29%). Get in now if you take it: 10:15 AM, $363.44
 This is the moment to get in, if you take the trade. Nothing was placed.
 Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\entry.json.
+Wrote $TRADER_HOME/entry.json.
 [exit 0]
 
 $ python trader-exit/exit.py plan --now "2026-09-16 10:15" --write --stop pct:1 --target 1R
@@ -1604,7 +1696,7 @@ Exit plan: TSLA long, Wed 2026-09-16, close above a level on 5-minute bars
   Flat by       15:55 ET, win or lose: no overnight hold
 Set before the entry. If price hits the stop, you are out; never move it further away.
 A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\plan.json.
+Wrote $TRADER_HOME/plan.json.
 Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
 [exit 0]
 
@@ -1626,7 +1718,7 @@ History: skipped: the history replay knows the opening-range breakout (orb) only
 Leans toward the target: target first 55.1 % vs stop first 38.6 %.
 
 A simulation built from TSLA's own last 36 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\timemachine.json.
+Wrote $TRADER_HOME/timemachine.json.
 Next: /trader-budget sizes it to your budget and your max loss per trade.
 [exit 0]
 
@@ -1650,7 +1742,7 @@ Flat by 15:55 New York: anything still open then gets closed (trader-alerts ring
 
 Next: trader-risk checks it, then trader-broker asks you yes or no.
 Education and tooling, not financial advice.
-Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\orders.json
+Wrote 1 proposed bracket order to $TRADER_HOME/orders.json
 [exit 0]
 
 $ python trader-risk/check.py --now "2026-09-16 10:15"
@@ -1693,12 +1785,27 @@ ORDER 1 of 1, PAPER account per your config, Alpaca
 One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
 [exit 0]
 
-[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+$ python trader-broker/ticket.py approve --index 1 --auto-yes --now "2026-09-16 10:15"
+Recorded an automatic yes for order 1 (--auto-yes: a practice run, paper per your config): BUY 10 TSLA, market, good for today / stop-loss 359.80 / take-profit 367.08 / max loss about $36.40 if the stop fills at 359.80 (it can fill worse in a fast market).
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+There is nothing to place. Practice the rest with: ticket.py result --index 1 --status placed|denied|failed --now ...
+[exit 0]
+
+[paper broker, simulated] the yes was automatic (ticket.py approve --auto-yes); this stands in for Allow once and Alpaca paper.
 place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "10", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "367.08", "stop_loss_stop_price": "359.80"}
   10:15 filled: bought 10 TSLA at 363.44 (market: the 10:15 bar's open)
   bracket legs working: stop-loss 359.80, take-profit 367.08
   14:00 stop-loss filled: sold 10 at 359.80
   P&L -36.40; deepest open loss -36.40 at 14:00; best open gain +16.10 at 11:00
+
+$ python trader-broker/ticket.py result --index 1 --status placed --broker-id SIM-S10-2026-09-16 --filled-qty 10 --filled-price 363.44 --now "2026-09-16 10:15"
+Recorded order 1 as placed.
+Added the fill to $TRADER_HOME/practice/portfolio.json.
+[exit 0]
+
+$ python trader-broker/ticket.py fill --practice --symbol TSLA --side sell --qty 10 --price 359.80 --now "2026-09-16 14:00"
+Recorded a practice fill: sell 10 TSLA at $359.80 on 2026-09-16 in $TRADER_HOME/practice/portfolio.json. Cash now $5,036.10.
+[exit 0]
 
 ====================================================================================================
 Thu 2026-09-17  account cash $5036.10
@@ -1712,7 +1819,7 @@ Opening range 9:30-9:45: high $371.29, low $366.33 (1 of 3 bars, still forming).
  9:40 bar  closed $365.22  TRIGGERED: closed above $365.05 (+0.05%). Get in now if you take it: 9:45 AM, $365.22
 This is the moment to get in, if you take the trade. Nothing was placed.
 Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\entry.json.
+Wrote $TRADER_HOME/entry.json.
 [exit 0]
 
 $ python trader-exit/exit.py plan --now "2026-09-17 09:45" --write --stop pct:1 --target 1R
@@ -1725,7 +1832,7 @@ Exit plan: TSLA long, Thu 2026-09-17, close above a level on 5-minute bars
   Flat by       15:55 ET, win or lose: no overnight hold
 Set before the entry. If price hits the stop, you are out; never move it further away.
 A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\plan.json.
+Wrote $TRADER_HOME/plan.json.
 Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
 [exit 0]
 
@@ -1747,7 +1854,7 @@ History: skipped: the history replay knows the opening-range breakout (orb) only
 Leans toward the target: target first 57.0 % vs stop first 41.0 %.
 
 A simulation built from TSLA's own last 37 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\timemachine.json.
+Wrote $TRADER_HOME/timemachine.json.
 Next: /trader-budget sizes it to your budget and your max loss per trade.
 [exit 0]
 
@@ -1771,7 +1878,7 @@ Flat by 15:55 New York: anything still open then gets closed (trader-alerts ring
 
 Next: trader-risk checks it, then trader-broker asks you yes or no.
 Education and tooling, not financial advice.
-Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\orders.json
+Wrote 1 proposed bracket order to $TRADER_HOME/orders.json
 [exit 0]
 
 $ python trader-risk/check.py --now "2026-09-17 09:45"
@@ -1814,12 +1921,28 @@ ORDER 1 of 1, PAPER account per your config, Alpaca
 One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
 [exit 0]
 
-[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+$ python trader-broker/ticket.py approve --index 1 --auto-yes --now "2026-09-17 09:45"
+Recorded an automatic yes for order 1 (--auto-yes: a practice run, paper per your config): BUY 10 TSLA, market, good for today / stop-loss 361.56 / take-profit 368.88 / max loss about $36.60 if the stop fills at 361.56 (it can fill worse in a fast market).
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+There is nothing to place. Practice the rest with: ticket.py result --index 1 --status placed|denied|failed --now ...
+[exit 0]
+
+[paper broker, simulated] the yes was automatic (ticket.py approve --auto-yes); this stands in for Allow once and Alpaca paper.
 place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "10", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "368.88", "stop_loss_stop_price": "361.56"}
   09:45 filled: bought 10 TSLA at 365.25 (market: the 09:45 bar's open)
   bracket legs working: stop-loss 361.56, take-profit 368.88
   09:55 take-profit filled: sold 10 at 368.88
   P&L +36.30; deepest open loss -11.10 at 09:45; best open gain +36.30 at 09:55
+
+$ python trader-broker/ticket.py result --index 1 --status placed --broker-id SIM-S10-2026-09-17 --filled-qty 10 --filled-price 365.25 --now "2026-09-17 09:45"
+Recorded order 1 as placed.
+It filled at 365.25, so the max loss at the stop 361.56 is $36.90 now; today's loss limit counts that.
+Added the fill to $TRADER_HOME/practice/portfolio.json.
+[exit 0]
+
+$ python trader-broker/ticket.py fill --practice --symbol TSLA --side sell --qty 10 --price 368.88 --now "2026-09-17 09:55"
+Recorded a practice fill: sell 10 TSLA at $368.88 on 2026-09-17 in $TRADER_HOME/practice/portfolio.json. Cash now $5,072.40.
+[exit 0]
 
 ====================================================================================================
 Fri 2026-09-18  account cash $5072.40
@@ -1915,7 +2038,7 @@ Opening range 9:30-9:45: high $376.51, low $371.11 (1 of 3 bars, still forming).
  9:40 bar  closed $375.44  TRIGGERED: closed above $370.90 (+1.22%). Get in now if you take it: 9:45 AM, $375.44
 This is the moment to get in, if you take the trade. Nothing was placed.
 Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\entry.json.
+Wrote $TRADER_HOME/entry.json.
 [exit 0]
 
 $ python trader-exit/exit.py plan --now "2026-09-21 09:45" --write --stop pct:1 --target 1R
@@ -1928,7 +2051,7 @@ Exit plan: TSLA long, Mon 2026-09-21, close above a level on 5-minute bars
   Flat by       15:55 ET, win or lose: no overnight hold
 Set before the entry. If price hits the stop, you are out; never move it further away.
 A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\plan.json.
+Wrote $TRADER_HOME/plan.json.
 Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
 [exit 0]
 
@@ -1950,7 +2073,7 @@ History: skipped: the history replay knows the opening-range breakout (orb) only
 Leans toward the target: target first 55.7 % vs stop first 42.2 %.
 
 A simulation built from TSLA's own last 39 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\timemachine.json.
+Wrote $TRADER_HOME/timemachine.json.
 Next: /trader-budget sizes it to your budget and your max loss per trade.
 [exit 0]
 
@@ -1974,7 +2097,7 @@ Flat by 15:55 New York: anything still open then gets closed (trader-alerts ring
 
 Next: trader-risk checks it, then trader-broker asks you yes or no.
 Education and tooling, not financial advice.
-Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\orders.json
+Wrote 1 proposed bracket order to $TRADER_HOME/orders.json
 [exit 0]
 
 $ python trader-risk/check.py --now "2026-09-21 09:45"
@@ -2017,12 +2140,82 @@ ORDER 1 of 1, PAPER account per your config, Alpaca
 One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
 [exit 0]
 
-[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+$ python trader-broker/ticket.py approve --index 1 --auto-yes --now "2026-09-21 09:45"
+Recorded an automatic yes for order 1 (--auto-yes: a practice run, paper per your config): BUY 9 TSLA, market, good for today / stop-loss 371.68 / take-profit 379.20 / max loss about $33.84 if the stop fills at 371.68 (it can fill worse in a fast market).
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+There is nothing to place. Practice the rest with: ticket.py result --index 1 --status placed|denied|failed --now ...
+[exit 0]
+
+[paper broker, simulated] the yes was automatic (ticket.py approve --auto-yes); this stands in for Allow once and Alpaca paper.
 place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "9", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "379.20", "stop_loss_stop_price": "371.68"}
   09:45 filled: bought 9 TSLA at 375.50 (market: the 09:45 bar's open)
   bracket legs working: stop-loss 371.68, take-profit 379.20
   15:55 flat-by: sold 9 at the open, 373.45
   P&L -18.45; deepest open loss -25.65 at 13:15; best open gain +25.74 at 10:30
+
+$ python trader-broker/ticket.py result --index 1 --status placed --broker-id SIM-S10-2026-09-21 --filled-qty 9 --filled-price 375.50 --now "2026-09-21 09:45"
+Recorded order 1 as placed.
+It filled at 375.50, so the max loss at the stop 371.68 is $34.38 now; today's loss limit counts that.
+Added the fill to $TRADER_HOME/practice/portfolio.json.
+[exit 0]
+
+$ python trader-broker/ticket.py flatten --symbol TSLA --now "2026-09-21 15:55"
+Flatten TSLA: SELL 9 shares of TSLA, market order, good for today (flat by 15:55 New York).
+Wrote it to $TRADER_HOME/orders.json (it replaced 1 earlier proposal).
+The qty comes from $TRADER_HOME/practice/portfolio.json. Check it against get_open_position TSLA before you say yes.
+Next:
+  1. trader-risk: check.py. A sell that only closes what you hold is never blocked by the daily
+     limits or the entry window.
+  2. ticket.py show, then the user's yes for this one order.
+  3. If the bracket's stop-loss and take-profit are still open, Alpaca holds these shares for them
+     and rejects a new sell. Cancel them first: get_orders (status open, nested true), then
+     cancel_order_by_id for each open leg (Needs approval). Then place_stock_order with the ticket.
+[exit 0]
+
+$ python trader-risk/check.py --now "2026-09-21 15:55"
+WARNING: no price for TSLA: valued at its cost basis $3,379.50
+
+PASS  #1 sell TSLA 9 shares, exit
+
+1 passed, 0 blocked at 2026-09-21 15:55 New York. Cash after the passed orders: $1,692.90 (paper account).
+Every order passed. trader-broker still asks you yes or no for each one.
+PRACTICE: the clock is pinned (--now or --today), so trader-broker treats these verdicts as practice, never as a real PASS.
+Education and tooling, not financial advice.
+[exit 0]
+
+$ python trader-broker/ticket.py show --now "2026-09-21 15:55"
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+
+ORDER 1 of 1, PAPER account per your config, Alpaca
+  SELL 9 shares of TSLA, market order, good for today
+  why: flat by 15:55 New York: closes the TSLA day trade before the close (qty from $TRADER_HOME/practice/portfolio.json)
+  READY: trader-risk PASS, waiting for your yes
+  Practice run: in a real one, Claude would call place_stock_order with exactly:
+    {
+      "symbol": "TSLA",
+      "side": "sell",
+      "qty": "9",
+      "type": "market",
+      "time_in_force": "day"
+    }
+  Reply "yes" to practice the yes, or "no" to skip it. Nothing is placed.
+
+One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
+[exit 0]
+
+$ python trader-broker/ticket.py approve --index 1 --auto-yes --now "2026-09-21 15:55"
+Recorded an automatic yes for order 1 (--auto-yes: a practice run, paper per your config): SELL 9 shares of TSLA, market order, good for today.
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+There is nothing to place. Practice the rest with: ticket.py result --index 1 --status placed|denied|failed --now ...
+[exit 0]
+
+[paper broker, simulated] the bracket's stop-loss and take-profit are canceled first (cancel_order_by_id), then this sell fills at the 15:55 bar's open, 373.45.
+place_stock_order {"symbol": "TSLA", "side": "sell", "qty": "9", "type": "market", "time_in_force": "day"}
+
+$ python trader-broker/ticket.py result --index 1 --status placed --broker-id SIM-S10-2026-09-21-flat --filled-qty 9 --filled-price 373.45 --now "2026-09-21 15:55"
+Recorded order 1 as placed.
+Added the fill to $TRADER_HOME/practice/portfolio.json.
+[exit 0]
 
 ====================================================================================================
 Tue 2026-09-22  account cash $5053.95
@@ -2042,7 +2235,7 @@ Opening range 9:30-9:45: high $379.25, low $374.67 (1 of 3 bars, still forming).
 10:10 bar  closed $378.39  TRIGGERED: closed above $378.36 (+0.01%). Get in now if you take it: 10:15 AM, $378.39
 This is the moment to get in, if you take the trade. Nothing was placed.
 Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\entry.json.
+Wrote $TRADER_HOME/entry.json.
 [exit 0]
 
 $ python trader-exit/exit.py plan --now "2026-09-22 10:15" --write --stop pct:1 --target 1R
@@ -2055,7 +2248,7 @@ Exit plan: TSLA long, Tue 2026-09-22, close above a level on 5-minute bars
   Flat by       15:55 ET, win or lose: no overnight hold
 Set before the entry. If price hits the stop, you are out; never move it further away.
 A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\plan.json.
+Wrote $TRADER_HOME/plan.json.
 Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
 [exit 0]
 
@@ -2077,7 +2270,7 @@ History: skipped: the history replay knows the opening-range breakout (orb) only
 Leans toward the target: target first 52.9 % vs stop first 40.8 %.
 
 A simulation built from TSLA's own last 40 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\timemachine.json.
+Wrote $TRADER_HOME/timemachine.json.
 Next: /trader-budget sizes it to your budget and your max loss per trade.
 [exit 0]
 
@@ -2101,7 +2294,7 @@ Flat by 15:55 New York: anything still open then gets closed (trader-alerts ring
 
 Next: trader-risk checks it, then trader-broker asks you yes or no.
 Education and tooling, not financial advice.
-Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\orders.json
+Wrote 1 proposed bracket order to $TRADER_HOME/orders.json
 [exit 0]
 
 $ python trader-risk/check.py --now "2026-09-22 10:15"
@@ -2144,12 +2337,81 @@ ORDER 1 of 1, PAPER account per your config, Alpaca
 One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
 [exit 0]
 
-[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+$ python trader-broker/ticket.py approve --index 1 --auto-yes --now "2026-09-22 10:15"
+Recorded an automatic yes for order 1 (--auto-yes: a practice run, paper per your config): BUY 9 TSLA, market, good for today / stop-loss 374.60 / take-profit 382.18 / max loss about $34.11 if the stop fills at 374.60 (it can fill worse in a fast market).
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+There is nothing to place. Practice the rest with: ticket.py result --index 1 --status placed|denied|failed --now ...
+[exit 0]
+
+[paper broker, simulated] the yes was automatic (ticket.py approve --auto-yes); this stands in for Allow once and Alpaca paper.
 place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "9", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "382.18", "stop_loss_stop_price": "374.60"}
   10:15 filled: bought 9 TSLA at 378.35 (market: the 10:15 bar's open)
   bracket legs working: stop-loss 374.60, take-profit 382.18
   15:55 flat-by: sold 9 at the open, 379.40
   P&L +9.45; deepest open loss -26.10 at 11:35; best open gain +18.63 at 15:50
+
+$ python trader-broker/ticket.py result --index 1 --status placed --broker-id SIM-S10-2026-09-22 --filled-qty 9 --filled-price 378.35 --now "2026-09-22 10:15"
+Recorded order 1 as placed.
+Added the fill to $TRADER_HOME/practice/portfolio.json.
+[exit 0]
+
+$ python trader-broker/ticket.py flatten --symbol TSLA --now "2026-09-22 15:55"
+Flatten TSLA: SELL 9 shares of TSLA, market order, good for today (flat by 15:55 New York).
+Wrote it to $TRADER_HOME/orders.json (it replaced 1 earlier proposal).
+The qty comes from $TRADER_HOME/practice/portfolio.json. Check it against get_open_position TSLA before you say yes.
+Next:
+  1. trader-risk: check.py. A sell that only closes what you hold is never blocked by the daily
+     limits or the entry window.
+  2. ticket.py show, then the user's yes for this one order.
+  3. If the bracket's stop-loss and take-profit are still open, Alpaca holds these shares for them
+     and rejects a new sell. Cancel them first: get_orders (status open, nested true), then
+     cancel_order_by_id for each open leg (Needs approval). Then place_stock_order with the ticket.
+[exit 0]
+
+$ python trader-risk/check.py --now "2026-09-22 15:55"
+WARNING: no price for TSLA: valued at its cost basis $3,405.15
+
+PASS  #1 sell TSLA 9 shares, exit
+
+1 passed, 0 blocked at 2026-09-22 15:55 New York. Cash after the passed orders: $1,648.80 (paper account).
+Every order passed. trader-broker still asks you yes or no for each one.
+PRACTICE: the clock is pinned (--now or --today), so trader-broker treats these verdicts as practice, never as a real PASS.
+Education and tooling, not financial advice.
+[exit 0]
+
+$ python trader-broker/ticket.py show --now "2026-09-22 15:55"
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+
+ORDER 1 of 1, PAPER account per your config, Alpaca
+  SELL 9 shares of TSLA, market order, good for today
+  why: flat by 15:55 New York: closes the TSLA day trade before the close (qty from $TRADER_HOME/practice/portfolio.json)
+  READY: trader-risk PASS, waiting for your yes
+  Practice run: in a real one, Claude would call place_stock_order with exactly:
+    {
+      "symbol": "TSLA",
+      "side": "sell",
+      "qty": "9",
+      "type": "market",
+      "time_in_force": "day"
+    }
+  Reply "yes" to practice the yes, or "no" to skip it. Nothing is placed.
+
+One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
+[exit 0]
+
+$ python trader-broker/ticket.py approve --index 1 --auto-yes --now "2026-09-22 15:55"
+Recorded an automatic yes for order 1 (--auto-yes: a practice run, paper per your config): SELL 9 shares of TSLA, market order, good for today.
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+There is nothing to place. Practice the rest with: ticket.py result --index 1 --status placed|denied|failed --now ...
+[exit 0]
+
+[paper broker, simulated] the bracket's stop-loss and take-profit are canceled first (cancel_order_by_id), then this sell fills at the 15:55 bar's open, 379.40.
+place_stock_order {"symbol": "TSLA", "side": "sell", "qty": "9", "type": "market", "time_in_force": "day"}
+
+$ python trader-broker/ticket.py result --index 1 --status placed --broker-id SIM-S10-2026-09-22-flat --filled-qty 9 --filled-price 379.40 --now "2026-09-22 15:55"
+Recorded order 1 as placed.
+Added the fill to $TRADER_HOME/practice/portfolio.json.
+[exit 0]
 
 ====================================================================================================
 Wed 2026-09-23  account cash $5063.40
@@ -2163,7 +2425,7 @@ Opening range 9:30-9:45: high $384.76, low $379.93 (1 of 3 bars, still forming).
  9:40 bar  closed $382.36  TRIGGERED: closed above $380.42 (+0.51%). Get in now if you take it: 9:45 AM, $382.36
 This is the moment to get in, if you take the trade. Nothing was placed.
 Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\entry.json.
+Wrote $TRADER_HOME/entry.json.
 [exit 0]
 
 $ python trader-exit/exit.py plan --now "2026-09-23 09:45" --write --stop pct:1 --target 1R
@@ -2176,7 +2438,7 @@ Exit plan: TSLA long, Wed 2026-09-23, close above a level on 5-minute bars
   Flat by       15:55 ET, win or lose: no overnight hold
 Set before the entry. If price hits the stop, you are out; never move it further away.
 A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\plan.json.
+Wrote $TRADER_HOME/plan.json.
 Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
 [exit 0]
 
@@ -2198,7 +2460,7 @@ History: skipped: the history replay knows the opening-range breakout (orb) only
 Leans toward the target: target first 56.7 % vs stop first 40.9 %.
 
 A simulation built from TSLA's own last 41 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\timemachine.json.
+Wrote $TRADER_HOME/timemachine.json.
 Next: /trader-budget sizes it to your budget and your max loss per trade.
 [exit 0]
 
@@ -2222,7 +2484,7 @@ Flat by 15:55 New York: anything still open then gets closed (trader-alerts ring
 
 Next: trader-risk checks it, then trader-broker asks you yes or no.
 Education and tooling, not financial advice.
-Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\orders.json
+Wrote 1 proposed bracket order to $TRADER_HOME/orders.json
 [exit 0]
 
 $ python trader-risk/check.py --now "2026-09-23 09:45"
@@ -2265,12 +2527,27 @@ ORDER 1 of 1, PAPER account per your config, Alpaca
 One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
 [exit 0]
 
-[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+$ python trader-broker/ticket.py approve --index 1 --auto-yes --now "2026-09-23 09:45"
+Recorded an automatic yes for order 1 (--auto-yes: a practice run, paper per your config): BUY 9 TSLA, market, good for today / stop-loss 378.53 / take-profit 386.19 / max loss about $34.47 if the stop fills at 378.53 (it can fill worse in a fast market).
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+There is nothing to place. Practice the rest with: ticket.py result --index 1 --status placed|denied|failed --now ...
+[exit 0]
+
+[paper broker, simulated] the yes was automatic (ticket.py approve --auto-yes); this stands in for Allow once and Alpaca paper.
 place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "9", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "386.19", "stop_loss_stop_price": "378.53"}
   09:45 filled: bought 9 TSLA at 382.31 (market: the 09:45 bar's open)
   bracket legs working: stop-loss 378.53, take-profit 386.19
   10:00 take-profit filled: sold 9 at 386.19
   P&L +34.92; deepest open loss -2.79 at 09:45; best open gain +34.92 at 10:00
+
+$ python trader-broker/ticket.py result --index 1 --status placed --broker-id SIM-S10-2026-09-23 --filled-qty 9 --filled-price 382.31 --now "2026-09-23 09:45"
+Recorded order 1 as placed.
+Added the fill to $TRADER_HOME/practice/portfolio.json.
+[exit 0]
+
+$ python trader-broker/ticket.py fill --practice --symbol TSLA --side sell --qty 9 --price 386.19 --now "2026-09-23 10:00"
+Recorded a practice fill: sell 9 TSLA at $386.19 on 2026-09-23 in $TRADER_HOME/practice/portfolio.json. Cash now $5,098.32.
+[exit 0]
 
 ====================================================================================================
 Thu 2026-09-24  account cash $5098.32
@@ -2694,7 +2971,7 @@ Opening range 9:30-9:45: high $358.40, low $355.32 (1 of 3 bars, still forming).
  9:40 bar  closed $357.42  TRIGGERED: closed above $355.22 (+0.62%). Get in now if you take it: 9:45 AM, $357.42
 This is the moment to get in, if you take the trade. Nothing was placed.
 Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\entry.json.
+Wrote $TRADER_HOME/entry.json.
 [exit 0]
 
 $ python trader-exit/exit.py plan --now "2026-10-01 09:45" --write --stop pct:1 --target 1R
@@ -2707,7 +2984,7 @@ Exit plan: TSLA long, Thu 2026-10-01, close above a level on 5-minute bars
   Flat by       15:55 ET, win or lose: no overnight hold
 Set before the entry. If price hits the stop, you are out; never move it further away.
 A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\plan.json.
+Wrote $TRADER_HOME/plan.json.
 Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
 [exit 0]
 
@@ -2729,7 +3006,7 @@ History: skipped: the history replay knows the opening-range breakout (orb) only
 Leans toward the target: target first 56.1 % vs stop first 41.3 %.
 
 A simulation built from TSLA's own last 47 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\timemachine.json.
+Wrote $TRADER_HOME/timemachine.json.
 Next: /trader-budget sizes it to your budget and your max loss per trade.
 [exit 0]
 
@@ -2753,7 +3030,7 @@ Flat by 15:55 New York: anything still open then gets closed (trader-alerts ring
 
 Next: trader-risk checks it, then trader-broker asks you yes or no.
 Education and tooling, not financial advice.
-Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\orders.json
+Wrote 1 proposed bracket order to $TRADER_HOME/orders.json
 [exit 0]
 
 $ python trader-risk/check.py --now "2026-10-01 09:45"
@@ -2796,12 +3073,27 @@ ORDER 1 of 1, PAPER account per your config, Alpaca
 One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
 [exit 0]
 
-[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+$ python trader-broker/ticket.py approve --index 1 --auto-yes --now "2026-10-01 09:45"
+Recorded an automatic yes for order 1 (--auto-yes: a practice run, paper per your config): BUY 10 TSLA, market, good for today / stop-loss 353.84 / take-profit 361.00 / max loss about $35.80 if the stop fills at 353.84 (it can fill worse in a fast market).
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+There is nothing to place. Practice the rest with: ticket.py result --index 1 --status placed|denied|failed --now ...
+[exit 0]
+
+[paper broker, simulated] the yes was automatic (ticket.py approve --auto-yes); this stands in for Allow once and Alpaca paper.
 place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "10", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "361.00", "stop_loss_stop_price": "353.84"}
   09:45 filled: bought 10 TSLA at 356.74 (market: the 09:45 bar's open)
   bracket legs working: stop-loss 353.84, take-profit 361.00
   10:00 stop-loss filled: sold 10 at 353.84
   P&L -29.00; deepest open loss -29.00 at 10:00; best open gain +9.00 at 09:45
+
+$ python trader-broker/ticket.py result --index 1 --status placed --broker-id SIM-S10-2026-10-01 --filled-qty 10 --filled-price 356.74 --now "2026-10-01 09:45"
+Recorded order 1 as placed.
+Added the fill to $TRADER_HOME/practice/portfolio.json.
+[exit 0]
+
+$ python trader-broker/ticket.py fill --practice --symbol TSLA --side sell --qty 10 --price 353.84 --now "2026-10-01 10:00"
+Recorded a practice fill: sell 10 TSLA at $353.84 on 2026-10-01 in $TRADER_HOME/practice/portfolio.json. Cash now $5,069.32.
+[exit 0]
 
 ====================================================================================================
 Fri 2026-10-02  account cash $5069.32
@@ -2815,7 +3107,7 @@ Opening range 9:30-9:45: high $368.39, low $359.41 (1 of 3 bars, still forming).
  9:40 bar  closed $369.20  TRIGGERED: closed above $359.79 (+2.62%). Get in now if you take it: 9:45 AM, $369.20
 This is the moment to get in, if you take the trade. Nothing was placed.
 Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\entry.json.
+Wrote $TRADER_HOME/entry.json.
 [exit 0]
 
 $ python trader-exit/exit.py plan --now "2026-10-02 09:45" --write --stop pct:1 --target 1R
@@ -2828,7 +3120,7 @@ Exit plan: TSLA long, Fri 2026-10-02, close above a level on 5-minute bars
   Flat by       15:55 ET, win or lose: no overnight hold
 Set before the entry. If price hits the stop, you are out; never move it further away.
 A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\plan.json.
+Wrote $TRADER_HOME/plan.json.
 Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
 [exit 0]
 
@@ -2850,7 +3142,7 @@ History: skipped: the history replay knows the opening-range breakout (orb) only
 Leans toward the target: target first 55.2 % vs stop first 42.1 %.
 
 A simulation built from TSLA's own last 48 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\timemachine.json.
+Wrote $TRADER_HOME/timemachine.json.
 Next: /trader-budget sizes it to your budget and your max loss per trade.
 [exit 0]
 
@@ -2874,7 +3166,7 @@ Flat by 15:55 New York: anything still open then gets closed (trader-alerts ring
 
 Next: trader-risk checks it, then trader-broker asks you yes or no.
 Education and tooling, not financial advice.
-Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\orders.json
+Wrote 1 proposed bracket order to $TRADER_HOME/orders.json
 [exit 0]
 
 $ python trader-risk/check.py --now "2026-10-02 09:45"
@@ -2917,12 +3209,27 @@ ORDER 1 of 1, PAPER account per your config, Alpaca
 One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
 [exit 0]
 
-[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+$ python trader-broker/ticket.py approve --index 1 --auto-yes --now "2026-10-02 09:45"
+Recorded an automatic yes for order 1 (--auto-yes: a practice run, paper per your config): BUY 10 TSLA, market, good for today / stop-loss 365.50 / take-profit 372.90 / max loss about $37 if the stop fills at 365.50 (it can fill worse in a fast market).
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+There is nothing to place. Practice the rest with: ticket.py result --index 1 --status placed|denied|failed --now ...
+[exit 0]
+
+[paper broker, simulated] the yes was automatic (ticket.py approve --auto-yes); this stands in for Allow once and Alpaca paper.
 place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "10", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "372.90", "stop_loss_stop_price": "365.50"}
   09:45 filled: bought 10 TSLA at 369.17 (market: the 09:45 bar's open)
   bracket legs working: stop-loss 365.50, take-profit 372.90
   10:10 take-profit filled: sold 10 at 372.90
   P&L +37.30; deepest open loss -12.80 at 09:45; best open gain +37.30 at 10:10
+
+$ python trader-broker/ticket.py result --index 1 --status placed --broker-id SIM-S10-2026-10-02 --filled-qty 10 --filled-price 369.17 --now "2026-10-02 09:45"
+Recorded order 1 as placed.
+Added the fill to $TRADER_HOME/practice/portfolio.json.
+[exit 0]
+
+$ python trader-broker/ticket.py fill --practice --symbol TSLA --side sell --qty 10 --price 372.90 --now "2026-10-02 10:10"
+Recorded a practice fill: sell 10 TSLA at $372.90 on 2026-10-02 in $TRADER_HOME/practice/portfolio.json. Cash now $5,106.62.
+[exit 0]
 
 ====================================================================================================
 Mon 2026-10-05  account cash $5106.62
@@ -2938,7 +3245,7 @@ Opening range 9:30-9:45: high $369.30, low $364.91 (1 of 3 bars, still forming).
  9:50 bar  closed $375.33  TRIGGERED: closed above $374.60 (+0.19%). Get in now if you take it: 9:55 AM, $375.33
 This is the moment to get in, if you take the trade. Nothing was placed.
 Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\entry.json.
+Wrote $TRADER_HOME/entry.json.
 [exit 0]
 
 $ python trader-exit/exit.py plan --now "2026-10-05 09:55" --write --stop pct:1 --target 1R
@@ -2951,7 +3258,7 @@ Exit plan: TSLA long, Mon 2026-10-05, close above a level on 5-minute bars
   Flat by       15:55 ET, win or lose: no overnight hold
 Set before the entry. If price hits the stop, you are out; never move it further away.
 A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\plan.json.
+Wrote $TRADER_HOME/plan.json.
 Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
 [exit 0]
 
@@ -2973,7 +3280,7 @@ History: skipped: the history replay knows the opening-range breakout (orb) only
 Close to a coin flip: target first 51.5 % vs stop first 44.1 %.
 
 A simulation built from TSLA's own last 49 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\timemachine.json.
+Wrote $TRADER_HOME/timemachine.json.
 Next: /trader-budget sizes it to your budget and your max loss per trade.
 [exit 0]
 
@@ -2997,7 +3304,7 @@ Flat by 15:55 New York: anything still open then gets closed (trader-alerts ring
 
 Next: trader-risk checks it, then trader-broker asks you yes or no.
 Education and tooling, not financial advice.
-Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\orders.json
+Wrote 1 proposed bracket order to $TRADER_HOME/orders.json
 [exit 0]
 
 $ python trader-risk/check.py --now "2026-10-05 09:55"
@@ -3040,12 +3347,27 @@ ORDER 1 of 1, PAPER account per your config, Alpaca
 One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
 [exit 0]
 
-[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+$ python trader-broker/ticket.py approve --index 1 --auto-yes --now "2026-10-05 09:55"
+Recorded an automatic yes for order 1 (--auto-yes: a practice run, paper per your config): BUY 9 TSLA, market, good for today / stop-loss 371.57 / take-profit 379.09 / max loss about $33.84 if the stop fills at 371.57 (it can fill worse in a fast market).
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+There is nothing to place. Practice the rest with: ticket.py result --index 1 --status placed|denied|failed --now ...
+[exit 0]
+
+[paper broker, simulated] the yes was automatic (ticket.py approve --auto-yes); this stands in for Allow once and Alpaca paper.
 place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "9", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "379.09", "stop_loss_stop_price": "371.57"}
   09:55 filled: bought 9 TSLA at 375.33 (market: the 09:55 bar's open)
   bracket legs working: stop-loss 371.57, take-profit 379.09
   10:10 take-profit filled: sold 9 at 379.09
   P&L +33.84; deepest open loss -7.38 at 10:00; best open gain +33.84 at 10:10
+
+$ python trader-broker/ticket.py result --index 1 --status placed --broker-id SIM-S10-2026-10-05 --filled-qty 9 --filled-price 375.33 --now "2026-10-05 09:55"
+Recorded order 1 as placed.
+Added the fill to $TRADER_HOME/practice/portfolio.json.
+[exit 0]
+
+$ python trader-broker/ticket.py fill --practice --symbol TSLA --side sell --qty 9 --price 379.09 --now "2026-10-05 10:10"
+Recorded a practice fill: sell 9 TSLA at $379.09 on 2026-10-05 in $TRADER_HOME/practice/portfolio.json. Cash now $5,140.46.
+[exit 0]
 
 ====================================================================================================
 Tue 2026-10-06  account cash $5140.46
@@ -3065,7 +3387,7 @@ Opening range 9:30-9:45: high $382.94, low $378.52 (1 of 3 bars, still forming).
 10:10 bar  closed $381.72  TRIGGERED: closed above $381.59 (+0.03%). Get in now if you take it: 10:15 AM, $381.72
 This is the moment to get in, if you take the trade. Nothing was placed.
 Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\entry.json.
+Wrote $TRADER_HOME/entry.json.
 [exit 0]
 
 $ python trader-exit/exit.py plan --now "2026-10-06 10:15" --write --stop pct:1 --target 1R
@@ -3078,7 +3400,7 @@ Exit plan: TSLA long, Tue 2026-10-06, close above a level on 5-minute bars
   Flat by       15:55 ET, win or lose: no overnight hold
 Set before the entry. If price hits the stop, you are out; never move it further away.
 A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\plan.json.
+Wrote $TRADER_HOME/plan.json.
 Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
 [exit 0]
 
@@ -3100,7 +3422,7 @@ History: skipped: the history replay knows the opening-range breakout (orb) only
 Close to a coin flip: target first 50.2 % vs stop first 42.2 %.
 
 A simulation built from TSLA's own last 50 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\timemachine.json.
+Wrote $TRADER_HOME/timemachine.json.
 Next: /trader-budget sizes it to your budget and your max loss per trade.
 [exit 0]
 
@@ -3124,7 +3446,7 @@ Flat by 15:55 New York: anything still open then gets closed (trader-alerts ring
 
 Next: trader-risk checks it, then trader-broker asks you yes or no.
 Education and tooling, not financial advice.
-Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\orders.json
+Wrote 1 proposed bracket order to $TRADER_HOME/orders.json
 [exit 0]
 
 $ python trader-risk/check.py --now "2026-10-06 10:15"
@@ -3167,12 +3489,81 @@ ORDER 1 of 1, PAPER account per your config, Alpaca
 One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
 [exit 0]
 
-[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+$ python trader-broker/ticket.py approve --index 1 --auto-yes --now "2026-10-06 10:15"
+Recorded an automatic yes for order 1 (--auto-yes: a practice run, paper per your config): BUY 9 TSLA, market, good for today / stop-loss 377.90 / take-profit 385.54 / max loss about $34.38 if the stop fills at 377.90 (it can fill worse in a fast market).
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+There is nothing to place. Practice the rest with: ticket.py result --index 1 --status placed|denied|failed --now ...
+[exit 0]
+
+[paper broker, simulated] the yes was automatic (ticket.py approve --auto-yes); this stands in for Allow once and Alpaca paper.
 place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "9", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "385.54", "stop_loss_stop_price": "377.90"}
   10:15 filled: bought 9 TSLA at 381.70 (market: the 10:15 bar's open)
   bracket legs working: stop-loss 377.90, take-profit 385.54
   15:55 flat-by: sold 9 at the open, 380.65
   P&L -9.45; deepest open loss -21.42 at 15:15; best open gain +4.23 at 10:20
+
+$ python trader-broker/ticket.py result --index 1 --status placed --broker-id SIM-S10-2026-10-06 --filled-qty 9 --filled-price 381.70 --now "2026-10-06 10:15"
+Recorded order 1 as placed.
+Added the fill to $TRADER_HOME/practice/portfolio.json.
+[exit 0]
+
+$ python trader-broker/ticket.py flatten --symbol TSLA --now "2026-10-06 15:55"
+Flatten TSLA: SELL 9 shares of TSLA, market order, good for today (flat by 15:55 New York).
+Wrote it to $TRADER_HOME/orders.json (it replaced 1 earlier proposal).
+The qty comes from $TRADER_HOME/practice/portfolio.json. Check it against get_open_position TSLA before you say yes.
+Next:
+  1. trader-risk: check.py. A sell that only closes what you hold is never blocked by the daily
+     limits or the entry window.
+  2. ticket.py show, then the user's yes for this one order.
+  3. If the bracket's stop-loss and take-profit are still open, Alpaca holds these shares for them
+     and rejects a new sell. Cancel them first: get_orders (status open, nested true), then
+     cancel_order_by_id for each open leg (Needs approval). Then place_stock_order with the ticket.
+[exit 0]
+
+$ python trader-risk/check.py --now "2026-10-06 15:55"
+WARNING: no price for TSLA: valued at its cost basis $3,435.30
+
+PASS  #1 sell TSLA 9 shares, exit
+
+1 passed, 0 blocked at 2026-10-06 15:55 New York. Cash after the passed orders: $1,705.16 (paper account).
+Every order passed. trader-broker still asks you yes or no for each one.
+PRACTICE: the clock is pinned (--now or --today), so trader-broker treats these verdicts as practice, never as a real PASS.
+Education and tooling, not financial advice.
+[exit 0]
+
+$ python trader-broker/ticket.py show --now "2026-10-06 15:55"
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+
+ORDER 1 of 1, PAPER account per your config, Alpaca
+  SELL 9 shares of TSLA, market order, good for today
+  why: flat by 15:55 New York: closes the TSLA day trade before the close (qty from $TRADER_HOME/practice/portfolio.json)
+  READY: trader-risk PASS, waiting for your yes
+  Practice run: in a real one, Claude would call place_stock_order with exactly:
+    {
+      "symbol": "TSLA",
+      "side": "sell",
+      "qty": "9",
+      "type": "market",
+      "time_in_force": "day"
+    }
+  Reply "yes" to practice the yes, or "no" to skip it. Nothing is placed.
+
+One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
+[exit 0]
+
+$ python trader-broker/ticket.py approve --index 1 --auto-yes --now "2026-10-06 15:55"
+Recorded an automatic yes for order 1 (--auto-yes: a practice run, paper per your config): SELL 9 shares of TSLA, market order, good for today.
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+There is nothing to place. Practice the rest with: ticket.py result --index 1 --status placed|denied|failed --now ...
+[exit 0]
+
+[paper broker, simulated] the bracket's stop-loss and take-profit are canceled first (cancel_order_by_id), then this sell fills at the 15:55 bar's open, 380.65.
+place_stock_order {"symbol": "TSLA", "side": "sell", "qty": "9", "type": "market", "time_in_force": "day"}
+
+$ python trader-broker/ticket.py result --index 1 --status placed --broker-id SIM-S10-2026-10-06-flat --filled-qty 9 --filled-price 380.65 --now "2026-10-06 15:55"
+Recorded order 1 as placed.
+Added the fill to $TRADER_HOME/practice/portfolio.json.
+[exit 0]
 
 ====================================================================================================
 Wed 2026-10-07  account cash $5131.01
@@ -3350,7 +3741,7 @@ Opening range 9:30-9:45: high $385.74, low $381.24 (1 of 3 bars, still forming).
  9:40 bar  closed $386.68  TRIGGERED: closed above $375.96 (+2.85%). Get in now if you take it: 9:45 AM, $386.68
 This is the moment to get in, if you take the trade. Nothing was placed.
 Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\entry.json.
+Wrote $TRADER_HOME/entry.json.
 [exit 0]
 
 $ python trader-exit/exit.py plan --now "2026-10-09 09:45" --write --stop pct:1 --target 1R
@@ -3363,7 +3754,7 @@ Exit plan: TSLA long, Fri 2026-10-09, close above a level on 5-minute bars
   Flat by       15:55 ET, win or lose: no overnight hold
 Set before the entry. If price hits the stop, you are out; never move it further away.
 A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\plan.json.
+Wrote $TRADER_HOME/plan.json.
 Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
 [exit 0]
 
@@ -3385,7 +3776,7 @@ History: skipped: the history replay knows the opening-range breakout (orb) only
 Leans toward the target: target first 55.5 % vs stop first 41.4 %.
 
 A simulation built from TSLA's own last 53 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\timemachine.json.
+Wrote $TRADER_HOME/timemachine.json.
 Next: /trader-budget sizes it to your budget and your max loss per trade.
 [exit 0]
 
@@ -3409,7 +3800,7 @@ Flat by 15:55 New York: anything still open then gets closed (trader-alerts ring
 
 Next: trader-risk checks it, then trader-broker asks you yes or no.
 Education and tooling, not financial advice.
-Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\orders.json
+Wrote 1 proposed bracket order to $TRADER_HOME/orders.json
 [exit 0]
 
 $ python trader-risk/check.py --now "2026-10-09 09:45"
@@ -3452,12 +3843,28 @@ ORDER 1 of 1, PAPER account per your config, Alpaca
 One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
 [exit 0]
 
-[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+$ python trader-broker/ticket.py approve --index 1 --auto-yes --now "2026-10-09 09:45"
+Recorded an automatic yes for order 1 (--auto-yes: a practice run, paper per your config): BUY 9 TSLA, market, good for today / stop-loss 382.81 / take-profit 390.55 / max loss about $34.83 if the stop fills at 382.81 (it can fill worse in a fast market).
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+There is nothing to place. Practice the rest with: ticket.py result --index 1 --status placed|denied|failed --now ...
+[exit 0]
+
+[paper broker, simulated] the yes was automatic (ticket.py approve --auto-yes); this stands in for Allow once and Alpaca paper.
 place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "9", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "390.55", "stop_loss_stop_price": "382.81"}
   09:45 filled: bought 9 TSLA at 386.72 (market: the 09:45 bar's open)
   bracket legs working: stop-loss 382.81, take-profit 390.55
   11:25 stop-loss filled: sold 9 at 382.81
   P&L -35.19; deepest open loss -35.19 at 11:25; best open gain +16.56 at 09:50
+
+$ python trader-broker/ticket.py result --index 1 --status placed --broker-id SIM-S10-2026-10-09 --filled-qty 9 --filled-price 386.72 --now "2026-10-09 09:45"
+Recorded order 1 as placed.
+It filled at 386.72, so the max loss at the stop 382.81 is $35.19 now; today's loss limit counts that.
+Added the fill to $TRADER_HOME/practice/portfolio.json.
+[exit 0]
+
+$ python trader-broker/ticket.py fill --practice --symbol TSLA --side sell --qty 9 --price 382.81 --now "2026-10-09 11:25"
+Recorded a practice fill: sell 9 TSLA at $382.81 on 2026-10-09 in $TRADER_HOME/practice/portfolio.json. Cash now $5,095.82.
+[exit 0]
 
 ====================================================================================================
 Mon 2026-10-12  account cash $5095.82
@@ -3799,7 +4206,7 @@ Opening range 9:30-9:45: high $370.58, low $364.15 (1 of 3 bars, still forming).
  9:40 bar  closed $368.85  TRIGGERED: closed above $363.75 (+1.40%). Get in now if you take it: 9:45 AM, $368.85
 This is the moment to get in, if you take the trade. Nothing was placed.
 Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\entry.json.
+Wrote $TRADER_HOME/entry.json.
 [exit 0]
 
 $ python trader-exit/exit.py plan --now "2026-10-16 09:45" --write --stop pct:1 --target 1R
@@ -3812,7 +4219,7 @@ Exit plan: TSLA long, Fri 2026-10-16, close above a level on 5-minute bars
   Flat by       15:55 ET, win or lose: no overnight hold
 Set before the entry. If price hits the stop, you are out; never move it further away.
 A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\plan.json.
+Wrote $TRADER_HOME/plan.json.
 Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
 [exit 0]
 
@@ -3834,7 +4241,7 @@ History: skipped: the history replay knows the opening-range breakout (orb) only
 Leans toward the target: target first 53.3 % vs stop first 43.1 %.
 
 A simulation built from TSLA's own last 58 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
-Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\timemachine.json.
+Wrote $TRADER_HOME/timemachine.json.
 Next: /trader-budget sizes it to your budget and your max loss per trade.
 [exit 0]
 
@@ -3858,7 +4265,7 @@ Flat by 15:55 New York: anything still open then gets closed (trader-alerts ring
 
 Next: trader-risk checks it, then trader-broker asks you yes or no.
 Education and tooling, not financial advice.
-Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S10-prior-day-high\trader-home\orders.json
+Wrote 1 proposed bracket order to $TRADER_HOME/orders.json
 [exit 0]
 
 $ python trader-risk/check.py --now "2026-10-16 09:45"
@@ -3901,10 +4308,25 @@ ORDER 1 of 1, PAPER account per your config, Alpaca
 One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
 [exit 0]
 
-[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+$ python trader-broker/ticket.py approve --index 1 --auto-yes --now "2026-10-16 09:45"
+Recorded an automatic yes for order 1 (--auto-yes: a practice run, paper per your config): BUY 10 TSLA, market, good for today / stop-loss 365.16 / take-profit 372.54 / max loss about $36.90 if the stop fills at 365.16 (it can fill worse in a fast market).
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+There is nothing to place. Practice the rest with: ticket.py result --index 1 --status placed|denied|failed --now ...
+[exit 0]
+
+[paper broker, simulated] the yes was automatic (ticket.py approve --auto-yes); this stands in for Allow once and Alpaca paper.
 place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "10", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "372.54", "stop_loss_stop_price": "365.16"}
   09:45 filled: bought 10 TSLA at 368.80 (market: the 09:45 bar's open)
   bracket legs working: stop-loss 365.16, take-profit 372.54
   09:50 stop-loss filled: sold 10 at 365.16
   P&L -36.40; deepest open loss -36.40 at 09:50; best open gain +14.80 at 09:45
+
+$ python trader-broker/ticket.py result --index 1 --status placed --broker-id SIM-S10-2026-10-16 --filled-qty 10 --filled-price 368.80 --now "2026-10-16 09:45"
+Recorded order 1 as placed.
+Added the fill to $TRADER_HOME/practice/portfolio.json.
+[exit 0]
+
+$ python trader-broker/ticket.py fill --practice --symbol TSLA --side sell --qty 10 --price 365.16 --now "2026-10-16 09:50"
+Recorded a practice fill: sell 10 TSLA at $365.16 on 2026-10-16 in $TRADER_HOME/practice/portfolio.json. Cash now $5,059.42.
+[exit 0]
 

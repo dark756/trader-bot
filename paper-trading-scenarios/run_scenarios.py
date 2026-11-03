@@ -4,11 +4,18 @@ Each scenario runs the real tools, one session at a time, on a pinned clock
 (practice runs), in its own trader folder (TRADER_HOME):
 
   entry.py watch -> exit.py plan -> timemachine.py run -> size.py -> check.py -> ticket.py show
+  -> ticket.py approve --auto-yes -> (simulated paper broker) -> ticket.py result, and the exit:
+     ticket.py fill --practice for the stop-loss or take-profit, or at 15:55
+     ticket.py flatten -> check.py -> ticket.py show -> approve --auto-yes -> result
 
-Nobody says yes and nothing is placed: CLAUDE.md forbids approving an order on
-the user's behalf, even a practice one. Where the ticket is READY, a simulated
-paper broker takes the exact place_stock_order arguments the ticket shows and
-fills the bracket against that session's own 5-minute bars (rules in README.md).
+Where the ticket is READY, the yes is automatic (ticket.py approve --auto-yes,
+which works only on a pinned clock with "paper": true), and a simulated paper
+broker takes the exact place_stock_order arguments the ticket shows and fills
+the bracket against that session's own 5-minute bars (rules in README.md).
+Nothing goes to a broker. The tools record every yes, placement and fill in
+the scenario's practice log and portfolio, as they would on a real day, so
+trader-risk counts them; each evening the tools' cash must match the
+simulated broker's.
 
     python -B paper-trading-scenarios/run_scenarios.py            # all 13
     python -B paper-trading-scenarios/run_scenarios.py S01 S07    # some
@@ -76,7 +83,10 @@ CSV_FIELDS = ["date", "weekday", "action", "reason", "signal_time", "signal_pric
               "order_type", "limit_price", "shares", "limit_binding", "risk_verdict", "gate_max_loss",
               "ticket_status", "fill_time", "fill_price", "fill_minus_plan", "exit_time", "exit_price",
               "exit_reason", "stop_and_target_same_bar", "pnl", "r_multiple", "loss_at_stop_after_fill",
-              "max_open_loss", "max_open_loss_time", "max_open_gain", "cash_after"]
+              "max_open_loss", "max_open_loss_time", "max_open_gain", "cash_after",
+              "approved_by", "exit_recorded_by", "tools_cash_after", "books"]
+PRACTICE_LOG = os.path.join("practice", "state", "broker.json")
+BOOK = os.path.join("practice", "portfolio.json")
 
 
 def load_sessions():
@@ -122,12 +132,17 @@ def run(log, home, args):
     done = subprocess.run([sys.executable, "-B"] + args, cwd=REPO, env=env, capture_output=True, text=True,
                           encoding="utf-8")
     shown = ['"%s"' % arg if " " in arg else arg for arg in ["python"] + args]
-    log.write("$ %s\n" % " ".join(shown).replace(home.replace("\\", "/"), "$TRADER_HOME").replace(home, "$TRADER_HOME"))
-    log.write(done.stdout)
+    log.write("$ %s\n" % trader_home_text(" ".join(shown), home))
+    log.write(trader_home_text(done.stdout, home))     # the tools print full paths: the same on every machine
     if done.stderr:
-        log.write(done.stderr)
+        log.write(trader_home_text(done.stderr, home))
     log.write("[exit %d]\n\n" % done.returncode)
     return done
+
+
+def trader_home_text(text, home):
+    """Printed text with the trader folder's full path written as $TRADER_HOME."""
+    return text.replace(home.replace("\\", "/"), "$TRADER_HOME").replace(home, "$TRADER_HOME")
 
 
 def last_line(done):
@@ -240,6 +255,35 @@ def trimmed_time_machine(doc):
     return doc
 
 
+def portable_text(text, home):
+    """JSON text with the trader folder's full path written as $TRADER_HOME: the tools record where they
+    ran, and the saved files should read the same on every machine."""
+    for form in (home, home.replace("\\", "/")):
+        text = text.replace(json.dumps(form)[1:-1], "$TRADER_HOME")
+    return text
+
+
+def portable(doc, home):
+    return json.loads(portable_text(json.dumps(doc), home))
+
+
+def portable_folder(home):
+    """The trader folder as the last session left it, with the same path rewrite (its formatting kept)."""
+    for base, _, names in os.walk(home):
+        for name in names:
+            if name.endswith(".json"):
+                path = os.path.join(base, name)
+                with open(path, encoding="utf-8") as file:
+                    text = file.read()
+                if portable_text(text, home) != text:
+                    with open(path, "w", encoding="utf-8", newline="\n") as file:
+                        file.write(portable_text(text, home))
+
+
+def save(home, day_folder, name, doc):
+    write_json(os.path.join(day_folder, name), portable(doc, home))
+
+
 def archive(home, day_folder, extra):
     os.makedirs(day_folder, exist_ok=True)
     for name in DAY_FILES:
@@ -247,9 +291,66 @@ def archive(home, day_folder, extra):
         if doc is not None:
             if name == "timemachine.json":
                 doc = trimmed_time_machine(doc)
-            write_json(os.path.join(day_folder, os.path.basename(name)), doc)
+            save(home, day_folder, os.path.basename(name), doc)
     for name, doc in extra.items():
-        write_json(os.path.join(day_folder, name), doc)
+        save(home, day_folder, name, doc)
+
+
+def show_ticket(log, home, now):
+    """ticket.py show (logged), then its --json: (the tickets, the first one, its status line)."""
+    run(log, home, ["trader-broker/ticket.py", "show", "--now", now])
+    env = dict(os.environ, TRADER_HOME=home, PYTHONIOENCODING="utf-8")
+    shown = subprocess.run([sys.executable, "-B", "trader-broker/ticket.py", "show", "--now", now, "--json"],
+                           cwd=REPO, env=env, capture_output=True, text=True, encoding="utf-8")
+    try:
+        tickets = json.loads(shown.stdout)
+    except ValueError:
+        tickets = []
+    ticket = tickets[0] if isinstance(tickets, list) and tickets else {}
+    return tickets, ticket, ticket.get("status") or last_line(shown)
+
+
+def tools_book(home):
+    """The practice portfolio the tools keep: (cash, the positions still open)."""
+    doc = read_json(os.path.join(home, BOOK)) or {}
+    return doc.get("cash"), [row for row in doc.get("positions") or [] if row.get("shares")]
+
+
+def day_decisions(home, day):
+    """The day's records in the practice log: every yes, placement and fill the tools wrote."""
+    doc = read_json(os.path.join(home, PRACTICE_LOG)) or {}
+    return [record for record in doc.get("orders", []) if record.get("date") == day]
+
+
+def flatten(log, home, day, day_folder, fill, broker_id):
+    """The 15:55 exit the way a real day does it: flatten, check, show, the automatic yes, result.
+    Returns "flatten", or why it did not get through (the caller then records the sell another way)."""
+    now = "%s %s" % (day, fill["exit_time"])
+    for args in (["trader-broker/ticket.py", "flatten", "--symbol", SYMBOL, "--now", now],
+                 ["trader-risk/check.py", "--now", now]):
+        done = run(log, home, args)
+        if done.returncode != 0:
+            return "%s failed: %s" % (os.path.basename(args[0]), last_line(done))
+    tickets, ticket, status = show_ticket(log, home, now)
+    for name, doc in (("flatten-orders.json", read_json(os.path.join(home, "orders.json"))),
+                      ("flatten-risk.json", read_json(os.path.join(home, "practice", "state", "risk.json"))),
+                      ("flatten-ticket.json", tickets)):
+        save(home, day_folder, name, doc)
+    if not ticket.get("ready"):
+        return "the flatten ticket was not ready: " + status
+    done = run(log, home, ["trader-broker/ticket.py", "approve", "--index", "1", "--auto-yes", "--now", now])
+    if done.returncode != 0:
+        return "approve failed: " + last_line(done)
+    log.write("[paper broker, simulated] the bracket's stop-loss and take-profit are canceled first "
+              "(cancel_order_by_id), then this sell fills at the %s bar's open, %.2f.\n"
+              % (fill["exit_time"], fill["exit_price"]))
+    log.write("place_stock_order %s\n\n" % json.dumps(ticket["tool_input"]))
+    done = run(log, home, ["trader-broker/ticket.py", "result", "--index", "1", "--status", "placed",
+                           "--broker-id", broker_id + "-flat", "--filled-qty", str(fill["qty"]),
+                           "--filled-price", "%.2f" % fill["exit_price"], "--now", now])
+    if done.returncode != 0:
+        return "result failed: " + last_line(done)
+    return "flatten"
 
 
 def run_day(scenario, config, home, folder, log, day, bars, previous_bars, cash):
@@ -258,7 +359,8 @@ def run_day(scenario, config, home, folder, log, day, bars, previous_bars, cash)
     for name in DAY_FILES:                      # a new morning: no file from yesterday may be planned again
         if os.path.exists(os.path.join(home, name)):
             os.remove(os.path.join(home, name))
-    write_json(os.path.join(home, "practice", "portfolio.json"), {"cash": round(cash, 2), "positions": []})
+    if not os.path.exists(os.path.join(home, BOOK)):   # the first morning; then the tools keep it (result, fill)
+        write_json(os.path.join(home, BOOK), {"cash": round(cash, 2), "positions": []})
     row = {"date": day, "weekday": weekday, "cash_after": round(cash, 2)}
     entry_args = list(scenario.get("entry", []))
     if scenario.get("level") == "prior_high":
@@ -321,28 +423,53 @@ def run_day(scenario, config, home, folder, log, day, bars, previous_bars, cash)
         archive(home, day_folder, {})
         return row, None
 
-    run(log, home, ["trader-broker/ticket.py", "show", "--now", now])
-    env = dict(os.environ, TRADER_HOME=home, PYTHONIOENCODING="utf-8")
-    shown = subprocess.run([sys.executable, "-B", "trader-broker/ticket.py", "show", "--now", now, "--json"],
-                           cwd=REPO, env=env, capture_output=True, text=True, encoding="utf-8")
-    tickets = json.loads(shown.stdout) if shown.returncode == 0 else []
-    ticket = tickets[0] if tickets else {}
-    row["ticket_status"] = ticket.get("status") or last_line(shown)
+    tickets, ticket, row["ticket_status"] = show_ticket(log, home, now)
     if not ticket.get("ready"):
         row.update(action="ticket not ready", reason=row["ticket_status"])
         archive(home, day_folder, {"ticket.json": tickets})
         return row, None
 
-    log.write("[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.\n")
+    # the yes: automatic, and only possible because this is a practice run on a paper config
+    done = run(log, home, ["trader-broker/ticket.py", "approve", "--index", "1", "--auto-yes", "--now", now])
+    if done.returncode != 0:
+        row.update(action="not approved", reason=last_line(done))
+        archive(home, day_folder, {"ticket.json": tickets})
+        return row, None
+    row["approved_by"] = "auto-yes"
+    archive(home, day_folder, {"ticket.json": tickets})     # the entry's files, before a flatten replaces them
+
+    log.write("[paper broker, simulated] the yes was automatic (ticket.py approve --auto-yes); this stands in for "
+              "Allow once and Alpaca paper.\n")
     log.write("place_stock_order %s\n" % json.dumps(ticket["tool_input"]))
     fill = paper_broker(ticket["tool_input"], bars, signal_index, plan["flat_by"], config["no_entries_after"])
     for event in fill["events"]:
         log.write("  %s\n" % event)
     log.write("\n")
+    broker_id = "SIM-%s-%s" % (scenario["id"][:3], day)
     if not fill["filled"]:
+        # the broker took the order; it never traded, so it was canceled: placed, with no fill
+        run(log, home, ["trader-broker/ticket.py", "result", "--index", "1", "--status", "placed", "--broker-id",
+                        broker_id, "--note", "simulated: " + fill["events"][0], "--now", now])
         row.update(action="not filled", reason=fill["events"][0])
-        archive(home, day_folder, {"ticket.json": tickets, "paper-broker.json": fill})
+        save(home, day_folder, "paper-broker.json", fill)
+        save(home, day_folder, "decisions.json", day_decisions(home, day))
         return row, None
+    done = run(log, home, ["trader-broker/ticket.py", "result", "--index", "1", "--status", "placed",
+                           "--broker-id", broker_id, "--filled-qty", str(fill["qty"]),
+                           "--filled-price", "%.2f" % fill["fill_price"], "--now", "%s %s" % (day, fill["fill_time"])])
+    if done.returncode != 0:
+        row["books"] = "result failed: " + last_line(done)
+
+    # the exit: a bracket leg is a broker fill (fill --practice); the 15:55 sell is a ticket of its own
+    recorded = flatten(log, home, day, day_folder, fill, broker_id) if fill["exit_reason"] == "flat by" else None
+    if recorded != "flatten":
+        done = run(log, home, ["trader-broker/ticket.py", "fill", "--practice", "--symbol", SYMBOL, "--side", "sell",
+                               "--qty", str(fill["qty"]), "--price", "%.2f" % fill["exit_price"],
+                               "--now", "%s %s" % (day, fill["exit_time"])])
+        how = "fill --practice" if done.returncode == 0 else "fill --practice failed: " + last_line(done)
+        recorded = how if recorded is None else "%s; then %s" % (recorded, how)
+    row["exit_recorded_by"] = recorded
+
     cash += fill["pnl"]
     gate = row["gate_max_loss"] or 0
     row.update(action="traded", fill_time=fill["fill_time"], fill_price=fill["fill_price"],
@@ -353,8 +480,8 @@ def run_day(scenario, config, home, folder, log, day, bars, previous_bars, cash)
                loss_at_stop_after_fill=fill["loss_at_stop_after_fill"], max_open_loss=fill["max_open_loss"],
                max_open_loss_time=fill["max_open_loss_time"], max_open_gain=fill["max_open_gain"],
                cash_after=round(cash, 2))
-    write_json(os.path.join(home, "practice", "portfolio.json"), {"cash": round(cash, 2), "positions": []})
-    archive(home, day_folder, {"ticket.json": tickets, "paper-broker.json": fill})
+    save(home, day_folder, "paper-broker.json", fill)
+    save(home, day_folder, "decisions.json", day_decisions(home, day))
     return row, fill
 
 
@@ -414,6 +541,14 @@ def summarize(scenario, config, rows, fills):
         "tm_avg_p_target": round(sum(row["tm_p_target"] for row in with_tm) / len(with_tm), 3) if with_tm else None,
         "tm_avg_p_stop": round(sum(row["tm_p_stop"] for row in with_tm) / len(with_tm), 3) if with_tm else None,
         "actual_target_share": round(targets / (targets + stops), 3) if targets + stops else None,
+        "not_approved": count("not approved"),
+        "auto_yes_entries": sum(1 for row in rows if row.get("approved_by") == "auto-yes"),
+        "exits_by_fill_practice": sum(1 for row in trades if row.get("exit_recorded_by") == "fill --practice"),
+        "exits_by_flatten": sum(1 for row in trades if row.get("exit_recorded_by") == "flatten"),
+        "exits_recorded_otherwise": [{"date": row["date"], "how": row.get("exit_recorded_by")} for row in trades
+                                     if row.get("exit_recorded_by") not in ("fill --practice", "flatten")],
+        "books_mismatches": [{"date": row["date"], "books": row["books"]} for row in rows
+                             if row.get("books") != "agree"],
     }
 
 
@@ -433,22 +568,37 @@ def run_scenario(scenario, sessions, days, full):
     cash, rows, fills = START_CASH, [], {}
     with open(os.path.join(folder, "run.log"), "w", encoding="utf-8", newline="\n") as log:
         log.write("%s: %s\n%s\nEvery command below ran from the repo root with TRADER_HOME=%s.\n"
-                  "Practice runs (pinned clock); nothing was approved or placed.\n\n"
+                  "Practice runs (pinned clock). Each READY ticket got an automatic yes (ticket.py approve "
+                  "--auto-yes, practice runs on paper only); nothing was sent to a broker.\n\n"
                   % (scenario["id"], scenario["feature"], scenario["choice"], os.path.relpath(home, REPO)))
         for day in days:
             previous_bars = sessions[full[full.index(day) - 1]]
             row, fill = run_day(scenario, config, home, folder, log, day, sessions[day], previous_bars, cash)
+            # each evening the tools' own books (ticket.py result and fill) must match the simulated broker
+            tools_cash, still_open = tools_book(home)
+            row["tools_cash_after"] = tools_cash
+            problems = [row["books"]] if row.get("books") else []
+            if still_open or tools_cash is None or abs(tools_cash - row["cash_after"]) > 0.005:
+                problems.append("MISMATCH: the tools' practice portfolio has cash %s and %d open position(s), the "
+                                "simulated broker $%.2f and none" % (tools_cash, len(still_open), row["cash_after"]))
+            row["books"] = "; ".join(problems) if problems else "agree"
+            if problems:
+                log.write("[books] %s: %s\n\n" % (day, row["books"]))
             rows.append(row)
             cash = row["cash_after"]
             if fill:
                 fills[day] = fill
     with open(os.path.join(folder, "trades.csv"), "w", encoding="utf-8", newline="") as file:
-        writer = csv.DictWriter(file, fieldnames=CSV_FIELDS)
+        writer = csv.DictWriter(file, fieldnames=CSV_FIELDS, lineterminator="\n")   # the same file on every OS
         writer.writeheader()
         for row in rows:
             writer.writerow({key: row.get(key, "") for key in CSV_FIELDS})
     summary = summarize(scenario, config, rows, fills)
+    practice_log = read_json(os.path.join(home, PRACTICE_LOG)) or {}
+    statuses = [record.get("status") for record in practice_log.get("orders", [])]
+    summary["practice_log"] = {status: statuses.count(status) for status in sorted(set(statuses))}
     write_json(os.path.join(folder, "summary.json"), summary)
+    portable_folder(home)
     return summary
 
 
@@ -467,6 +617,8 @@ def main(argv):
               % (summary["id"], summary["trades"], summary["targets"], summary["stops"], summary["flat_by"],
                  summary["net_pnl"], summary["worst_trade"]["pnl"] if summary["worst_trade"] else 0,
                  summary["deepest_open_loss"]["loss"] if summary["deepest_open_loss"] else 0))
+        for problem in summary["books_mismatches"] + summary["exits_recorded_otherwise"]:
+            print("  WARNING %s" % json.dumps(problem))
     every = [read_json(os.path.join(HERE, s["id"], "summary.json")) for s in SCENARIOS]
     every = [summary for summary in every if summary]
     with open(os.path.join(HERE, "summary.csv"), "w", encoding="utf-8", newline="") as file:
@@ -474,7 +626,7 @@ def main(argv):
                   "not_filled", "skipped_by_filter", "blocked_by_risk", "win_rate", "net_pnl", "avg_pnl", "avg_r",
                   "avg_shares", "avg_gate_max_loss", "worst_trade_pnl", "deepest_open_loss", "max_drawdown",
                   "longest_losing_streak", "losses_over_gate_max_loss", "end_cash"]
-        writer = csv.DictWriter(file, fieldnames=fields)
+        writer = csv.DictWriter(file, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
         for summary in every:
             flat = {key: summary.get(key) for key in fields}

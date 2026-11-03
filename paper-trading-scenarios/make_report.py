@@ -4,7 +4,8 @@
 
 Reads scenarios.json, each S*/summary.json, S*/trades.csv and S*/days/*/paper-broker.json,
 draws the charts with matplotlib (SVG), lays the pages out in HTML and prints them to PDF
-with Microsoft Edge (headless). --build keeps the HTML and SVG files in DIR.
+with Microsoft Edge (headless), or the Chrome or Chromium program that REPORT_BROWSER names.
+--build keeps the HTML and SVG files in DIR.
 """
 
 import csv
@@ -469,23 +470,26 @@ def page_summary(spec, runs):
     dd = [run["summary"]["max_drawdown"]["amount"] for run in runs]
     all_cross = all(run["range90"][0] < 0 < run["range90"][1] for run in runs if run["summary"]["trades"] >= 10)
     d50 = deepest50["summary"]["deepest_open_loss"]
+    mismatches = sum(len(run["summary"].get("books_mismatches", [])) for run in runs)
     return """
 <section>
 <h1>Paper trading the Day Trader skill</h1>
 <div class="sub">13 scenarios on the same 39 recorded TSLA sessions, %(first)s to %(last)s</div>
-<div class="meta">Run on 2 November 2026 with the repo's own tools and data. $5,000 practice account. Every number
+<div class="meta">Run on 3 November 2026 with the repo's own tools and data. $5,000 practice account. Every number
 here comes from the files in <code>paper-trading-scenarios/</code>.</div>
 
 <p class="lede">Each scenario is the README example's rules with <b>one choice changed</b>: the stop, the target,
 the entry order, the opening range, a volume check, the setup, the risk per trade, the entry window, or the Time
 Machine as a filter. Nine choices give twelve alternative settings, plus the baseline, so any difference traces back to
 that one choice. For every session, the pack's own tools found the signal, planned the exit, replayed it in the Time Machine,
-sized it, ran the risk check and showed the ticket. Where the ticket was READY, a simulated paper broker filled the
-exact order the ticket showed against that session's 5-minute bars.</p>
+sized it, ran the risk check and showed the ticket. Where the ticket was READY, it got an automatic practice yes, a
+simulated paper broker filled the exact order the ticket showed against that session's 5-minute bars, and the tools
+recorded every placement and fill, as on a real day.</p>
 
 <div class="box"><h3>What happened</h3><ul>
 <li><b>The pipeline ran on all %(runs)d scenario sessions</b> (13 x 39) without a tool error: %(trades)d trades,
-the rest no signal, plus %(blocked)d risk blocks and %(skipped)d filter skips. Nothing was approved or placed.</li>
+the rest no signal, plus %(blocked)d risk blocks and %(skipped)d filter skips. Every READY ticket got an automatic
+practice yes (<code>ticket.py approve --auto-yes</code>), and nothing was sent to a broker. %(books)s</li>
 <li><b>%(n_above)d of 13 ended above $5,000:</b> %(above)s. The baseline ended at %(base_net)s over %(base_trades)d
 trades (%(base_t)d targets, %(base_s)d stops, %(base_f)d sold at 15:55). The worst was %(worst_name)s at
 %(worst_net)s.</li>
@@ -510,6 +514,9 @@ partial fills. No broker was connected.</p></div>
         runs=13 * len(spec["sessions"]), trades=trades,
         blocked=sum(run["summary"]["blocked_by_risk"] for run in runs),
         skipped=sum(run["summary"]["skipped_by_filter"] for run in runs),
+        books=("The tools' own books matched the simulated broker's cash every evening." if not mismatches else
+               "In %d sessions the tools' own books did not match the simulated broker's cash (see summary.json)."
+               % mismatches),
         n_above=len(above), above=" and ".join("%s %s (%s)" % (r["key"], esc(SHORT[r["key"]]),
                                                                money(r["summary"]["net_pnl"])) for r in above),
         base_net=money(base["net_pnl"]), base_trades=base["trades"], base_t=base["targets"], base_s=base["stops"],
@@ -553,13 +560,17 @@ after you have read the number in the Alpaca dashboard yourself.</td></tr></tabl
 <div><b>3 Time Machine</b>10,000 replays of the rest of the day, plus every past session of the rule.</div>
 <div><b>4 Size</b>size.py fits whole shares inside the four limits and writes one bracket order.</div>
 <div><b>5 Risk</b>check.py gives PASS or BLOCK and records the verdict.</div>
-<div><b>6 Ticket</b>ticket.py show turns a PASS into a READY ticket with the exact order.</div>
-<div class="sim"><b>7 Paper broker</b>Simulated: fills that order on the session's bars.</div>
+<div><b>6 Ticket and yes</b>ticket.py show turns a PASS into a READY ticket; approve --auto-yes gives the yes.</div>
+<div class="sim"><b>7 Paper broker</b>Simulated: fills that order on the session's bars; the tools record it.</div>
 </div>
 <p>Steps 1 to 6 are the real tools, run from the repo on a <b>pinned clock</b> (practice runs), in the scenario's own
-trader folder. Each morning the folder is cleared of the previous day's files, and the account starts with the cash
-the previous sessions left. Step 7 stands in for your yes, the Allow once card and Alpaca paper.
-<b>ticket.py approve was never run</b>: CLAUDE.md forbids approving an order on your behalf, even a practice one.</p>
+trader folder. Each morning the folder is cleared of the previous day's plan files, and the account starts with the
+cash the tools recorded the evening before. <b>The yes in step 6 is automatic</b>: <code>ticket.py approve
+--auto-yes</code>, which the tool accepts only on a practice run with <code>"paper": true</code>, so nothing can be
+placed from it; on the real clock it refuses, and a real order still needs your typed yes. Step 7 stands in for the
+Allow once card and Alpaca paper. The tools then record the placement and every fill (<code>ticket.py result</code>,
+<code>fill --practice</code>), and a position still open at 15:55 goes out through <code>flatten</code>, the risk
+check and its own automatic yes, so the risk check counts each trade the way it would on a real day.</p>
 
 <h3>The simulated paper broker</h3>
 <ul>
@@ -570,7 +581,8 @@ it. If it has not filled by the end of the entry window, it is canceled.</li>
 <li><b>Stop-loss:</b> sells at the stop, or at the bar's open if a bar opens below the stop (a gap).
 <b>Take-profit:</b> sells at the target, or at the open if a bar opens above it.</li>
 <li><b>Both in one bar:</b> the stop is assumed to come first, because 5-minute bars do not say which came first.
-<b>Flat by:</b> anything still open at 15:55 sells at that bar's open.</li>
+<b>Flat by:</b> anything still open at 15:55 sells at that bar's open, once the bracket's two legs are canceled; the
+sell is the flatten ticket the tools wrote, checked and approved.</li>
 <li><b>Open loss</b> is marked at every bar's low (or the stop fill), so the deepest open loss is the most the position
 was down at any one moment.</li>
 </ul>
@@ -902,14 +914,21 @@ def pick_instances(runs):
 
 
 def print_pdf(html_path):
-    edge = next((path for path in EDGE if os.path.exists(path)), None)
-    if not edge:
-        raise SystemExit("Microsoft Edge not found: open %s in a browser and print it to PDF" % html_path)
+    # Edge on Windows; REPORT_BROWSER names another Chromium-family browser (Chrome, Chromium) anywhere else
+    browser = os.environ.get("REPORT_BROWSER") or next((path for path in EDGE if os.path.exists(path)), None)
+    if not browser or not os.path.exists(browser):
+        raise SystemExit("Microsoft Edge not found: open %s in a browser and print it to PDF, or set REPORT_BROWSER "
+                         "to a Chrome or Chromium program" % html_path)
     profile = tempfile.mkdtemp(prefix="edge-print-")
+    sandbox = [] if os.name == "nt" else ["--no-sandbox"]     # Chromium as root on Linux needs it
+    # Edge prints with --headless=new; Chrome for Testing in a Linux container hangs on it, so another browser
+    # gets the plain flag
+    headless = "--headless" if os.environ.get("REPORT_BROWSER") else "--headless=new"
     try:
-        subprocess.run([edge, "--headless=new", "--disable-gpu", "--no-first-run", "--no-pdf-header-footer",
-                        "--user-data-dir=" + profile, "--print-to-pdf=" + PDF,
-                        "file:///" + html_path.replace("\\", "/")], check=True, capture_output=True, timeout=180)
+        subprocess.run([browser, headless, "--disable-gpu", "--no-first-run", "--no-pdf-header-footer"]
+                       + sandbox + ["--user-data-dir=" + profile, "--print-to-pdf=" + PDF,
+                                    "file:///" + html_path.replace("\\", "/").lstrip("/")],
+                       check=True, capture_output=True, timeout=180)
     finally:
         shutil.rmtree(profile, ignore_errors=True)
 

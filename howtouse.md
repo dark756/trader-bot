@@ -215,7 +215,7 @@ If all of these match, the tools work on your PC.
 
 ### 2.3 See the pipeline trade 39 recorded sessions
 
-The `paper-trading-scenarios` folder holds 13 practice runs of the whole pipeline over 39 recorded TSLA sessions (24 Aug to 16 Oct 2026). Each one changes one choice from the example's rules: stop, target, entry order, opening range, volume check, setup, risk per trade, entry window, or the Time Machine as a filter. Nothing was approved or placed: a simulated paper broker filled each READY ticket against the recorded bars. Read `paper-trading-comparison.pdf` there, including its section on the largest losses at any one moment. To run them again (about 3 minutes, same numbers each time):
+The `paper-trading-scenarios` folder holds 13 practice runs of the whole pipeline over 39 recorded TSLA sessions (24 Aug to 16 Oct 2026). Each one changes one choice from the example's rules: stop, target, entry order, opening range, volume check, setup, risk per trade, entry window, or the Time Machine as a filter. Each READY ticket got an automatic yes (`ticket.py approve --auto-yes`, which only works on a practice run with `"paper": true`), a simulated paper broker filled it against the recorded bars, and the tools recorded every placement and fill in the scenario's practice log, so the risk check counted them the way it would on a real day. Nothing was sent to a broker. Read `paper-trading-comparison.pdf` there, including its section on the largest losses at any one moment. To run them again (about 7 minutes, same numbers each time):
 
 ```powershell
 python -B paper-trading-scenarios\run_scenarios.py
@@ -292,6 +292,7 @@ Tips:
 - **PASS / BLOCK** (risk): a PASS only means the order may be shown to you. It is not advice, and it is not a yes.
 - **READY / NOT READY / DONE** (broker): only a READY ticket can take your yes. A pass counts for 15 minutes: after that the ticket says NOT READY until the risk check runs again.
 - **PRACTICE / PRACTICE RUN** (risk, broker): the clock was pinned with `--now` or `--today`, for a replay or a test. Nothing from a practice run can be placed.
+- **auto-yes** (broker log): an automatic yes from `ticket.py approve --auto-yes`, used by unattended replays such as the paper-trading scenarios. It works only on a practice run with `"paper": true`, so it can never lead to an order; on the real clock or a live config the tool refuses it, and every real order still needs your own typed yes.
 
 ## 4. Connect a paper broker (optional)
 
@@ -339,6 +340,8 @@ One yes covers one order. If an order **failed** (or you clicked Deny, or said n
 
 Want a hard cap on the price you pay? Ask for `--limit cap` when sizing (`/trader-budget`): a limit order at the highest price where your max loss and reward:risk still hold. It can't fill worse, but it may not fill at all. Market orders stay the default.
 
+Replays that run unattended (like `paper-trading-scenarios`) give their yes with `ticket.py approve --auto-yes`. The tool accepts that only on a practice run (`--now` or `--today`) with `"paper": true` in the config, and records it as `auto_yes`, never as your reply. A practice run never places anything, so an automatic yes can't reach Alpaca. On the real clock, or with `"paper": false`, it refuses, and every real order still needs your typed yes and your Allow once. A replay records its stop-loss and take-profit fills with `ticket.py fill --practice`, into `trader\practice\`.
+
 ## 6. The other tools
 
 - **News**, `/trader-news` or `/trader-news TSLA NVDA`:
@@ -384,7 +387,7 @@ Flags most tools share:
 
 | flag | meaning |
 | --- | --- |
-| `--now "2026-11-02 10:15"` | Pretend it is this New York time (for replays and tests); add `Z` for UTC. For the risk check and the order ticket, `--now` and `--today` make a practice run, which can never lead to an order and keeps its own files in `trader\practice\`. |
+| `--now "2026-11-02 10:15"` | Pretend it is this New York time (for replays and tests); add `Z` for UTC. For the risk check and the order ticket, `--now` and `--today` make a practice run, which can never lead to an order and keeps its own files in `trader\practice\`. On `ticket.py fill` it only dates the fill, which stays real; `fill --practice` records a practice one. |
 | `--offline PATH` | Read saved files instead of the internet. |
 | `--json` | Machine-readable output. |
 | `--write` | Save the result into `trader\` (entry, exit, timemachine, budget, and alerts `quote`). |

@@ -393,6 +393,93 @@ class Flow(unittest.TestCase):
         finally:
             os.chdir(cwd)
 
+    def test_an_auto_yes_is_for_practice_runs_on_paper(self):
+        # an unattended replay (paper-trading-scenarios) records its yes with --auto-yes
+        code, _, err = run(self.args("approve", "--index", "1", "--auto-yes"))
+        self.assertEqual(code, 1)
+        self.assertIn("not ready", err)                      # no risk check yet: the same gates as a typed yes
+        self.assertEqual(self.run_risk(), 0)
+        code, text, _ = run(self.args("approve", "--index", "1", "--auto-yes"))
+        self.assertEqual(code, 0)
+        self.assertIn("Recorded an automatic yes for order 1", text)
+        self.assertIn("PRACTICE RUN", text)
+        self.assertNotIn("Now call place_stock_order", text)
+        self.assertNotIn("{", text)
+        appr = self.state_doc()["orders"][-1]
+        self.assertEqual((appr["status"], appr["auto_yes"], appr["practice"], appr["kind"], appr["max_loss"]),
+                         ("approved", True, True, "entry", 46.88))
+        self.assertNotIn("reply", appr)                      # nobody replied, and the log never says so
+        self.assertIn("APPROVED automatically (--auto-yes, a practice run)", run(self.args("show", "--index", "1"))[1])
+        code, _, err = run(self.args("approve", "--index", "1", "--auto-yes"))
+        self.assertEqual(code, 1)
+        self.assertIn("APPROVED", err)                       # still one yes per order
+        code, text, _ = run(self.args("result", "--index", "1", "--status", "placed", "--broker-id", "SIM-1",
+                                      "--filled-qty", "8", "--filled-price", "364.20", "--portfolio", self.pf))
+        self.assertEqual(code, 0)
+        placed = self.state_doc()["orders"][1]
+        self.assertEqual((placed["status"], placed["auto_yes"], placed["practice"], placed["max_loss"]),
+                         ("placed", True, True, 47.04))
+        self.assertIn(" auto-yes (practice)\n", run(["log", "--state", self.state, "--now", NOW])[1])
+        # trader-risk counts it like a typed one: a second TSLA buy today is a duplicate
+        self.assertEqual(self.run_risk("2026-10-19 10:30"), 1)
+
+    def test_a_live_config_never_gets_an_auto_yes(self):
+        with open(self.cfg) as fh:
+            cfg = json.load(fh)
+        cfg["paper"] = False
+        with open(self.cfg, "w") as fh:
+            json.dump(cfg, fh)
+        self.assertEqual(self.run_risk(), 0)
+        self.assertIn("READY: trader-risk PASS", run(self.args("show"))[1])
+        code, _, err = run(self.args("approve", "--index", "1", "--auto-yes"))
+        self.assertEqual(code, 1)
+        self.assertIn("--auto-yes is for paper trading only, and your config says \"paper\": false", err)
+        self.assertFalse(os.path.exists(self.state))
+
+    def test_auto_yes_and_a_reply_are_one_or_the_other(self):
+        self.run_risk()
+        for extra in ([], ["--reply", "yes", "--auto-yes"]):
+            with self.assertRaises(SystemExit) as caught:
+                run(self.args("approve", "--index", "1", *extra))
+            self.assertEqual(caught.exception.code, 2)
+        self.assertFalse(os.path.exists(self.state))
+
+    def test_a_practice_fill_stays_in_the_practice_files(self):
+        cwd = os.getcwd()
+        os.chdir(self.d)
+        try:
+            os.makedirs("trader")
+            shutil.copy(ORDERS_PATH, os.path.join("trader", "orders.json"))
+            shutil.copy(CFG_PATH, os.path.join("trader", "config.json"))
+            with redirect_stdout(io.StringIO()):
+                self.assertEqual(check.main(["--now", NOW]), 0)
+            self.assertEqual(run(["approve", "--index", "1", "--auto-yes", "--now", NOW])[0], 0)
+            self.assertEqual(run(["result", "--index", "1", "--status", "placed", "--filled-qty", "8",
+                                  "--filled-price", "364.20", "--now", "2026-10-19 10:16"])[0], 0)
+            # the bracket's take-profit fills: the sell goes to the practice files too
+            code, text, _ = run(["fill", "--practice", "--symbol", "TSLA", "--side", "sell", "--qty", "8",
+                                 "--price", "370.04", "--now", "2026-10-19 10:53"])
+            self.assertEqual(code, 0)
+            self.assertIn("Recorded a practice fill: sell 8 TSLA at $370.04 on 2026-10-19", text)
+            with open(os.path.join("trader", "practice", "portfolio.json")) as fh:
+                self.assertEqual(json.load(fh), {"cash": 5046.72, "positions": []})
+            with open(os.path.join("trader", "practice", "state", "broker.json")) as fh:
+                log = json.load(fh)
+            self.assertEqual([(r["status"], r["side"], r.get("practice")) for r in log["orders"]],
+                             [("approved", "buy", True), ("placed", "buy", True), ("filled", "buy", True),
+                              ("filled", "sell", True)])
+            self.assertFalse(os.path.exists(os.path.join("trader", "state")))      # your real files: untouched
+            self.assertFalse(os.path.exists(os.path.join("trader", "portfolio.json")))
+            # a practice check now sees the round trip: what "pdt_guard" counts
+            self.assertEqual(check.day_trades(log, "2026-10-20"), (1, ["2026-10-19 TSLA"]))
+            # --now only dates a fill: without --practice it is a real one
+            self.assertEqual(run(["fill", "--symbol", "KO", "--side", "buy", "--qty", "1", "--price", "60",
+                                  "--now", NOW])[0], 0)
+            with open(os.path.join("trader", "state", "broker.json")) as fh:
+                self.assertNotIn("practice", json.load(fh)["orders"][-1])
+        finally:
+            os.chdir(cwd)
+
     def test_a_broken_file_is_a_plain_error(self):
         self.run_risk()
         for path, doc, says in ((self.state, [], "should be one JSON object"),
@@ -577,6 +664,22 @@ class RealClock(unittest.TestCase):
         self.assertIn("READY: trader-risk PASS, waiting for your yes\n", text)
         self.assertIn("placed    BUY 8 TSLA", run(["log", "--state", self.state])[1])
         self.assertIn("(practice)", run(["log", "--state", self.state])[1])
+
+    def test_an_auto_yes_never_stands_in_for_a_real_yes(self):
+        self.account(self.ACCOUNT)
+        self.assertEqual(self.risk_check(), 0)
+        self.assertIn("READY: trader-risk PASS", run(self.args("show"))[1])
+        code, text, err = run(self.args("approve", "--index", "1", "--auto-yes"))      # the real clock: refused
+        self.assertEqual(code, 1)
+        self.assertIn("--auto-yes is for practice runs only", err)
+        self.assertNotIn("place_stock_order", text)
+        with open(self.state) as fh:
+            self.assertEqual(json.load(fh)["orders"], [])
+        # a practice auto-yes in the same log stays practice: the real ticket still waits for the user
+        self.assertEqual(self.risk_check("--now", NOW), 0)
+        self.assertEqual(run(self.args("approve", "--index", "1", "--auto-yes", "--now", NOW))[0], 0)
+        self.assertEqual(self.risk_check(), 0)
+        self.assertIn("READY: trader-risk PASS, waiting for your yes\n", run(self.args("show"))[1])
 
     def test_a_failed_check_clears_the_last_verdicts(self):
         self.account(self.ACCOUNT)
