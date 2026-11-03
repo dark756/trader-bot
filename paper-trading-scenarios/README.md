@@ -6,6 +6,8 @@ Thirteen paper-trading runs of the Day Trader skill, each over the same 39 recor
 
 The same choices on 30 stocks, in 852 combinations with an out-of-sample test, are in [feature-search/](feature-search/RESULTS.md), with a report in [feature-search.pdf](feature-search/feature-search.pdf).
 
+A larger test, with two pre-registered rules on 7.5 years of Alpaca data, each morning's stocks in play, and a locked holdout, is in [large-backtest/](large-backtest/README.md) (to be run on your PC with your Alpaca paper keys).
+
 ## What was run
 
 - **One choice per scenario.** S01 is the README example's rules. Each other scenario changes exactly one of the nine choices a user makes (stop rule, target, entry order, opening-range length, volume check, setup, risk per trade, entry window, Time Machine filter) and keeps everything else, so a difference traces back to that choice. [scenarios.json](scenarios.json) lists them.

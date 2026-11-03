@@ -20,6 +20,11 @@ In the findings, "confirmed" means the bug was reproduced, and "by reading" mean
   - `engine.py` calls the tools' functions in-process (`entry.evaluate`, `exit.compute`, `size.size_trade`/`limit_cap`, `check.check`, the runner's `paper_broker`), with a per-share cost and Alpaca's rejection of a bracket whose stop is already crossed;
   - `validate.py` proves it reproduces all 13 TSLA scenarios (507 sessions), so it is the same rules about 25 times faster;
   - `search.py` picks per category on the first 39 sessions and scores the picks on the last 20; `stress.py` and `tm_filter.py` test the picks and the Time Machine filter; `write_results.py` writes `RESULTS.md` from `results/`; `make_report.py` turns `RESULTS.md` into `feature-search.pdf` word for word, with three charts, reusing `../make_report.py`'s look and printing (built on Linux with `chrome-headless-shell`, so Inter stands in for Segoe UI).
+- **Large backtest.** `paper-trading-scenarios/large-backtest/` (2026-11-03; code only, the user runs it on the PC with their Alpaca paper keys). It tests the README rules (A) and a 5-minute breakout held to the close (B, stop at 10 % of the 14-session daily ATR, 100R) on two universes: each morning's 20 stocks in play (relative volume of the 9:30 bar) and the fixed list of 30. Each run is scored against its no-signal twin (A0, B0: buy at 9:45), on Alpaca's SIP 5-minute bars from 2019 to 2026-08-07.
+  - `PLAN.md` (committed before any data) and `plan.py` fix the rules, the period and the pass marks. Development is 2019 to 2023. The holdout (2024 to 2026-08-07) opens once, only for a run that passed, and refuses if `plan.py` changed since the development run.
+  - `fetch.py` downloads into `data/alpaca.sqlite` (gitignored, resumable, read-only API calls); `backtest.py` scores it through the feature search's `engine.py` and writes `RESULTS.md`.
+  - `selftest.py` needs no keys. It checks everything against a fake Alpaca server that serves the feature search's data: a resumed fetch equals a clean one, the stored sessions equal `engine.load_symbol`'s, four combos reproduce `combos.csv` exactly, and a session moved to 2021 trades as in 2026.
+  - Don't change `plan.py` after the user's first fetch: a new idea needs a new plan.
 - **This copy versus upstream** (checked 2026-11-02 against GitHub's tree, by blob hash). Whoever passed this copy on had stripped the author's attribution: the `LICENSE` file, `plugin.json`'s `author`, `homepage`, `repository` and `license` fields, `marketplace.json`'s `owner` (which Claude Code's marketplace format requires), and the README's install section, `git clone` line and credit line. No code or fixture differed. All of it is restored verbatim; MIT requires the copyright notice to stay.
 
 ## This machine
@@ -50,7 +55,14 @@ python -B paper-trading-scenarios/feature-search/stress.py         # the picks' 
 python -B paper-trading-scenarios/feature-search/tm_filter.py      # the Time Machine filter on 26 combos, about 80 min
 python -B paper-trading-scenarios/feature-search/write_results.py  # RESULTS.md from results/
 python -B paper-trading-scenarios/feature-search/make_report.py    # feature-search.pdf from RESULTS.md, about 10 s
+python -B paper-trading-scenarios/large-backtest/selftest.py       # the large backtest's checks on a fake Alpaca, about 1 min
+python -B paper-trading-scenarios/large-backtest/fetch.py          # the Alpaca download, about 2 h, resumable (keys below)
+python -B paper-trading-scenarios/large-backtest/fetch.py status   # what is downloaded so far
+python -B paper-trading-scenarios/large-backtest/backtest.py       # the development verdicts -> RESULTS.md, about 5 min
+python -B paper-trading-scenarios/large-backtest/backtest.py --holdout   # once, only if RESULTS.md says something passed
 ```
+
+The large backtest runs on the user's PC. Before `fetch.py`, they set their Alpaca paper keys in that terminal, in PowerShell with `$env:APCA_API_KEY_ID = "..."` and `$env:APCA_API_SECRET_KEY = "..."`, or in Git Bash with `export`. Never ask for the keys in the chat, and never write them into a file.
 
 `-B` keeps `__pycache__` out of the tree. The tests chdir into temp folders and never touch `trader/`, and `tests/_load.py` clears `TRADER_HOME` before any test runs, so a `TRADER_HOME` set for real trading never receives test files. The scenario runner rewrites its scenario folders; its numbers are deterministic (pinned clock, offline data, the Time Machine's fixed seed), so a change in them after a code change is a change in behavior.
 
@@ -221,6 +233,7 @@ With Alpaca, a ticket is also READY only after today's `ticket.py account --numb
 ## Status (2026-11-02, Python 3.13.5)
 
 - **Tests:** 389 (384, plus five for the practice auto-yes and `fill --practice` on 2026-11-03), all pass on the PC (the two packaging failures are gone with B13). In the git copy (`main`), `test_root_matches_the_reel` fails because `LICENSE` was never committed.
+- **Large backtest (2026-11-03):** the plan and the code are committed; the user hasn't run it yet (it needs their Alpaca keys). `selftest.py` passes all 19 of its checks in the cloud session.
 - **Independent verification:** 129 checks, all pass. It is a scratch script, not part of the repo; the unit tests cover the same ground. Its corrupt-file sweep found four tracebacks the tests had missed (B14 below), now fixed and tested.
 - **Naming refactor (2026-11-02).** About 1,160 one- and two-letter names, and the cryptic helpers (`_f`, `_p`, `D`, `r2`, `hm`, `pc`, `_n`, ...), were given names that say what they hold, in all 11 scripts; the tests follow the new names. Nothing user-facing changed: flags, JSON and config keys, messages and exit codes are the same.
   - How it was checked: the renames were done by scope from the AST, refusing any rename that merged two names, took a builtin or module name, or changed which scope a reference binds to (that caught one real capture, in alerts' `cmd_add`). Line wrapping and re-alignment were proven AST-identical. The suite (384), the independent checks (129) and the reel replay all came out the same.
@@ -321,7 +334,8 @@ What is left, on purpose:
   - edit `paper` or `ALPACA_PAPER_TRADE`;
   - run check.py or ticket.py with `--now`/`--today` when a real order is wanted;
   - write `alpaca_account` unless the user confirmed that number in the Alpaca dashboard;
-  - use a plain `ticket.py fill` to practice (it records a real fill; `fill --practice` is the practice one).
+  - use a plain `ticket.py fill` to practice (it records a real fill; `fill --practice` is the practice one);
+  - ask for, read or write the user's Alpaca API keys (the large backtest reads them from the terminal's environment).
 - **When fixing a finding:**
   - change every duplicated copy;
   - keep Python 3.8 syntax and the plain-text style;
