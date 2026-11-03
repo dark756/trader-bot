@@ -5,3 +5,4 @@ trader/
 # Python's byte-code cache
 __pycache__/
 *.pyc
+.env.local
