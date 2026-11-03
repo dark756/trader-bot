@@ -1,0 +1,2498 @@
+{
+  "tm_from": "2026-09-08",
+  "combos": [
+    {
+      "id": "orb5 atr:1 1R market novol until1100",
+      "categories": [
+        "Highest net return",
+        "Highest Sharpe ratio",
+        "Highest Sortino ratio",
+        "Best return per dollar of drawdown",
+        "Highest profit factor",
+        "Highest win rate while making money",
+        "Most stocks profitable",
+        "Best choice per feature (in-sample medians)"
+      ],
+      "base": {
+        "is": {
+          "days": 39,
+          "trades": 537,
+          "net": 317.58,
+          "return_pct": 0.212,
+          "sharpe": 1.247,
+          "sortino": 1.891,
+          "max_drawdown": 545.31,
+          "max_drawdown_pct": 0.364,
+          "return_to_drawdown": 0.582,
+          "win_rate": 0.5158,
+          "profit_factor": 1.057,
+          "avg_r": 0.003,
+          "t_stat": 0.071,
+          "symbols_up": 15,
+          "psr": 0.6852,
+          "targets": 259,
+          "stops": 248,
+          "flat_by": 30
+        },
+        "oos": {
+          "days": 20,
+          "trades": 293,
+          "net": -290.46,
+          "return_pct": -0.194,
+          "sharpe": -2.429,
+          "sortino": -2.94,
+          "max_drawdown": 621.73,
+          "max_drawdown_pct": 0.414,
+          "return_to_drawdown": -0.467,
+          "win_rate": 0.4983,
+          "profit_factor": 0.909,
+          "avg_r": -0.0296,
+          "t_stat": -0.515,
+          "symbols_up": 11,
+          "psr": 0.2481,
+          "targets": 139,
+          "stops": 140,
+          "flat_by": 14
+        },
+        "all": {
+          "days": 59,
+          "trades": 830,
+          "net": 27.12,
+          "return_pct": 0.018,
+          "sharpe": 0.073,
+          "sortino": 0.101,
+          "max_drawdown": 951.23,
+          "max_drawdown_pct": 0.634,
+          "return_to_drawdown": 0.029,
+          "win_rate": 0.5096,
+          "profit_factor": 1.003,
+          "avg_r": -0.0085,
+          "t_stat": -0.251,
+          "symbols_up": 12,
+          "psr": 0.5139,
+          "targets": 398,
+          "stops": 388,
+          "flat_by": 44
+        }
+      },
+      "rejected": 0,
+      "cost": {
+        "0.0": {
+          "days": 59,
+          "trades": 830,
+          "net": 393.0,
+          "return_pct": 0.262,
+          "sharpe": 1.052,
+          "sortino": 1.547,
+          "max_drawdown": 777.63,
+          "max_drawdown_pct": 0.518,
+          "return_to_drawdown": 0.505,
+          "win_rate": 0.5096,
+          "profit_factor": 1.046,
+          "avg_r": 0.0155,
+          "t_stat": 0.456,
+          "symbols_up": 14,
+          "psr": 0.6924,
+          "targets": 398,
+          "stops": 388,
+          "flat_by": 44
+        },
+        "0.01": {
+          "days": 59,
+          "trades": 830,
+          "net": 27.12,
+          "return_pct": 0.018,
+          "sharpe": 0.073,
+          "sortino": 0.101,
+          "max_drawdown": 951.23,
+          "max_drawdown_pct": 0.634,
+          "return_to_drawdown": 0.029,
+          "win_rate": 0.5096,
+          "profit_factor": 1.003,
+          "avg_r": -0.0085,
+          "t_stat": -0.251,
+          "symbols_up": 12,
+          "psr": 0.5139,
+          "targets": 398,
+          "stops": 388,
+          "flat_by": 44
+        },
+        "0.03": {
+          "days": 59,
+          "trades": 830,
+          "net": -704.64,
+          "return_pct": -0.47,
+          "sharpe": -1.883,
+          "sortino": -2.39,
+          "max_drawdown": 1298.43,
+          "max_drawdown_pct": 0.866,
+          "return_to_drawdown": -0.543,
+          "win_rate": 0.5084,
+          "profit_factor": 0.923,
+          "avg_r": -0.0566,
+          "t_stat": -1.661,
+          "symbols_up": 10,
+          "psr": 0.1823,
+          "targets": 398,
+          "stops": 388,
+          "flat_by": 44
+        }
+      },
+      "delay": {
+        "oos": {
+          "days": 20,
+          "trades": 289,
+          "net": -198.83,
+          "return_pct": -0.133,
+          "sharpe": -1.77,
+          "sortino": -2.498,
+          "max_drawdown": 368.47,
+          "max_drawdown_pct": 0.246,
+          "return_to_drawdown": -0.54,
+          "win_rate": 0.5087,
+          "profit_factor": 0.924,
+          "avg_r": -0.0004,
+          "t_stat": -0.007,
+          "symbols_up": 11,
+          "psr": 0.3195,
+          "targets": 142,
+          "stops": 133,
+          "flat_by": 14
+        },
+        "all": {
+          "days": 59,
+          "trades": 823,
+          "net": -215.1,
+          "return_pct": -0.143,
+          "sharpe": -0.569,
+          "sortino": -0.809,
+          "max_drawdown": 859.78,
+          "max_drawdown_pct": 0.573,
+          "return_to_drawdown": -0.25,
+          "win_rate": 0.4921,
+          "profit_factor": 0.97,
+          "avg_r": -0.0084,
+          "t_stat": -0.275,
+          "symbols_up": 12,
+          "psr": 0.3928,
+          "targets": 402,
+          "stops": 377,
+          "flat_by": 44
+        }
+      },
+      "delay_rejected": 17,
+      "risk100": {
+        "days": 59,
+        "trades": 801,
+        "net": -28.55,
+        "return_pct": -0.019,
+        "sharpe": -0.078,
+        "sortino": -0.109,
+        "max_drawdown": 890.64,
+        "max_drawdown_pct": 0.594,
+        "return_to_drawdown": -0.032,
+        "win_rate": 0.5094,
+        "profit_factor": 0.997,
+        "avg_r": -0.0086,
+        "t_stat": -0.247,
+        "symbols_up": 12,
+        "psr": 0.4851,
+        "targets": 384,
+        "stops": 374,
+        "flat_by": 43
+      },
+      "tm_off": {
+        "days": 40,
+        "trades": 543,
+        "net": -651.31,
+        "return_pct": -0.434,
+        "sharpe": -2.761,
+        "sortino": -3.28,
+        "max_drawdown": 971.92,
+        "max_drawdown_pct": 0.648,
+        "return_to_drawdown": -0.67,
+        "win_rate": 0.4862,
+        "profit_factor": 0.893,
+        "avg_r": -0.057,
+        "t_stat": -1.356,
+        "symbols_up": 11,
+        "psr": 0.1316,
+        "targets": 248,
+        "stops": 270,
+        "flat_by": 25
+      },
+      "tm": {
+        "days": 40,
+        "trades": 314,
+        "net": -96.42,
+        "return_pct": -0.064,
+        "sharpe": -0.507,
+        "sortino": -0.692,
+        "max_drawdown": 480.16,
+        "max_drawdown_pct": 0.32,
+        "return_to_drawdown": -0.201,
+        "win_rate": 0.5,
+        "profit_factor": 0.975,
+        "avg_r": -0.0206,
+        "t_stat": -0.373,
+        "symbols_up": 14,
+        "psr": 0.4209,
+        "targets": 148,
+        "stops": 150,
+        "flat_by": 16
+      },
+      "tm_skipped": 257,
+      "stock_picking": {
+        "in_sample_winners": [
+          "AAPL",
+          "AMD",
+          "AVGO",
+          "COST",
+          "CVX",
+          "DIS",
+          "GOOGL",
+          "INTC",
+          "META",
+          "MSFT",
+          "MU",
+          "NFLX",
+          "TSLA",
+          "UBER",
+          "XOM"
+        ],
+        "count": 15,
+        "oos_winners_only": {
+          "days": 20,
+          "trades": 158,
+          "net": 38.11,
+          "return_pct": 0.051,
+          "sharpe": 0.422,
+          "sortino": 0.676,
+          "max_drawdown": 145.09,
+          "max_drawdown_pct": 0.193,
+          "return_to_drawdown": 0.263,
+          "win_rate": 0.519,
+          "profit_factor": 1.021,
+          "avg_r": 0.0168,
+          "t_stat": 0.215,
+          "symbols_up": 6,
+          "psr": 0.5464,
+          "targets": 77,
+          "stops": 72,
+          "flat_by": 9
+        },
+        "oos_all_stocks": {
+          "days": 20,
+          "trades": 293,
+          "net": -290.46,
+          "return_pct": -0.194,
+          "sharpe": -2.429,
+          "sortino": -2.94,
+          "max_drawdown": 621.73,
+          "max_drawdown_pct": 0.414,
+          "return_to_drawdown": -0.467,
+          "win_rate": 0.4983,
+          "profit_factor": 0.909,
+          "avg_r": -0.0296,
+          "t_stat": -0.515,
+          "symbols_up": 11,
+          "psr": 0.2481,
+          "targets": 139,
+          "stops": 140,
+          "flat_by": 14
+        }
+      },
+      "by_symbol": {
+        "AAPL": {
+          "is": 57.01,
+          "oos": -49.34
+        },
+        "AMD": {
+          "is": 36.15,
+          "oos": -67.58
+        },
+        "AMZN": {
+          "is": -203.56,
+          "oos": 33.3
+        },
+        "AVGO": {
+          "is": 26.58,
+          "oos": -26.53
+        },
+        "BAC": {
+          "is": -58.02,
+          "oos": -36.44
+        },
+        "COIN": {
+          "is": -135.0,
+          "oos": -138.52
+        },
+        "COST": {
+          "is": 16.49,
+          "oos": 59.15
+        },
+        "CVX": {
+          "is": 39.8,
+          "oos": 18.24
+        },
+        "DIS": {
+          "is": 148.18,
+          "oos": -31.37
+        },
+        "GOOGL": {
+          "is": 31.19,
+          "oos": -103.67
+        },
+        "INTC": {
+          "is": 313.35,
+          "oos": 89.29
+        },
+        "IWM": {
+          "is": -49.46,
+          "oos": 7.8
+        },
+        "JPM": {
+          "is": -50.5,
+          "oos": -67.56
+        },
+        "KO": {
+          "is": -45.51,
+          "oos": 18.71
+        },
+        "LLY": {
+          "is": -66.68,
+          "oos": 31.48
+        },
+        "META": {
+          "is": 117.56,
+          "oos": 135.2
+        },
+        "MSFT": {
+          "is": 101.92,
+          "oos": 74.25
+        },
+        "MU": {
+          "is": 27.02,
+          "oos": -103.52
+        },
+        "NFLX": {
+          "is": 155.34,
+          "oos": -47.71
+        },
+        "NKE": {
+          "is": -8.34,
+          "oos": -0.15
+        },
+        "NVDA": {
+          "is": -22.84,
+          "oos": 74.54
+        },
+        "PFE": {
+          "is": -11.65,
+          "oos": -83.43
+        },
+        "PLTR": {
+          "is": -161.89,
+          "oos": -57.43
+        },
+        "QQQ": {
+          "is": -40.46,
+          "oos": -16.16
+        },
+        "SPY": {
+          "is": -19.2,
+          "oos": -12.6
+        },
+        "TSLA": {
+          "is": 83.62,
+          "oos": 212.66
+        },
+        "UBER": {
+          "is": 52.08,
+          "oos": -60.54
+        },
+        "UNH": {
+          "is": -107.73,
+          "oos": -74.07
+        },
+        "WMT": {
+          "is": -36.36,
+          "oos": -8.04
+        },
+        "XOM": {
+          "is": 128.49,
+          "oos": -60.42
+        }
+      },
+      "one_account": {
+        "all": {
+          "days": 59,
+          "trades": 59,
+          "net": 92.92,
+          "return_pct": 1.858,
+          "sharpe": 0.864,
+          "sortino": 1.241,
+          "max_drawdown": 109.83,
+          "max_drawdown_pct": 2.197,
+          "return_to_drawdown": 0.846,
+          "win_rate": 0.5424,
+          "profit_factor": 1.13,
+          "avg_r": 0.0826,
+          "t_stat": 0.657,
+          "symbols_up": 1,
+          "psr": 0.6599,
+          "targets": 30,
+          "stops": 24,
+          "flat_by": 5
+        },
+        "is": {
+          "days": 39,
+          "trades": 39,
+          "net": -40.22,
+          "return_pct": -0.804,
+          "sharpe": -0.576,
+          "sortino": -0.779,
+          "max_drawdown": 109.83,
+          "max_drawdown_pct": 2.197,
+          "return_to_drawdown": -0.366,
+          "win_rate": 0.5128,
+          "profit_factor": 0.92,
+          "avg_r": 0.0264,
+          "t_stat": 0.171,
+          "symbols_up": 0,
+          "psr": 0.4113,
+          "targets": 18,
+          "stops": 16,
+          "flat_by": 5
+        },
+        "oos": {
+          "days": 20,
+          "trades": 20,
+          "net": 133.14,
+          "return_pct": 2.663,
+          "sharpe": 3.523,
+          "sortino": 5.779,
+          "max_drawdown": 65.63,
+          "max_drawdown_pct": 1.313,
+          "return_to_drawdown": 2.029,
+          "win_rate": 0.6,
+          "profit_factor": 1.639,
+          "avg_r": 0.1922,
+          "t_stat": 0.87,
+          "symbols_up": 1,
+          "psr": 0.8242,
+          "targets": 12,
+          "stops": 8,
+          "flat_by": 0
+        },
+        "trades_by_symbol": {
+          "BAC": 10,
+          "JPM": 1,
+          "AMD": 14,
+          "DIS": 2,
+          "AAPL": 5,
+          "IWM": 3,
+          "COST": 4,
+          "TSLA": 1,
+          "COIN": 2,
+          "AMZN": 5,
+          "CVX": 5,
+          "QQQ": 1,
+          "AVGO": 3,
+          "MSFT": 1,
+          "MU": 1,
+          "KO": 1
+        }
+      }
+    },
+    {
+      "id": "orb5 atr:1 1R cap novol until1100",
+      "categories": [
+        "Smallest drawdown while making money"
+      ],
+      "base": {
+        "is": {
+          "days": 39,
+          "trades": 524,
+          "net": 139.36,
+          "return_pct": 0.093,
+          "sharpe": 0.514,
+          "sortino": 0.752,
+          "max_drawdown": 534.87,
+          "max_drawdown_pct": 0.357,
+          "return_to_drawdown": 0.261,
+          "win_rate": 0.5,
+          "profit_factor": 1.025,
+          "avg_r": -0.0127,
+          "t_stat": -0.296,
+          "symbols_up": 15,
+          "psr": 0.5791,
+          "targets": 244,
+          "stops": 250,
+          "flat_by": 30
+        },
+        "oos": {
+          "days": 20,
+          "trades": 282,
+          "net": -256.84,
+          "return_pct": -0.171,
+          "sharpe": -2.161,
+          "sortino": -2.755,
+          "max_drawdown": 660.35,
+          "max_drawdown_pct": 0.44,
+          "return_to_drawdown": -0.389,
+          "win_rate": 0.4929,
+          "profit_factor": 0.915,
+          "avg_r": -0.0273,
+          "t_stat": -0.467,
+          "symbols_up": 11,
+          "psr": 0.2761,
+          "targets": 132,
+          "stops": 136,
+          "flat_by": 14
+        },
+        "all": {
+          "days": 59,
+          "trades": 806,
+          "net": -117.48,
+          "return_pct": -0.078,
+          "sharpe": -0.302,
+          "sortino": -0.422,
+          "max_drawdown": 968.26,
+          "max_drawdown_pct": 0.646,
+          "return_to_drawdown": -0.121,
+          "win_rate": 0.4975,
+          "profit_factor": 0.986,
+          "avg_r": -0.0178,
+          "t_stat": -0.515,
+          "symbols_up": 12,
+          "psr": 0.4425,
+          "targets": 376,
+          "stops": 386,
+          "flat_by": 44
+        }
+      },
+      "rejected": 0,
+      "cost": {
+        "0.0": {
+          "days": 59,
+          "trades": 806,
+          "net": 235.68,
+          "return_pct": 0.157,
+          "sharpe": 0.606,
+          "sortino": 0.89,
+          "max_drawdown": 799.62,
+          "max_drawdown_pct": 0.533,
+          "return_to_drawdown": 0.295,
+          "win_rate": 0.4975,
+          "profit_factor": 1.028,
+          "avg_r": 0.0063,
+          "t_stat": 0.182,
+          "symbols_up": 13,
+          "psr": 0.6144,
+          "targets": 376,
+          "stops": 386,
+          "flat_by": 44
+        },
+        "0.01": {
+          "days": 59,
+          "trades": 806,
+          "net": -117.48,
+          "return_pct": -0.078,
+          "sharpe": -0.302,
+          "sortino": -0.422,
+          "max_drawdown": 968.26,
+          "max_drawdown_pct": 0.646,
+          "return_to_drawdown": -0.121,
+          "win_rate": 0.4975,
+          "profit_factor": 0.986,
+          "avg_r": -0.0178,
+          "t_stat": -0.515,
+          "symbols_up": 12,
+          "psr": 0.4425,
+          "targets": 376,
+          "stops": 386,
+          "flat_by": 44
+        },
+        "0.03": {
+          "days": 59,
+          "trades": 806,
+          "net": -823.8,
+          "return_pct": -0.549,
+          "sharpe": -2.112,
+          "sortino": -2.684,
+          "max_drawdown": 1316.22,
+          "max_drawdown_pct": 0.877,
+          "return_to_drawdown": -0.626,
+          "win_rate": 0.4975,
+          "profit_factor": 0.907,
+          "avg_r": -0.0659,
+          "t_stat": -1.906,
+          "symbols_up": 10,
+          "psr": 0.1562,
+          "targets": 376,
+          "stops": 386,
+          "flat_by": 44
+        }
+      },
+      "delay": {
+        "oos": {
+          "days": 20,
+          "trades": 238,
+          "net": -157.58,
+          "return_pct": -0.105,
+          "sharpe": -1.323,
+          "sortino": -2.248,
+          "max_drawdown": 471.61,
+          "max_drawdown_pct": 0.314,
+          "return_to_drawdown": -0.334,
+          "win_rate": 0.4034,
+          "profit_factor": 0.93,
+          "avg_r": -0.0037,
+          "t_stat": -0.061,
+          "symbols_up": 12,
+          "psr": 0.3665,
+          "targets": 88,
+          "stops": 136,
+          "flat_by": 14
+        },
+        "all": {
+          "days": 59,
+          "trades": 695,
+          "net": -432.9,
+          "return_pct": -0.289,
+          "sharpe": -1.3,
+          "sortino": -1.864,
+          "max_drawdown": 734.9,
+          "max_drawdown_pct": 0.49,
+          "return_to_drawdown": -0.589,
+          "win_rate": 0.3986,
+          "profit_factor": 0.934,
+          "avg_r": -0.0181,
+          "t_stat": -0.522,
+          "symbols_up": 10,
+          "psr": 0.2715,
+          "targets": 249,
+          "stops": 402,
+          "flat_by": 44
+        }
+      },
+      "delay_rejected": 0,
+      "risk100": {
+        "days": 59,
+        "trades": 784,
+        "net": -127.4,
+        "return_pct": -0.085,
+        "sharpe": -0.336,
+        "sortino": -0.472,
+        "max_drawdown": 870.3,
+        "max_drawdown_pct": 0.58,
+        "return_to_drawdown": -0.146,
+        "win_rate": 0.4974,
+        "profit_factor": 0.985,
+        "avg_r": -0.0166,
+        "t_stat": -0.474,
+        "symbols_up": 12,
+        "psr": 0.436,
+        "targets": 367,
+        "stops": 376,
+        "flat_by": 41
+      },
+      "tm_off": {
+        "days": 40,
+        "trades": 538,
+        "net": -730.06,
+        "return_pct": -0.487,
+        "sharpe": -3.121,
+        "sortino": -3.717,
+        "max_drawdown": 1046.7,
+        "max_drawdown_pct": 0.698,
+        "return_to_drawdown": -0.697,
+        "win_rate": 0.474,
+        "profit_factor": 0.88,
+        "avg_r": -0.0667,
+        "t_stat": -1.578,
+        "symbols_up": 11,
+        "psr": 0.1059,
+        "targets": 239,
+        "stops": 274,
+        "flat_by": 25
+      },
+      "tm": {
+        "days": 40,
+        "trades": 310,
+        "net": -134.0,
+        "return_pct": -0.089,
+        "sharpe": -0.697,
+        "sortino": -0.971,
+        "max_drawdown": 557.81,
+        "max_drawdown_pct": 0.372,
+        "return_to_drawdown": -0.24,
+        "win_rate": 0.4903,
+        "profit_factor": 0.966,
+        "avg_r": -0.0253,
+        "t_stat": -0.453,
+        "symbols_up": 13,
+        "psr": 0.3922,
+        "targets": 143,
+        "stops": 151,
+        "flat_by": 16
+      },
+      "tm_skipped": 253,
+      "stock_picking": {
+        "in_sample_winners": [
+          "AAPL",
+          "AMD",
+          "AVGO",
+          "COST",
+          "CVX",
+          "DIS",
+          "GOOGL",
+          "INTC",
+          "META",
+          "MSFT",
+          "MU",
+          "NFLX",
+          "TSLA",
+          "UBER",
+          "XOM"
+        ],
+        "count": 15,
+        "oos_winners_only": {
+          "days": 20,
+          "trades": 155,
+          "net": 46.34,
+          "return_pct": 0.062,
+          "sharpe": 0.497,
+          "sortino": 0.817,
+          "max_drawdown": 193.13,
+          "max_drawdown_pct": 0.258,
+          "return_to_drawdown": 0.24,
+          "win_rate": 0.5097,
+          "profit_factor": 1.027,
+          "avg_r": 0.0124,
+          "t_stat": 0.157,
+          "symbols_up": 6,
+          "psr": 0.5547,
+          "targets": 74,
+          "stops": 72,
+          "flat_by": 9
+        },
+        "oos_all_stocks": {
+          "days": 20,
+          "trades": 282,
+          "net": -256.84,
+          "return_pct": -0.171,
+          "sharpe": -2.161,
+          "sortino": -2.755,
+          "max_drawdown": 660.35,
+          "max_drawdown_pct": 0.44,
+          "return_to_drawdown": -0.389,
+          "win_rate": 0.4929,
+          "profit_factor": 0.915,
+          "avg_r": -0.0273,
+          "t_stat": -0.467,
+          "symbols_up": 11,
+          "psr": 0.2761,
+          "targets": 132,
+          "stops": 136,
+          "flat_by": 14
+        }
+      },
+      "by_symbol": {
+        "AAPL": {
+          "is": 58.96,
+          "oos": -48.2
+        },
+        "AMD": {
+          "is": 56.93,
+          "oos": -88.2
+        },
+        "AMZN": {
+          "is": -200.62,
+          "oos": 33.44
+        },
+        "AVGO": {
+          "is": 27.38,
+          "oos": -21.17
+        },
+        "BAC": {
+          "is": -67.5,
+          "oos": -14.96
+        },
+        "COIN": {
+          "is": -231.44,
+          "oos": -96.19
+        },
+        "COST": {
+          "is": 22.22,
+          "oos": 63.2
+        },
+        "CVX": {
+          "is": 48.91,
+          "oos": 19.73
+        },
+        "DIS": {
+          "is": 142.14,
+          "oos": -25.59
+        },
+        "GOOGL": {
+          "is": 3.29,
+          "oos": -76.38
+        },
+        "INTC": {
+          "is": 253.95,
+          "oos": 91.56
+        },
+        "IWM": {
+          "is": -48.97,
+          "oos": 8.58
+        },
+        "JPM": {
+          "is": -58.0,
+          "oos": -49.25
+        },
+        "KO": {
+          "is": -43.83,
+          "oos": 19.89
+        },
+        "LLY": {
+          "is": -52.6,
+          "oos": 34.92
+        },
+        "META": {
+          "is": 108.3,
+          "oos": 102.59
+        },
+        "MSFT": {
+          "is": 109.13,
+          "oos": 75.31
+        },
+        "MU": {
+          "is": 30.08,
+          "oos": -100.98
+        },
+        "NFLX": {
+          "is": 155.34,
+          "oos": -47.26
+        },
+        "NKE": {
+          "is": -7.42,
+          "oos": -57.05
+        },
+        "NVDA": {
+          "is": -20.61,
+          "oos": 77.62
+        },
+        "PFE": {
+          "is": -9.01,
+          "oos": -67.06
+        },
+        "PLTR": {
+          "is": -151.44,
+          "oos": -75.31
+        },
+        "QQQ": {
+          "is": -30.97,
+          "oos": -15.21
+        },
+        "SPY": {
+          "is": -23.44,
+          "oos": -12.24
+        },
+        "TSLA": {
+          "is": 37.14,
+          "oos": 218.75
+        },
+        "UBER": {
+          "is": 57.17,
+          "oos": -60.39
+        },
+        "UNH": {
+          "is": -116.3,
+          "oos": -73.91
+        },
+        "WMT": {
+          "is": -35.02,
+          "oos": -16.45
+        },
+        "XOM": {
+          "is": 125.59,
+          "oos": -56.63
+        }
+      },
+      "one_account": {
+        "all": {
+          "days": 59,
+          "trades": 58,
+          "net": 106.67,
+          "return_pct": 2.133,
+          "sharpe": 1.002,
+          "sortino": 1.475,
+          "max_drawdown": 103.21,
+          "max_drawdown_pct": 2.064,
+          "return_to_drawdown": 1.034,
+          "win_rate": 0.5345,
+          "profit_factor": 1.154,
+          "avg_r": 0.0847,
+          "t_stat": 0.669,
+          "symbols_up": 1,
+          "psr": 0.684,
+          "targets": 29,
+          "stops": 24,
+          "flat_by": 5
+        },
+        "is": {
+          "days": 39,
+          "trades": 38,
+          "net": -29.87,
+          "return_pct": -0.597,
+          "sharpe": -0.434,
+          "sortino": -0.605,
+          "max_drawdown": 103.21,
+          "max_drawdown_pct": 2.064,
+          "return_to_drawdown": -0.289,
+          "win_rate": 0.5,
+          "profit_factor": 0.939,
+          "avg_r": 0.0244,
+          "t_stat": 0.157,
+          "symbols_up": 0,
+          "psr": 0.433,
+          "targets": 17,
+          "stops": 16,
+          "flat_by": 5
+        },
+        "oos": {
+          "days": 20,
+          "trades": 20,
+          "net": 136.54,
+          "return_pct": 2.731,
+          "sharpe": 3.621,
+          "sortino": 5.976,
+          "max_drawdown": 65.1,
+          "max_drawdown_pct": 1.302,
+          "return_to_drawdown": 2.097,
+          "win_rate": 0.6,
+          "profit_factor": 1.659,
+          "avg_r": 0.1993,
+          "t_stat": 0.899,
+          "symbols_up": 1,
+          "psr": 0.8306,
+          "targets": 12,
+          "stops": 8,
+          "flat_by": 0
+        },
+        "trades_by_symbol": {
+          "BAC": 9,
+          "JPM": 1,
+          "AMD": 14,
+          "DIS": 2,
+          "AAPL": 5,
+          "IWM": 3,
+          "COST": 4,
+          "TSLA": 1,
+          "COIN": 2,
+          "AMZN": 5,
+          "CVX": 5,
+          "QQQ": 1,
+          "AVGO": 3,
+          "MSFT": 1,
+          "MU": 1,
+          "KO": 1
+        }
+      }
+    },
+    {
+      "id": "pdh atr:1.5 2R cap vol1.5x until1530",
+      "categories": [
+        "Strongest evidence (t-stat of R per trade)"
+      ],
+      "base": {
+        "is": {
+          "days": 39,
+          "trades": 79,
+          "net": -234.82,
+          "return_pct": -0.157,
+          "sharpe": -2.946,
+          "sortino": -3.542,
+          "max_drawdown": 234.82,
+          "max_drawdown_pct": 0.157,
+          "return_to_drawdown": -1.0,
+          "win_rate": 0.4051,
+          "profit_factor": 0.706,
+          "avg_r": 0.0354,
+          "t_stat": 0.359,
+          "symbols_up": 11,
+          "psr": 0.1192,
+          "targets": 22,
+          "stops": 40,
+          "flat_by": 17
+        },
+        "oos": {
+          "days": 20,
+          "trades": 49,
+          "net": 52.15,
+          "return_pct": 0.035,
+          "sharpe": 2.338,
+          "sortino": 4.512,
+          "max_drawdown": 41.18,
+          "max_drawdown_pct": 0.027,
+          "return_to_drawdown": 1.266,
+          "win_rate": 0.3878,
+          "profit_factor": 1.198,
+          "avg_r": -0.0363,
+          "t_stat": -0.299,
+          "symbols_up": 9,
+          "psr": 0.7515,
+          "targets": 11,
+          "stops": 26,
+          "flat_by": 12
+        },
+        "all": {
+          "days": 59,
+          "trades": 128,
+          "net": -182.67,
+          "return_pct": -0.122,
+          "sharpe": -1.728,
+          "sortino": -2.177,
+          "max_drawdown": 234.82,
+          "max_drawdown_pct": 0.157,
+          "return_to_drawdown": -0.778,
+          "win_rate": 0.3984,
+          "profit_factor": 0.828,
+          "avg_r": 0.008,
+          "t_stat": 0.104,
+          "symbols_up": 11,
+          "psr": 0.1975,
+          "targets": 33,
+          "stops": 66,
+          "flat_by": 29
+        }
+      },
+      "rejected": 0,
+      "cost": {
+        "0.0": {
+          "days": 59,
+          "trades": 128,
+          "net": -115.87,
+          "return_pct": -0.077,
+          "sharpe": -1.09,
+          "sortino": -1.42,
+          "max_drawdown": 202.53,
+          "max_drawdown_pct": 0.135,
+          "return_to_drawdown": -0.572,
+          "win_rate": 0.3984,
+          "profit_factor": 0.887,
+          "avg_r": 0.0399,
+          "t_stat": 0.518,
+          "symbols_up": 11,
+          "psr": 0.2976,
+          "targets": 33,
+          "stops": 66,
+          "flat_by": 29
+        },
+        "0.01": {
+          "days": 59,
+          "trades": 128,
+          "net": -182.67,
+          "return_pct": -0.122,
+          "sharpe": -1.728,
+          "sortino": -2.177,
+          "max_drawdown": 234.82,
+          "max_drawdown_pct": 0.157,
+          "return_to_drawdown": -0.778,
+          "win_rate": 0.3984,
+          "profit_factor": 0.828,
+          "avg_r": 0.008,
+          "t_stat": 0.104,
+          "symbols_up": 11,
+          "psr": 0.1975,
+          "targets": 33,
+          "stops": 66,
+          "flat_by": 29
+        },
+        "0.03": {
+          "days": 59,
+          "trades": 128,
+          "net": -316.27,
+          "return_pct": -0.211,
+          "sharpe": -3.003,
+          "sortino": -3.559,
+          "max_drawdown": 321.0,
+          "max_drawdown_pct": 0.214,
+          "return_to_drawdown": -0.985,
+          "win_rate": 0.3906,
+          "profit_factor": 0.723,
+          "avg_r": -0.0559,
+          "t_stat": -0.739,
+          "symbols_up": 8,
+          "psr": 0.0652,
+          "targets": 33,
+          "stops": 66,
+          "flat_by": 29
+        }
+      },
+      "delay": {
+        "oos": {
+          "days": 20,
+          "trades": 47,
+          "net": -17.61,
+          "return_pct": -0.012,
+          "sharpe": -0.933,
+          "sortino": -1.385,
+          "max_drawdown": 65.76,
+          "max_drawdown_pct": 0.044,
+          "return_to_drawdown": -0.268,
+          "win_rate": 0.3191,
+          "profit_factor": 0.937,
+          "avg_r": -0.113,
+          "t_stat": -0.941,
+          "symbols_up": 7,
+          "psr": 0.4005,
+          "targets": 10,
+          "stops": 26,
+          "flat_by": 11
+        },
+        "all": {
+          "days": 59,
+          "trades": 126,
+          "net": -210.13,
+          "return_pct": -0.14,
+          "sharpe": -2.577,
+          "sortino": -3.293,
+          "max_drawdown": 210.13,
+          "max_drawdown_pct": 0.14,
+          "return_to_drawdown": -1.0,
+          "win_rate": 0.3651,
+          "profit_factor": 0.787,
+          "avg_r": -0.0289,
+          "t_stat": -0.389,
+          "symbols_up": 9,
+          "psr": 0.1133,
+          "targets": 31,
+          "stops": 67,
+          "flat_by": 28
+        }
+      },
+      "delay_rejected": 0,
+      "risk100": {
+        "days": 59,
+        "trades": 128,
+        "net": -184.46,
+        "return_pct": -0.123,
+        "sharpe": -1.749,
+        "sortino": -2.205,
+        "max_drawdown": 234.87,
+        "max_drawdown_pct": 0.157,
+        "return_to_drawdown": -0.785,
+        "win_rate": 0.3984,
+        "profit_factor": 0.826,
+        "avg_r": 0.0075,
+        "t_stat": 0.099,
+        "symbols_up": 11,
+        "psr": 0.1948,
+        "targets": 33,
+        "stops": 66,
+        "flat_by": 29
+      },
+      "tm_off": {
+        "days": 40,
+        "trades": 88,
+        "net": -66.88,
+        "return_pct": -0.045,
+        "sharpe": -1.048,
+        "sortino": -1.431,
+        "max_drawdown": 117.29,
+        "max_drawdown_pct": 0.078,
+        "return_to_drawdown": -0.57,
+        "win_rate": 0.4091,
+        "profit_factor": 0.896,
+        "avg_r": -0.0165,
+        "t_stat": -0.183,
+        "symbols_up": 12,
+        "psr": 0.3405,
+        "targets": 21,
+        "stops": 47,
+        "flat_by": 20
+      },
+      "tm": {
+        "days": 40,
+        "trades": 0,
+        "net": 0,
+        "return_pct": 0.0,
+        "sharpe": 0.0,
+        "sortino": null,
+        "max_drawdown": 0.0,
+        "max_drawdown_pct": 0.0,
+        "return_to_drawdown": null,
+        "win_rate": null,
+        "profit_factor": null,
+        "avg_r": 0.0,
+        "t_stat": null,
+        "symbols_up": 0,
+        "psr": 0.5,
+        "targets": 0,
+        "stops": 0,
+        "flat_by": 0
+      },
+      "tm_skipped": 91,
+      "stock_picking": {
+        "in_sample_winners": [
+          "AMZN",
+          "COIN",
+          "COST",
+          "CVX",
+          "DIS",
+          "GOOGL",
+          "JPM",
+          "MU",
+          "PFE",
+          "UBER",
+          "WMT"
+        ],
+        "count": 11,
+        "oos_winners_only": {
+          "days": 20,
+          "trades": 22,
+          "net": 96.81,
+          "return_pct": 0.176,
+          "sharpe": 4.523,
+          "sortino": 13.66,
+          "max_drawdown": 22.85,
+          "max_drawdown_pct": 0.042,
+          "return_to_drawdown": 4.237,
+          "win_rate": 0.4545,
+          "profit_factor": 1.871,
+          "avg_r": 0.1132,
+          "t_stat": 0.581,
+          "symbols_up": 5,
+          "psr": 0.9301,
+          "targets": 6,
+          "stops": 10,
+          "flat_by": 6
+        },
+        "oos_all_stocks": {
+          "days": 20,
+          "trades": 49,
+          "net": 52.15,
+          "return_pct": 0.035,
+          "sharpe": 2.338,
+          "sortino": 4.512,
+          "max_drawdown": 41.18,
+          "max_drawdown_pct": 0.027,
+          "return_to_drawdown": 1.266,
+          "win_rate": 0.3878,
+          "profit_factor": 1.198,
+          "avg_r": -0.0363,
+          "t_stat": -0.299,
+          "symbols_up": 9,
+          "psr": 0.7515,
+          "targets": 11,
+          "stops": 26,
+          "flat_by": 12
+        }
+      },
+      "by_symbol": {
+        "AAPL": {
+          "is": -19.99,
+          "oos": 10.11
+        },
+        "AMD": {
+          "is": -9.45,
+          "oos": 0.0
+        },
+        "AMZN": {
+          "is": 4.62,
+          "oos": 16.1
+        },
+        "AVGO": {
+          "is": -15.8,
+          "oos": 0.0
+        },
+        "BAC": {
+          "is": -22.8,
+          "oos": 0.0
+        },
+        "COIN": {
+          "is": 14.03,
+          "oos": 64.0
+        },
+        "COST": {
+          "is": 16.38,
+          "oos": 72.88
+        },
+        "CVX": {
+          "is": 6.48,
+          "oos": -32.25
+        },
+        "DIS": {
+          "is": 5.11,
+          "oos": -23.04
+        },
+        "GOOGL": {
+          "is": 29.7,
+          "oos": -12.7
+        },
+        "IWM": {
+          "is": -8.4,
+          "oos": 0.0
+        },
+        "JPM": {
+          "is": 0.2,
+          "oos": 0.0
+        },
+        "KO": {
+          "is": -13.42,
+          "oos": 25.11
+        },
+        "LLY": {
+          "is": -37.44,
+          "oos": -12.76
+        },
+        "META": {
+          "is": -98.57,
+          "oos": 12.65
+        },
+        "MSFT": {
+          "is": -6.51,
+          "oos": -5.82
+        },
+        "MU": {
+          "is": 53.25,
+          "oos": 0.0
+        },
+        "NFLX": {
+          "is": -25.45,
+          "oos": 0.0
+        },
+        "NKE": {
+          "is": -20.35,
+          "oos": -10.74
+        },
+        "NVDA": {
+          "is": -0.87,
+          "oos": -19.33
+        },
+        "PFE": {
+          "is": 14.24,
+          "oos": 8.18
+        },
+        "PLTR": {
+          "is": -51.36,
+          "oos": -14.4
+        },
+        "QQQ": {
+          "is": -2.7,
+          "oos": 11.8
+        },
+        "SPY": {
+          "is": -15.0,
+          "oos": -19.24
+        },
+        "TSLA": {
+          "is": -18.02,
+          "oos": 0.0
+        },
+        "UBER": {
+          "is": 36.19,
+          "oos": -4.68
+        },
+        "UNH": {
+          "is": 0.0,
+          "oos": -22.04
+        },
+        "WMT": {
+          "is": 26.18,
+          "oos": 8.32
+        },
+        "XOM": {
+          "is": -75.07,
+          "oos": 0.0
+        }
+      },
+      "one_account": {
+        "all": {
+          "days": 59,
+          "trades": 43,
+          "net": -11.42,
+          "return_pct": -0.228,
+          "sharpe": -0.165,
+          "sortino": -0.279,
+          "max_drawdown": 134.78,
+          "max_drawdown_pct": 2.696,
+          "return_to_drawdown": -0.085,
+          "win_rate": 0.3721,
+          "profit_factor": 0.968,
+          "avg_r": -0.0141,
+          "t_stat": -0.117,
+          "symbols_up": 0,
+          "psr": 0.4686,
+          "targets": 7,
+          "stops": 19,
+          "flat_by": 17
+        },
+        "is": {
+          "days": 39,
+          "trades": 27,
+          "net": -96.52,
+          "return_pct": -1.93,
+          "sharpe": -2.115,
+          "sortino": -3.1,
+          "max_drawdown": 96.52,
+          "max_drawdown_pct": 1.93,
+          "return_to_drawdown": -1.0,
+          "win_rate": 0.2593,
+          "profit_factor": 0.658,
+          "avg_r": -0.1721,
+          "t_stat": -1.222,
+          "symbols_up": 0,
+          "psr": 0.2202,
+          "targets": 3,
+          "stops": 14,
+          "flat_by": 10
+        },
+        "oos": {
+          "days": 20,
+          "trades": 16,
+          "net": 85.1,
+          "return_pct": 1.702,
+          "sharpe": 3.706,
+          "sortino": 9.998,
+          "max_drawdown": 38.26,
+          "max_drawdown_pct": 0.765,
+          "return_to_drawdown": 2.224,
+          "win_rate": 0.5625,
+          "profit_factor": 2.088,
+          "avg_r": 0.2526,
+          "t_stat": 1.208,
+          "symbols_up": 1,
+          "psr": 0.8908,
+          "targets": 4,
+          "stops": 5,
+          "flat_by": 7
+        },
+        "trades_by_symbol": {
+          "META": 3,
+          "QQQ": 4,
+          "IWM": 1,
+          "CVX": 3,
+          "XOM": 3,
+          "KO": 3,
+          "TSLA": 2,
+          "DIS": 2,
+          "AVGO": 1,
+          "UBER": 1,
+          "JPM": 1,
+          "SPY": 5,
+          "MSFT": 1,
+          "GOOGL": 2,
+          "MU": 1,
+          "PFE": 1,
+          "PLTR": 1,
+          "UNH": 1,
+          "COIN": 1,
+          "COST": 3,
+          "AMZN": 1,
+          "NVDA": 1,
+          "AAPL": 1
+        }
+      }
+    },
+    {
+      "id": "orb30 atr:1 1R market vol1.5x until1530",
+      "categories": [
+        "Steadiest (best worse quarter in-sample)"
+      ],
+      "base": {
+        "is": {
+          "days": 39,
+          "trades": 108,
+          "net": -97.12,
+          "return_pct": -0.065,
+          "sharpe": -1.842,
+          "sortino": -2.435,
+          "max_drawdown": 150.46,
+          "max_drawdown_pct": 0.1,
+          "return_to_drawdown": -0.645,
+          "win_rate": 0.537,
+          "profit_factor": 0.831,
+          "avg_r": 0.0152,
+          "t_stat": 0.161,
+          "symbols_up": 13,
+          "psr": 0.2414,
+          "targets": 58,
+          "stops": 50,
+          "flat_by": 0
+        },
+        "oos": {
+          "days": 20,
+          "trades": 61,
+          "net": 56.99,
+          "return_pct": 0.038,
+          "sharpe": 2.709,
+          "sortino": 4.079,
+          "max_drawdown": 67.13,
+          "max_drawdown_pct": 0.045,
+          "return_to_drawdown": 0.849,
+          "win_rate": 0.6393,
+          "profit_factor": 1.277,
+          "avg_r": 0.1971,
+          "t_stat": 1.592,
+          "symbols_up": 13,
+          "psr": 0.7618,
+          "targets": 39,
+          "stops": 22,
+          "flat_by": 0
+        },
+        "all": {
+          "days": 59,
+          "trades": 169,
+          "net": -40.13,
+          "return_pct": -0.027,
+          "sharpe": -0.54,
+          "sortino": -0.735,
+          "max_drawdown": 169.59,
+          "max_drawdown_pct": 0.113,
+          "return_to_drawdown": -0.237,
+          "win_rate": 0.574,
+          "profit_factor": 0.948,
+          "avg_r": 0.0809,
+          "t_stat": 1.073,
+          "symbols_up": 17,
+          "psr": 0.3978,
+          "targets": 97,
+          "stops": 72,
+          "flat_by": 0
+        }
+      },
+      "rejected": 0,
+      "cost": {
+        "0.0": {
+          "days": 59,
+          "trades": 169,
+          "net": 44.43,
+          "return_pct": 0.03,
+          "sharpe": 0.59,
+          "sortino": 0.867,
+          "max_drawdown": 127.74,
+          "max_drawdown_pct": 0.085,
+          "return_to_drawdown": 0.348,
+          "win_rate": 0.574,
+          "profit_factor": 1.06,
+          "avg_r": 0.1499,
+          "t_stat": 1.97,
+          "symbols_up": 18,
+          "psr": 0.6117,
+          "targets": 97,
+          "stops": 72,
+          "flat_by": 0
+        },
+        "0.01": {
+          "days": 59,
+          "trades": 169,
+          "net": -40.13,
+          "return_pct": -0.027,
+          "sharpe": -0.54,
+          "sortino": -0.735,
+          "max_drawdown": 169.59,
+          "max_drawdown_pct": 0.113,
+          "return_to_drawdown": -0.237,
+          "win_rate": 0.574,
+          "profit_factor": 0.948,
+          "avg_r": 0.0809,
+          "t_stat": 1.073,
+          "symbols_up": 17,
+          "psr": 0.3978,
+          "targets": 97,
+          "stops": 72,
+          "flat_by": 0
+        },
+        "0.03": {
+          "days": 59,
+          "trades": 169,
+          "net": -209.25,
+          "return_pct": -0.14,
+          "sharpe": -2.862,
+          "sortino": -3.403,
+          "max_drawdown": 285.25,
+          "max_drawdown_pct": 0.19,
+          "return_to_drawdown": -0.734,
+          "win_rate": 0.5562,
+          "profit_factor": 0.753,
+          "avg_r": -0.0572,
+          "t_stat": -0.758,
+          "symbols_up": 14,
+          "psr": 0.0814,
+          "targets": 97,
+          "stops": 72,
+          "flat_by": 0
+        }
+      },
+      "delay": {
+        "oos": {
+          "days": 20,
+          "trades": 60,
+          "net": 48.44,
+          "return_pct": 0.032,
+          "sharpe": 2.053,
+          "sortino": 3.104,
+          "max_drawdown": 51.25,
+          "max_drawdown_pct": 0.034,
+          "return_to_drawdown": 0.945,
+          "win_rate": 0.55,
+          "profit_factor": 1.263,
+          "avg_r": 0.131,
+          "t_stat": 1.074,
+          "symbols_up": 11,
+          "psr": 0.7076,
+          "targets": 39,
+          "stops": 21,
+          "flat_by": 0
+        },
+        "all": {
+          "days": 59,
+          "trades": 158,
+          "net": -48.29,
+          "return_pct": -0.032,
+          "sharpe": -0.683,
+          "sortino": -0.905,
+          "max_drawdown": 180.54,
+          "max_drawdown_pct": 0.12,
+          "return_to_drawdown": -0.267,
+          "win_rate": 0.5127,
+          "profit_factor": 0.915,
+          "avg_r": 0.0035,
+          "t_stat": 0.049,
+          "symbols_up": 14,
+          "psr": 0.3709,
+          "targets": 96,
+          "stops": 62,
+          "flat_by": 0
+        }
+      },
+      "delay_rejected": 15,
+      "risk100": {
+        "days": 59,
+        "trades": 169,
+        "net": -40.13,
+        "return_pct": -0.027,
+        "sharpe": -0.54,
+        "sortino": -0.735,
+        "max_drawdown": 169.59,
+        "max_drawdown_pct": 0.113,
+        "return_to_drawdown": -0.237,
+        "win_rate": 0.574,
+        "profit_factor": 0.948,
+        "avg_r": 0.0809,
+        "t_stat": 1.073,
+        "symbols_up": 17,
+        "psr": 0.3978,
+        "targets": 97,
+        "stops": 72,
+        "flat_by": 0
+      },
+      "tm_off": {
+        "days": 40,
+        "trades": 115,
+        "net": -16.29,
+        "return_pct": -0.011,
+        "sharpe": -0.356,
+        "sortino": -0.477,
+        "max_drawdown": 111.4,
+        "max_drawdown_pct": 0.074,
+        "return_to_drawdown": -0.146,
+        "win_rate": 0.5913,
+        "profit_factor": 0.966,
+        "avg_r": 0.1117,
+        "t_stat": 1.218,
+        "symbols_up": 16,
+        "psr": 0.4442,
+        "targets": 68,
+        "stops": 47,
+        "flat_by": 0
+      },
+      "tm": {
+        "days": 40,
+        "trades": 57,
+        "net": -8.72,
+        "return_pct": -0.006,
+        "sharpe": -0.228,
+        "sortino": -0.309,
+        "max_drawdown": 98.21,
+        "max_drawdown_pct": 0.065,
+        "return_to_drawdown": -0.089,
+        "win_rate": 0.5789,
+        "profit_factor": 0.968,
+        "avg_r": 0.0808,
+        "t_stat": 0.615,
+        "symbols_up": 11,
+        "psr": 0.4642,
+        "targets": 33,
+        "stops": 24,
+        "flat_by": 0
+      },
+      "tm_skipped": 58,
+      "stock_picking": {
+        "in_sample_winners": [
+          "AMD",
+          "AMZN",
+          "COIN",
+          "CVX",
+          "GOOGL",
+          "KO",
+          "MU",
+          "NFLX",
+          "NVDA",
+          "PFE",
+          "QQQ",
+          "SPY",
+          "TSLA"
+        ],
+        "count": 13,
+        "oos_winners_only": {
+          "days": 20,
+          "trades": 28,
+          "net": -23.7,
+          "return_pct": -0.036,
+          "sharpe": -1.625,
+          "sortino": -2.053,
+          "max_drawdown": 54.52,
+          "max_drawdown_pct": 0.084,
+          "return_to_drawdown": -0.435,
+          "win_rate": 0.5714,
+          "profit_factor": 0.798,
+          "avg_r": 0.0733,
+          "t_stat": 0.402,
+          "symbols_up": 5,
+          "psr": 0.3254,
+          "targets": 16,
+          "stops": 12,
+          "flat_by": 0
+        },
+        "oos_all_stocks": {
+          "days": 20,
+          "trades": 61,
+          "net": 56.99,
+          "return_pct": 0.038,
+          "sharpe": 2.709,
+          "sortino": 4.079,
+          "max_drawdown": 67.13,
+          "max_drawdown_pct": 0.045,
+          "return_to_drawdown": 0.849,
+          "win_rate": 0.6393,
+          "profit_factor": 1.277,
+          "avg_r": 0.1971,
+          "t_stat": 1.592,
+          "symbols_up": 13,
+          "psr": 0.7618,
+          "targets": 39,
+          "stops": 22,
+          "flat_by": 0
+        }
+      },
+      "by_symbol": {
+        "AAPL": {
+          "is": -42.85,
+          "oos": -8.4
+        },
+        "AMD": {
+          "is": 11.82,
+          "oos": 0.0
+        },
+        "AMZN": {
+          "is": 22.76,
+          "oos": 20.58
+        },
+        "AVGO": {
+          "is": -10.9,
+          "oos": 0.0
+        },
+        "BAC": {
+          "is": -15.6,
+          "oos": 0.0
+        },
+        "COIN": {
+          "is": 2.76,
+          "oos": -48.0
+        },
+        "COST": {
+          "is": -5.19,
+          "oos": 25.51
+        },
+        "CVX": {
+          "is": 5.66,
+          "oos": 6.75
+        },
+        "DIS": {
+          "is": -8.74,
+          "oos": -24.21
+        },
+        "GOOGL": {
+          "is": 1.95,
+          "oos": 0.0
+        },
+        "INTC": {
+          "is": -14.88,
+          "oos": 0.0
+        },
+        "IWM": {
+          "is": -7.02,
+          "oos": 7.02
+        },
+        "JPM": {
+          "is": -26.4,
+          "oos": 0.0
+        },
+        "KO": {
+          "is": 1.54,
+          "oos": 15.21
+        },
+        "LLY": {
+          "is": -17.49,
+          "oos": -8.52
+        },
+        "META": {
+          "is": -11.26,
+          "oos": 17.95
+        },
+        "MSFT": {
+          "is": -5.32,
+          "oos": 9.92
+        },
+        "MU": {
+          "is": 18.27,
+          "oos": 0.0
+        },
+        "NFLX": {
+          "is": 23.96,
+          "oos": 0.0
+        },
+        "NKE": {
+          "is": -34.52,
+          "oos": -16.96
+        },
+        "NVDA": {
+          "is": 1.82,
+          "oos": -13.26
+        },
+        "PFE": {
+          "is": 44.32,
+          "oos": 9.84
+        },
+        "PLTR": {
+          "is": -45.84,
+          "oos": 19.95
+        },
+        "QQQ": {
+          "is": 12.66,
+          "oos": 1.55
+        },
+        "SPY": {
+          "is": 8.56,
+          "oos": -8.36
+        },
+        "TSLA": {
+          "is": 42.17,
+          "oos": -8.01
+        },
+        "UBER": {
+          "is": -37.37,
+          "oos": -2.11
+        },
+        "UNH": {
+          "is": 0.0,
+          "oos": 36.08
+        },
+        "WMT": {
+          "is": -6.24,
+          "oos": 18.74
+        },
+        "XOM": {
+          "is": -5.75,
+          "oos": 5.72
+        }
+      },
+      "one_account": {
+        "all": {
+          "days": 59,
+          "trades": 53,
+          "net": -6.48,
+          "return_pct": -0.13,
+          "sharpe": -0.134,
+          "sortino": -0.187,
+          "max_drawdown": 107.59,
+          "max_drawdown_pct": 2.152,
+          "return_to_drawdown": -0.06,
+          "win_rate": 0.566,
+          "profit_factor": 0.979,
+          "avg_r": 0.0745,
+          "t_stat": 0.548,
+          "symbols_up": 0,
+          "psr": 0.4743,
+          "targets": 30,
+          "stops": 23,
+          "flat_by": 0
+        },
+        "is": {
+          "days": 39,
+          "trades": 35,
+          "net": -32.51,
+          "return_pct": -0.65,
+          "sharpe": -0.978,
+          "sortino": -1.367,
+          "max_drawdown": 107.59,
+          "max_drawdown_pct": 2.152,
+          "return_to_drawdown": -0.302,
+          "win_rate": 0.5143,
+          "profit_factor": 0.857,
+          "avg_r": -0.0277,
+          "t_stat": -0.163,
+          "symbols_up": 0,
+          "psr": 0.3531,
+          "targets": 18,
+          "stops": 17,
+          "flat_by": 0
+        },
+        "oos": {
+          "days": 20,
+          "trades": 18,
+          "net": 26.03,
+          "return_pct": 0.521,
+          "sharpe": 1.707,
+          "sortino": 2.386,
+          "max_drawdown": 54.15,
+          "max_drawdown_pct": 1.083,
+          "return_to_drawdown": 0.481,
+          "win_rate": 0.6667,
+          "profit_factor": 1.328,
+          "avg_r": 0.2732,
+          "t_stat": 1.209,
+          "symbols_up": 1,
+          "psr": 0.6737,
+          "targets": 12,
+          "stops": 6,
+          "flat_by": 0
+        },
+        "trades_by_symbol": {
+          "META": 3,
+          "JPM": 1,
+          "PFE": 5,
+          "XOM": 1,
+          "UBER": 2,
+          "NFLX": 1,
+          "PLTR": 2,
+          "TSLA": 1,
+          "NKE": 1,
+          "AAPL": 3,
+          "AVGO": 1,
+          "BAC": 1,
+          "DIS": 4,
+          "GOOGL": 1,
+          "MSFT": 1,
+          "NVDA": 1,
+          "SPY": 3,
+          "MU": 1,
+          "COST": 5,
+          "CVX": 2,
+          "AMZN": 2,
+          "QQQ": 6,
+          "WMT": 1,
+          "COIN": 2,
+          "UNH": 1,
+          "KO": 1
+        }
+      }
+    },
+    {
+      "id": "orb15 or-mid 1R market novol until1530",
+      "categories": [],
+      "base": {
+        "is": {
+          "days": 39,
+          "trades": 546,
+          "net": -1091.31,
+          "return_pct": -0.728,
+          "sharpe": -4.861,
+          "sortino": -5.466,
+          "max_drawdown": 1157.29,
+          "max_drawdown_pct": 0.772,
+          "return_to_drawdown": -0.943,
+          "win_rate": 0.4542,
+          "profit_factor": 0.832,
+          "avg_r": -0.0939,
+          "t_stat": -2.43,
+          "symbols_up": 9,
+          "psr": 0.0288,
+          "targets": 194,
+          "stops": 229,
+          "flat_by": 123
+        },
+        "oos": {
+          "days": 20,
+          "trades": 281,
+          "net": -338.66,
+          "return_pct": -0.226,
+          "sharpe": -2.215,
+          "sortino": -3.03,
+          "max_drawdown": 601.24,
+          "max_drawdown_pct": 0.401,
+          "return_to_drawdown": -0.563,
+          "win_rate": 0.516,
+          "profit_factor": 0.89,
+          "avg_r": 0.013,
+          "t_stat": 0.237,
+          "symbols_up": 13,
+          "psr": 0.2795,
+          "targets": 118,
+          "stops": 110,
+          "flat_by": 53
+        },
+        "all": {
+          "days": 59,
+          "trades": 827,
+          "net": -1429.97,
+          "return_pct": -0.953,
+          "sharpe": -3.787,
+          "sortino": -4.588,
+          "max_drawdown": 1484.27,
+          "max_drawdown_pct": 0.99,
+          "return_to_drawdown": -0.963,
+          "win_rate": 0.4752,
+          "profit_factor": 0.851,
+          "avg_r": -0.0576,
+          "t_stat": -1.823,
+          "symbols_up": 12,
+          "psr": 0.0413,
+          "targets": 312,
+          "stops": 339,
+          "flat_by": 176
+        }
+      },
+      "rejected": 0,
+      "cost": {
+        "0.0": {
+          "days": 59,
+          "trades": 827,
+          "net": -1070.53,
+          "return_pct": -0.714,
+          "sharpe": -2.823,
+          "sortino": -3.594,
+          "max_drawdown": 1136.03,
+          "max_drawdown_pct": 0.757,
+          "return_to_drawdown": -0.942,
+          "win_rate": 0.4764,
+          "profit_factor": 0.886,
+          "avg_r": -0.0368,
+          "t_stat": -1.163,
+          "symbols_up": 12,
+          "psr": 0.095,
+          "targets": 312,
+          "stops": 339,
+          "flat_by": 176
+        },
+        "0.01": {
+          "days": 59,
+          "trades": 827,
+          "net": -1429.97,
+          "return_pct": -0.953,
+          "sharpe": -3.787,
+          "sortino": -4.588,
+          "max_drawdown": 1484.27,
+          "max_drawdown_pct": 0.99,
+          "return_to_drawdown": -0.963,
+          "win_rate": 0.4752,
+          "profit_factor": 0.851,
+          "avg_r": -0.0576,
+          "t_stat": -1.823,
+          "symbols_up": 12,
+          "psr": 0.0413,
+          "targets": 312,
+          "stops": 339,
+          "flat_by": 176
+        },
+        "0.03": {
+          "days": 59,
+          "trades": 827,
+          "net": -2148.85,
+          "return_pct": -1.433,
+          "sharpe": -5.729,
+          "sortino": -6.316,
+          "max_drawdown": 2180.75,
+          "max_drawdown_pct": 1.454,
+          "return_to_drawdown": -0.985,
+          "win_rate": 0.4692,
+          "profit_factor": 0.784,
+          "avg_r": -0.0993,
+          "t_stat": -3.139,
+          "symbols_up": 7,
+          "psr": 0.0053,
+          "targets": 312,
+          "stops": 339,
+          "flat_by": 176
+        }
+      },
+      "delay": {
+        "oos": {
+          "days": 20,
+          "trades": 297,
+          "net": -353.42,
+          "return_pct": -0.236,
+          "sharpe": -2.345,
+          "sortino": -3.197,
+          "max_drawdown": 808.12,
+          "max_drawdown_pct": 0.539,
+          "return_to_drawdown": -0.437,
+          "win_rate": 0.5118,
+          "profit_factor": 0.887,
+          "avg_r": 0.0119,
+          "t_stat": 0.231,
+          "symbols_up": 14,
+          "psr": 0.27,
+          "targets": 126,
+          "stops": 117,
+          "flat_by": 54
+        },
+        "all": {
+          "days": 59,
+          "trades": 849,
+          "net": -1147.21,
+          "return_pct": -0.765,
+          "sharpe": -3.052,
+          "sortino": -3.905,
+          "max_drawdown": 1147.21,
+          "max_drawdown_pct": 0.765,
+          "return_to_drawdown": -1.0,
+          "win_rate": 0.4688,
+          "profit_factor": 0.871,
+          "avg_r": -0.0466,
+          "t_stat": -1.594,
+          "symbols_up": 11,
+          "psr": 0.0827,
+          "targets": 324,
+          "stops": 345,
+          "flat_by": 180
+        }
+      },
+      "delay_rejected": 11,
+      "risk100": {
+        "days": 59,
+        "trades": 803,
+        "net": -1526.04,
+        "return_pct": -1.017,
+        "sharpe": -4.011,
+        "sortino": -4.926,
+        "max_drawdown": 1571.94,
+        "max_drawdown_pct": 1.048,
+        "return_to_drawdown": -0.971,
+        "win_rate": 0.4732,
+        "profit_factor": 0.84,
+        "avg_r": -0.0634,
+        "t_stat": -1.979,
+        "symbols_up": 11,
+        "psr": 0.0375,
+        "targets": 301,
+        "stops": 332,
+        "flat_by": 170
+      },
+      "tm_off": {
+        "days": 40,
+        "trades": 570,
+        "net": -1414.88,
+        "return_pct": -0.943,
+        "sharpe": -5.087,
+        "sortino": -6.041,
+        "max_drawdown": 1414.88,
+        "max_drawdown_pct": 0.943,
+        "return_to_drawdown": -1.0,
+        "win_rate": 0.4702,
+        "profit_factor": 0.789,
+        "avg_r": -0.0833,
+        "t_stat": -2.191,
+        "symbols_up": 10,
+        "psr": 0.0405,
+        "targets": 205,
+        "stops": 243,
+        "flat_by": 122
+      },
+      "tm": {
+        "days": 40,
+        "trades": 298,
+        "net": -406.02,
+        "return_pct": -0.271,
+        "sharpe": -1.83,
+        "sortino": -2.33,
+        "max_drawdown": 571.59,
+        "max_drawdown_pct": 0.381,
+        "return_to_drawdown": -0.71,
+        "win_rate": 0.4933,
+        "profit_factor": 0.893,
+        "avg_r": -0.0408,
+        "t_stat": -0.756,
+        "symbols_up": 9,
+        "psr": 0.2342,
+        "targets": 119,
+        "stops": 127,
+        "flat_by": 52
+      },
+      "tm_skipped": 323,
+      "stock_picking": {
+        "in_sample_winners": [
+          "AAPL",
+          "COIN",
+          "CVX",
+          "DIS",
+          "GOOGL",
+          "META",
+          "MU",
+          "NFLX",
+          "SPY"
+        ],
+        "count": 9,
+        "oos_winners_only": {
+          "days": 20,
+          "trades": 99,
+          "net": -573.58,
+          "return_pct": -1.275,
+          "sharpe": -6.309,
+          "sortino": -6.733,
+          "max_drawdown": 589.31,
+          "max_drawdown_pct": 1.31,
+          "return_to_drawdown": -0.973,
+          "win_rate": 0.4242,
+          "profit_factor": 0.581,
+          "avg_r": -0.1197,
+          "t_stat": -1.29,
+          "symbols_up": 1,
+          "psr": 0.0449,
+          "targets": 37,
+          "stops": 46,
+          "flat_by": 16
+        },
+        "oos_all_stocks": {
+          "days": 20,
+          "trades": 281,
+          "net": -338.66,
+          "return_pct": -0.226,
+          "sharpe": -2.215,
+          "sortino": -3.03,
+          "max_drawdown": 601.24,
+          "max_drawdown_pct": 0.401,
+          "return_to_drawdown": -0.563,
+          "win_rate": 0.516,
+          "profit_factor": 0.89,
+          "avg_r": 0.013,
+          "t_stat": 0.237,
+          "symbols_up": 13,
+          "psr": 0.2795,
+          "targets": 118,
+          "stops": 110,
+          "flat_by": 53
+        }
+      },
+      "by_symbol": {
+        "AAPL": {
+          "is": 110.16,
+          "oos": -31.05
+        },
+        "AMD": {
+          "is": -153.02,
+          "oos": 54.9
+        },
+        "AMZN": {
+          "is": -213.46,
+          "oos": -41.91
+        },
+        "AVGO": {
+          "is": -95.95,
+          "oos": 108.99
+        },
+        "BAC": {
+          "is": -47.56,
+          "oos": -57.72
+        },
+        "COIN": {
+          "is": 50.29,
+          "oos": -215.91
+        },
+        "COST": {
+          "is": -55.56,
+          "oos": 49.5
+        },
+        "CVX": {
+          "is": 117.08,
+          "oos": -8.98
+        },
+        "DIS": {
+          "is": 24.29,
+          "oos": -53.51
+        },
+        "GOOGL": {
+          "is": 0.13,
+          "oos": -123.83
+        },
+        "INTC": {
+          "is": -103.21,
+          "oos": 18.68
+        },
+        "IWM": {
+          "is": -54.49,
+          "oos": 61.49
+        },
+        "JPM": {
+          "is": -158.5,
+          "oos": -61.97
+        },
+        "KO": {
+          "is": -26.57,
+          "oos": 51.91
+        },
+        "LLY": {
+          "is": -164.6,
+          "oos": -4.08
+        },
+        "META": {
+          "is": 126.71,
+          "oos": -55.32
+        },
+        "MSFT": {
+          "is": -33.33,
+          "oos": -32.88
+        },
+        "MU": {
+          "is": 131.45,
+          "oos": -41.18
+        },
+        "NFLX": {
+          "is": 137.48,
+          "oos": -55.92
+        },
+        "NKE": {
+          "is": -31.17,
+          "oos": -24.05
+        },
+        "NVDA": {
+          "is": -95.15,
+          "oos": 6.26
+        },
+        "PFE": {
+          "is": -64.65,
+          "oos": 68.11
+        },
+        "PLTR": {
+          "is": -117.62,
+          "oos": 99.95
+        },
+        "QQQ": {
+          "is": -32.76,
+          "oos": 33.44
+        },
+        "SPY": {
+          "is": 5.72,
+          "oos": 12.12
+        },
+        "TSLA": {
+          "is": -17.77,
+          "oos": -48.73
+        },
+        "UBER": {
+          "is": -52.8,
+          "oos": -59.98
+        },
+        "UNH": {
+          "is": -176.13,
+          "oos": 11.42
+        },
+        "WMT": {
+          "is": -7.57,
+          "oos": 31.8
+        },
+        "XOM": {
+          "is": -92.75,
+          "oos": -30.21
+        }
+      },
+      "one_account": {
+        "all": {
+          "days": 59,
+          "trades": 59,
+          "net": -155.49,
+          "return_pct": -3.11,
+          "sharpe": -1.451,
+          "sortino": -1.878,
+          "max_drawdown": 272.4,
+          "max_drawdown_pct": 5.448,
+          "return_to_drawdown": -0.571,
+          "win_rate": 0.5085,
+          "profit_factor": 0.811,
+          "avg_r": -0.0249,
+          "t_stat": -0.203,
+          "symbols_up": 0,
+          "psr": 0.2426,
+          "targets": 24,
+          "stops": 25,
+          "flat_by": 10
+        },
+        "is": {
+          "days": 39,
+          "trades": 39,
+          "net": -77.99,
+          "return_pct": -1.56,
+          "sharpe": -1.029,
+          "sortino": -1.343,
+          "max_drawdown": 189.26,
+          "max_drawdown_pct": 3.785,
+          "return_to_drawdown": -0.412,
+          "win_rate": 0.5385,
+          "profit_factor": 0.863,
+          "avg_r": 0.0533,
+          "t_stat": 0.355,
+          "symbols_up": 0,
+          "psr": 0.3441,
+          "targets": 17,
+          "stops": 14,
+          "flat_by": 8
+        },
+        "oos": {
+          "days": 20,
+          "trades": 20,
+          "net": -77.5,
+          "return_pct": -1.55,
+          "sharpe": -2.448,
+          "sortino": -3.178,
+          "max_drawdown": 117.89,
+          "max_drawdown_pct": 2.358,
+          "return_to_drawdown": -0.657,
+          "win_rate": 0.45,
+          "profit_factor": 0.692,
+          "avg_r": -0.1773,
+          "t_stat": -0.835,
+          "symbols_up": 0,
+          "psr": 0.2538,
+          "targets": 7,
+          "stops": 11,
+          "flat_by": 2
+        },
+        "trades_by_symbol": {
+          "JPM": 3,
+          "CVX": 4,
+          "AVGO": 4,
+          "BAC": 2,
+          "LLY": 3,
+          "AAPL": 4,
+          "KO": 1,
+          "META": 3,
+          "NVDA": 3,
+          "AMD": 6,
+          "COST": 3,
+          "TSLA": 3,
+          "DIS": 4,
+          "IWM": 4,
+          "COIN": 3,
+          "AMZN": 5,
+          "GOOGL": 2,
+          "XOM": 2
+        }
+      }
+    }
+  ]
+}

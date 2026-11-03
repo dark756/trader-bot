@@ -222,6 +222,8 @@ python -B paper-trading-scenarios\run_scenarios.py
 python -B paper-trading-scenarios\make_report.py
 ```
 
+`paper-trading-scenarios\feature-search` tests the same choices on 30 stocks and ETFs, in every combination (852), over 59 sessions of Yahoo's 5-minute bars. The winners are picked on the first 39 sessions and then tested on the last 20. Read its `RESULTS.md` before you choose settings: no combination made money in both halves. Its `README.md` says how to run it again.
+
 ## 3. A real trading day
 
 ### 3.1 New York time and India time

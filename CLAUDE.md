@@ -16,6 +16,10 @@ In the findings, "confirmed" means the bug was reproduced, and "by reading" mean
 - **The PDF.** `shashwat-day-trader-skill-setup-guide.pdf` is a third-party 13-page guide (IST times, SEBI disclaimer), not from upstream.
 - **User docs.** `howtouse.md` covers setup and daily use; `nomenclature.md` covers the naming scheme and has a per-module index. Update both when behavior or names change.
 - **Paper-trading scenarios.** `paper-trading-scenarios/` (local, not upstream; in `LOCAL_DOCS`) holds 13 replays of the pipeline over the 39 TSLA sessions the 60-day fixture covers after 20 sessions of history, each changing one choice from the README rules, and the comparison PDF. `run_scenarios.py` (stdlib) runs the real tools per session in a per-scenario `TRADER_HOME` on a pinned clock, gives each READY ticket an automatic yes (`ticket.py approve --auto-yes`, practice runs on paper only), stands in a simulated paper broker for Allow once and Alpaca, and has the tools record every placement and fill (`result`, `fill --practice`, and the 15:55 exit through `flatten`, check and its own auto-yes), checking each evening that the tools' cash matches the simulator's; `make_report.py` (matplotlib, Edge headless; elsewhere `REPORT_BROWSER` names a Chrome-family program, and in a Linux container only Playwright's `chrome-headless-shell` prints, because full Chromium hangs on `--print-to-pdf`) builds `paper-trading-comparison.pdf`. The 2026-11-03 PDF was built that way, so its fonts are Linux fallbacks for Segoe UI; rebuilding on the PC with Edge restores them. Its README has the fill rules and the file layout.
+- **Feature search.** `paper-trading-scenarios/feature-search/` (2026-11-03) tests the pack's choices on 30 stocks and ETFs (Yahoo 5-minute bars, 59 sessions to 2 Nov 2026, `data/`), in every combination (832, plus 20 no-signal baselines):
+  - `engine.py` calls the tools' functions in-process (`entry.evaluate`, `exit.compute`, `size.size_trade`/`limit_cap`, `check.check`, the runner's `paper_broker`), with a per-share cost and Alpaca's rejection of a bracket whose stop is already crossed;
+  - `validate.py` proves it reproduces all 13 TSLA scenarios (507 sessions), so it is the same rules about 25 times faster;
+  - `search.py` picks per category on the first 39 sessions and scores the picks on the last 20; `stress.py` and `tm_filter.py` test the picks and the Time Machine filter; `write_results.py` writes `RESULTS.md` from `results/`.
 - **This copy versus upstream** (checked 2026-11-02 against GitHub's tree, by blob hash). Whoever passed this copy on had stripped the author's attribution: the `LICENSE` file, `plugin.json`'s `author`, `homepage`, `repository` and `license` fields, `marketplace.json`'s `owner` (which Claude Code's marketplace format requires), and the README's install section, `git clone` line and credit line. No code or fixture differed. All of it is restored verbatim; MIT requires the copyright notice to stay.
 
 ## This machine
@@ -40,6 +44,11 @@ python -B -m unittest discover -s tests -v                   # all 389 tests, 15
 python -B -m unittest discover -s tests -p "test_risk.py"    # one file
 python -B paper-trading-scenarios/run_scenarios.py           # the 13 scenarios, about 7.5 min; or name some: S01 S07
 python -B paper-trading-scenarios/make_report.py             # rebuilds the comparison PDF, about 6 s
+python -B paper-trading-scenarios/feature-search/validate.py       # the fast engine vs the 13 scenarios, about 20 s
+python -B paper-trading-scenarios/feature-search/search.py         # 852 combos x 30 stocks, about 2 min on 4 cores
+python -B paper-trading-scenarios/feature-search/stress.py         # the picks' stress tests, about 9 min
+python -B paper-trading-scenarios/feature-search/tm_filter.py      # the Time Machine filter on 26 combos, about 25 min
+python -B paper-trading-scenarios/feature-search/write_results.py  # RESULTS.md from results/
 ```
 
 `-B` keeps `__pycache__` out of the tree. The tests chdir into temp folders and never touch `trader/`, and `tests/_load.py` clears `TRADER_HOME` before any test runs, so a `TRADER_HOME` set for real trading never receives test files. The scenario runner rewrites its scenario folders; its numbers are deterministic (pinned clock, offline data, the Time Machine's fixed seed), so a change in them after a code change is a change in behavior.
@@ -217,6 +226,14 @@ With Alpaca, a ticket is also READY only after today's `ticket.py account --numb
   - Leftovers on purpose: `_` for thrown-away values; `rsi`, `ttm`, `eps`, `nth`; `at` in `orb_window` (the `--at` flag); the bar keys `o h l c v t` (JSON data).
 - **Restore points:** the folder before any edit, before the bug-fix round and before the naming refactor are in the session scratchpad (`original-backup`, `backup-after-v-fixes`, `backup-before-rename`). The scratchpad is temporary.
 - **Paper-trading scenarios (2026-11-02, rerun 2026-11-03).** 13 x 39 sessions ran with no tool error: 220 trades, 2 risk blocks (B15), 2 filter skips. Since 2026-11-03 every READY ticket gets an automatic practice yes (`ticket.py approve --auto-yes`) and the tools record every placement and fill (`result`, `fill --practice`, and the 69 exits at 15:55 through `flatten`, check and their own auto-yes); nothing goes to a broker. The tools' practice cash matched the simulated broker's on all 507 evenings, and every number came out the same as on 2026-11-02 (with one trade a day and `pdt_guard` off, no verdict reads the log). The log now feeds the risk check: the baseline with `"pdt_guard": true` (a scratch run, not a scenario) blocks 22 Sep and 5 Oct (three day trades in five sessions) and ends at -$109.38. A separate script recomputed all 220 fills and exits from the raw bars and agreed (again on 2026-11-03). Results: S10 (prior-day high) +$59.42 and S04 (1 % stop) +$50.74 ended up, the baseline -$62.52, S06 (2R) -$119.50 the worst, and every 90 % bootstrap range crosses zero. No moment in a $50 scenario went past -$49.60; with $100, -$62.01. No bar opened below a stop.
+
+- **Feature search (2026-11-03), `paper-trading-scenarios/feature-search/RESULTS.md`.** 832 combos x 30 stocks x 59 sessions (10 Aug to 2 Nov 2026), 1 cent a share each way, picked on the first 39 sessions and scored on the last 20:
+  - after costs, 0.8 % of combos made money in-sample, 36.8 % out-of-sample, and none in both halves;
+  - the in-sample and out-of-sample Sharpe ranks correlate at -0.04; the median combo lost 0.071R a trade;
+  - the in-sample winner of nearly every category (5-minute range, 1 x ATR stop, 1R, market, until 11:00) made +$317.58 in-sample and lost $290.46 out-of-sample, with a deflated Sharpe of 3.5 %;
+  - per trade, the signals did no better than buying every stock at 9:45 with the same exits; they lose less only by trading less;
+  - per trade, both halves favored a 1R target, a limit at the cap, no volume check and the full window, all still losing.
+  - Nothing there is a money-maker: don't present any combo as one.
 
 ## Possible vulnerabilities (all fixed or mitigated; re-verified 2026-11-02)
 
