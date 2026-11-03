@@ -5,3 +5,7 @@ trader/
 # Python's byte-code cache
 __pycache__/
 *.pyc
+
+# Your API keys (the large backtest's fetch.py reads .env.local or .env): never in a commit
+.env
+.env.*

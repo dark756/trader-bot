@@ -1,8 +1,10 @@
 """A small client for Alpaca's REST API: market data bars, the asset list and the market calendar.
 
-Read-only: it never touches orders or the account. The keys come from the environment, never from a file:
-APCA_API_KEY_ID and APCA_API_SECRET_KEY (Alpaca's own names), or ALPACA_API_KEY and ALPACA_SECRET_KEY (the
-names Alpaca's MCP server uses). Paper keys are enough. Standard library only.
+Read-only: it never touches orders or the account. Paper keys are enough. The keys come from the terminal's
+environment, or else from a .env.local (or .env) file in this folder, the repo root or the current folder, which
+git ignores. The names it knows: APCA_API_KEY_ID and APCA_API_SECRET_KEY (Alpaca's own), ALPACA_API_KEY and
+ALPACA_SECRET_KEY (Alpaca's MCP server's), and a few close variants (ID_NAMES, SECRET_NAMES). It never prints a
+key, only where it found them. Standard library only.
 """
 
 import calendar
@@ -26,13 +28,81 @@ class AlpacaError(Exception):
     pass
 
 
-def keys_from_environment():
-    key = os.environ.get("APCA_API_KEY_ID") or os.environ.get("ALPACA_API_KEY")
-    secret = os.environ.get("APCA_API_SECRET_KEY") or os.environ.get("ALPACA_SECRET_KEY")
-    if not key or not secret:
-        raise AlpacaError("no Alpaca keys: set APCA_API_KEY_ID and APCA_API_SECRET_KEY (your paper keys, from the "
-                          "Alpaca dashboard) in this terminal first; see the README")
+ID_NAMES = ("APCA_API_KEY_ID", "ALPACA_API_KEY_ID", "ALPACA_API_KEY", "ALPACA_KEY_ID", "ALPACA_KEY")
+SECRET_NAMES = ("APCA_API_SECRET_KEY", "ALPACA_API_SECRET_KEY", "ALPACA_SECRET_KEY", "ALPACA_SECRET")
+ENV_FILES = (".env.local", ".env")
+HERE = os.path.dirname(os.path.abspath(__file__))
+REPO = os.path.dirname(os.path.dirname(HERE))
+
+
+def parse_env_text(text):
+    """The NAME=value lines of a .env file -> {NAME: value}. Takes `export NAME=...`, `set NAME=...` and
+    PowerShell's `$env:NAME = "..."` too, quoted or not; a # starts a comment outside quotes."""
+    out = {}
+    for line in text.splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        for prefix in ("export ", "set ", "$env:"):
+            if line.lower().startswith(prefix.lower()):
+                line = line[len(prefix):].strip()
+        if "=" not in line:
+            continue
+        name, value = line.split("=", 1)
+        name, value = name.strip(), value.strip()
+        if len(value) >= 2 and value[0] in "\"'" and value[-1] == value[0]:
+            value = value[1:-1]
+        elif len(value) >= 2 and value[0] in "\"'" and value[0] in value[1:]:
+            value = value[1:value.index(value[0], 1)]  # a closing quote, then a comment
+        else:
+            value = value.split(" #")[0].split("\t#")[0].strip()
+        if name:
+            out[name] = value
+    return out
+
+
+def pick_keys(values):
+    """(key, secret) from a dict of variables, by the first of each name list that is set, or (None, None)."""
+    key = next((values[name] for name in ID_NAMES if values.get(name)), None)
+    secret = next((values[name] for name in SECRET_NAMES if values.get(name)), None)
     return key, secret
+
+
+def env_file_paths(folders=None):
+    """Where a .env.local or .env may sit: this folder, the repo root, then the current folder."""
+    out = []
+    for folder in folders or (HERE, REPO, os.getcwd()):
+        for name in ENV_FILES:
+            path = os.path.abspath(os.path.join(folder, name))
+            if path not in out:
+                out.append(path)
+    return out
+
+
+def find_keys(environ=None, folders=None):
+    """(key, secret, where): the terminal's environment first, then the first .env file that has both.
+    `where` names the source, never the keys. Raises AlpacaError when there are none."""
+    key, secret = pick_keys(os.environ if environ is None else environ)
+    if key and secret:
+        return key, secret, "the terminal's environment"
+    notes = []
+    for path in env_file_paths(folders):
+        if not os.path.isfile(path):
+            continue
+        try:
+            with open(path, encoding="utf-8-sig") as file:          # -sig: Notepad's byte-order mark
+                values = parse_env_text(file.read())
+        except (OSError, ValueError) as error:
+            notes.append("could not read %s (%s)" % (path, type(error).__name__))
+            continue
+        key, secret = pick_keys(values)
+        if key and secret:
+            return key, secret, path
+        notes.append("%s has %d NAME=value lines, but not both a key and a secret under these names: %s; and %s"
+                     % (path, len(values), " or ".join(ID_NAMES), " or ".join(SECRET_NAMES)))
+    raise AlpacaError("no Alpaca keys: put APCA_API_KEY_ID=... and APCA_API_SECRET_KEY=... (your paper keys) in a "
+                      ".env.local file in the repo root, or set them in this terminal; see the README"
+                      + ("".join("\n  " + note for note in notes) if notes else ""))
 
 
 def epoch_of(stamp):
