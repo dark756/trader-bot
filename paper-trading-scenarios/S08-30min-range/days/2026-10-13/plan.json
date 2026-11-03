@@ -1,0 +1,28 @@
+{
+  "created_by": "trader-exit",
+  "symbol": "TSLA",
+  "side": "buy",
+  "date": "2026-10-13",
+  "setup": "orb",
+  "entry": 375.52,
+  "entry_time": "10:45 AM",
+  "entry_bar": 14,
+  "interval": "5m",
+  "opening_range": {
+    "high": 375.4,
+    "low": 371.3,
+    "minutes": 30
+  },
+  "stop": 373.35,
+  "stop_rule": "or_mid",
+  "stop_label": "opening-range midpoint",
+  "target": 377.69,
+  "target_r": 1.0,
+  "target_label": "1R (one times the risk)",
+  "risk_per_share": 2.17,
+  "reward_risk": 1.0,
+  "flat_by": "15:55",
+  "stop_detail": "($375.40 + $371.30) / 2 = $373.35",
+  "created_at": "2026-10-13T14:45:00Z",
+  "note": "A stop is a plan, not a guarantee: a gap or a fast market can fill past it."
+}

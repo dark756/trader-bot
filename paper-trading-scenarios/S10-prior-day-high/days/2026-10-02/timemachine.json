@@ -1,0 +1,73 @@
+{
+  "created_by": "trader-timemachine",
+  "created_at": "2026-10-02T13:45:00Z",
+  "source": "offline",
+  "data": {
+    "symbol": "TSLA",
+    "interval": "5m",
+    "range": "60d",
+    "last_bar": "2026-10-02 09:40 ET",
+    "dropped": {
+      "no_price": 0,
+      "off_grid": 1,
+      "not_complete": 871,
+      "outside_hours": 0
+    },
+    "short_sessions_left_out": []
+  },
+  "plan": {
+    "symbol": "TSLA",
+    "side": "buy",
+    "date": "2026-10-02",
+    "setup": "level",
+    "entry": 369.2,
+    "entry_time": "9:45 AM",
+    "entry_bar": 2,
+    "stop": 365.5,
+    "target": 372.9,
+    "risk_per_share": 3.7,
+    "target_r": 1.0,
+    "opening_range": {
+      "high": 371.33,
+      "low": 359.41,
+      "minutes": 15
+    },
+    "stop_rule": "pct",
+    "interval": "5m",
+    "flat_by": "15:55",
+    "from": "C:\\Users\\gurka\\Desktop\\day-trader-skill-main\\paper-trading-scenarios\\S10-prior-day-high\\trader-home/plan.json"
+  },
+  "mc": {
+    "replays": 10000,
+    "seed": 19,
+    "window": 2,
+    "block": 1,
+    "bars_left": 75,
+    "p_target": 0.5523,
+    "p_stop": 0.4211,
+    "p_neither": 0.0266,
+    "p_green": 0.5655,
+    "median_close": 370.09,
+    "p5_close": 359.64,
+    "p95_close": 380.9,
+    "avg_R": 0.132,
+    "r_at_target": 1.0,
+    "band_paths": 2000,
+    "until": "16:00",
+    "pool_sessions": 48,
+    "pool_from": "2026-07-27",
+    "pool_to": "2026-10-01"
+  },
+  "history": {
+    "sessions": 48,
+    "triggered": 0,
+    "rule": null,
+    "trades": [],
+    "note": "skipped: the history replay knows the opening-range breakout (orb) only, this plan's setup is 'level'"
+  },
+  "verdict": "Leans toward the target: target first 55.2 % vs stop first 42.1 %.",
+  "verdict_notes": [],
+  "warnings": [],
+  "note": "A simulation built from TSLA's own last 48 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers.",
+  "trimmed": "mc.bands, mc.band_times, mc.sample_paths and mc.hist removed to save space"
+}

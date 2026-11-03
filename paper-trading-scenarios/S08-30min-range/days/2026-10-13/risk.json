@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-13",
+  "now_new_york": "2026-10-13 10:45",
+  "now_utc": "2026-10-13T14:45:00Z",
+  "paper": true,
+  "results": [
+    {
+      "index": 1,
+      "symbol": "TSLA",
+      "side": "buy",
+      "kind": "entry",
+      "amount": "9 shares",
+      "value_usd": 3379.68,
+      "entry_ref": 375.52,
+      "entry_ref_from": "plan",
+      "stop": 373.35,
+      "target": 377.69,
+      "risk_per_share": 2.17,
+      "max_loss": 19.53,
+      "reward_risk": 1.0,
+      "fingerprint": "5f0b3e541b9ccc96",
+      "verdict": "PASS",
+      "reasons": [],
+      "warnings": [],
+      "info": [
+        "entry 375.52 (the plan's entry), stop 373.35, target 377.69: risk 2.17 a share",
+        "max loss $19.53 (limit $50), reward:risk 1.00 (min 1)",
+        "today before this: 0 of 3 trades, $0 of $150 daily loss"
+      ]
+    }
+  ],
+  "pass": 1,
+  "block": 0,
+  "warnings": [],
+  "cash_after": 1522.76,
+  "today": {
+    "orders_placed": 0,
+    "entries_placed": 0,
+    "loss_at_risk": 0.0,
+    "day_trades_5d": null
+  },
+  "clock": "pinned",
+  "checked_at": "2026-11-01T21:08:08Z",
+  "orders_file": "C:\\Users\\gurka\\Desktop\\day-trader-skill-main\\paper-trading-scenarios\\S08-30min-range\\trader-home\\orders.json"
+}

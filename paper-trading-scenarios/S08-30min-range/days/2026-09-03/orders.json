@@ -1,0 +1,31 @@
+{
+  "created_by": "trader-budget",
+  "created_at": "2026-09-03T14:25:00Z",
+  "status": "proposed",
+  "paper": true,
+  "note": "Proposals only. Nothing is placed until trader-risk passes each order and you say yes to it in the chat.",
+  "source": "trader/plan.json (TSLA orb 2026-09-03)",
+  "orders": [
+    {
+      "symbol": "TSLA",
+      "side": "buy",
+      "qty": "8",
+      "type": "market",
+      "time_in_force": "day",
+      "order_class": "bracket",
+      "take_profit_limit_price": "384.53",
+      "stop_loss_stop_price": "372.07",
+      "why": "opening-range breakout on TSLA: 8 shares, bound by your $50 max loss per trade (8 x 6.23 = $49.84 at the stop)",
+      "plan": {
+        "entry": 378.3,
+        "stop": 372.07,
+        "target": 384.53,
+        "risk_per_share": 6.23,
+        "max_loss": 49.84,
+        "setup": "orb",
+        "entry_time": "10:25 AM",
+        "flat_by": "15:55"
+      }
+    }
+  ]
+}

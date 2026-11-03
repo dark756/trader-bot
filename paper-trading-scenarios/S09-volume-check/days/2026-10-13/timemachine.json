@@ -1,0 +1,121 @@
+{
+  "created_by": "trader-timemachine",
+  "created_at": "2026-10-13T15:00:00Z",
+  "source": "offline",
+  "data": {
+    "symbol": "TSLA",
+    "interval": "5m",
+    "range": "60d",
+    "last_bar": "2026-10-13 10:55 ET",
+    "dropped": {
+      "no_price": 0,
+      "off_grid": 1,
+      "not_complete": 310,
+      "outside_hours": 0
+    },
+    "short_sessions_left_out": []
+  },
+  "plan": {
+    "symbol": "TSLA",
+    "side": "buy",
+    "date": "2026-10-13",
+    "setup": "orb",
+    "entry": 375.25,
+    "entry_time": "11:00 AM",
+    "entry_bar": 17,
+    "stop": 373.1,
+    "target": 377.4,
+    "risk_per_share": 2.15,
+    "target_r": 1.0,
+    "opening_range": {
+      "high": 374.9,
+      "low": 371.3,
+      "minutes": 15
+    },
+    "stop_rule": "or_mid",
+    "interval": "5m",
+    "flat_by": "15:55",
+    "from": "C:\\Users\\gurka\\Desktop\\day-trader-skill-main\\paper-trading-scenarios\\S09-volume-check\\trader-home/plan.json"
+  },
+  "mc": {
+    "replays": 10000,
+    "seed": 19,
+    "window": 2,
+    "block": 1,
+    "bars_left": 60,
+    "p_target": 0.4744,
+    "p_stop": 0.5203,
+    "p_neither": 0.0053,
+    "p_green": 0.4768,
+    "median_close": 375.25,
+    "p5_close": 367.73,
+    "p95_close": 382.89,
+    "avg_R": -0.046,
+    "r_at_target": 1.0,
+    "band_paths": 2000,
+    "until": "16:00",
+    "pool_sessions": 55,
+    "pool_from": "2026-07-27",
+    "pool_to": "2026-10-12"
+  },
+  "history": {
+    "sessions": 55,
+    "triggered": 4,
+    "target": 1,
+    "stop": 0,
+    "close": 3,
+    "green": 2,
+    "avg_R": 0.2,
+    "rule": {
+      "setup": "orb",
+      "or_minutes": 15,
+      "stop_rule": "or_mid",
+      "target_r": 1.0
+    },
+    "entry_window": "09:45 to 15:30",
+    "min_volume_x": 1.5,
+    "trades": [
+      {
+        "date": "2026-08-03",
+        "time": "11:25 AM",
+        "entry": 323.64,
+        "stop": 314.41,
+        "target": 332.87,
+        "outcome": "close",
+        "R": -0.16
+      },
+      {
+        "date": "2026-08-13",
+        "time": "12:10 PM",
+        "entry": 333.86,
+        "stop": 328.46,
+        "target": 339.26,
+        "outcome": "target",
+        "R": 1.0
+      },
+      {
+        "date": "2026-08-21",
+        "time": "10:10 AM",
+        "entry": 358.76,
+        "stop": 349.23,
+        "target": 368.29,
+        "outcome": "close",
+        "R": 0.43
+      },
+      {
+        "date": "2026-09-10",
+        "time": "10:20 AM",
+        "entry": 365.45,
+        "stop": 361.53,
+        "target": 369.37,
+        "outcome": "close",
+        "R": -0.47
+      }
+    ]
+  },
+  "verdict": "Close to a coin flip: target first 47.4 % vs stop first 52.0 %.",
+  "verdict_notes": [],
+  "warnings": [],
+  "note": "A simulation built from TSLA's own last 55 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers.",
+  "trimmed": "mc.bands, mc.band_times, mc.sample_paths and mc.hist removed to save space"
+}

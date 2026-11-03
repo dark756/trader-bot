@@ -1,0 +1,2759 @@
+S12-morning-only: Entry window
+No new entries after 11:00 (morning only)
+Every command below ran from the repo root with TRADER_HOME=paper-trading-scenarios\S12-morning-only\trader-home.
+Practice runs (pinned clock); nothing was approved or placed.
+
+====================================================================================================
+Mon 2026-08-24  account cash $5000.00
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-08-24 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Mon 2026-08-24 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $363.24, low $354.78 (1 of 3 bars, still forming).
+ 9:30 bar  closed $355.28  range so far $354.78 to $363.24
+ 9:35 bar  closed $353.58  range so far $352.89 to $363.24
+ 9:40 bar  closed $352.50  opening range set: high $363.24, low $352.50
+ 9:45 bar  closed $353.15  $10.09 under $363.24
+ 9:50 bar  closed $353.11  $10.13 under $363.24
+ 9:55 bar  closed $353.99  $9.25 under $363.24
+10:00 bar  closed $353.40  $9.84 under $363.24
+10:05 bar  closed $353.77  $9.47 under $363.24
+10:10 bar  closed $353.84  $9.40 under $363.24
+10:15 bar  closed $354.21  $9.03 under $363.24
+10:20 bar  closed $354.37  $8.87 under $363.24
+10:25 bar  closed $354.43  $8.81 under $363.24
+10:30 bar  closed $356.80  $6.44 under $363.24
+10:35 bar  closed $357.79  $5.45 under $363.24
+10:40 bar  closed $358.27  $4.97 under $363.24
+10:45 bar  closed $357.79  $5.45 under $363.24
+10:50 bar  closed $358.00  $5.24 under $363.24
+10:55 bar  closed $358.08  $5.16 under $363.24
+EXPIRED  no close above the range high $363.24 by 11:00, the last time for a new entry.
+[exit 1]
+
+====================================================================================================
+Tue 2026-08-25  account cash $5000.00
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-08-25 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Tue 2026-08-25 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $351.80, low $349.20 (1 of 3 bars, still forming).
+ 9:30 bar  closed $349.32  range so far $349.20 to $351.80
+ 9:35 bar  closed $350.78  range so far $349.20 to $351.80
+ 9:40 bar  closed $351.83  opening range set: high $352.24, low $349.20
+ 9:45 bar  closed $352.15  $0.09 under $352.24
+ 9:50 bar  closed $352.13  $0.11 under $352.24
+ 9:55 bar  closed $351.30  $0.94 under $352.24
+10:00 bar  closed $352.04  $0.20 under $352.24
+10:05 bar  closed $352.49  TRIGGERED: closed above $352.24 (+0.07%). Get in now if you take it: 10:10 AM, $352.49
+This is the moment to get in, if you take the trade. Nothing was placed.
+Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\entry.json.
+[exit 0]
+
+$ python trader-exit/exit.py plan --now "2026-08-25 10:10" --write --target 1R
+Exit plan: TSLA long, Tue 2026-08-25, opening-range breakout on 5-minute bars
+  Entry         $352.49 at 10:10 AM (bar 7)
+  Stop          $350.72  opening-range midpoint: ($352.24 + $349.20) / 2 = $350.72
+  Target        $354.26  1R (one times the risk)
+  Risk a share  $1.77 (0.50% of the entry)
+  Reward:risk   1.0
+  Flat by       15:55 ET, win or lose: no overnight hold
+Set before the entry. If price hits the stop, you are out; never move it further away.
+A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\plan.json.
+Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
+[exit 0]
+
+$ python trader-timemachine/timemachine.py run --plan $TRADER_HOME/plan.json --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-08-25 10:10" --write
+TSLA buy, Tuesday 2026-08-25: entry 352.49 at 10:10 AM (bar 7), stop 350.72, target 354.26 (1R, risk 1.77 a share).
+10,000 replays of the rest of the session, 10:10 AM to 4:00 PM (70 five-minute bars), seed 19.
+Each bar is drawn whole from TSLA's own 5-min bars at the same time of day (+-2 bars) over its last 21 full sessions (2026-07-27 to 2026-08-24).
+
+  target first   49.5 %
+  stop first     50.5 %
+  neither        0.0 %    still open at 4:00 PM
+  green          49.5 %   target first, or above the entry at 4:00 PM
+
+  Price at 4:00 PM: median 354.05, 90 % of replays between 344.74 and 363.77.
+  Average R: -0.011 (R = the 1.77 risk: +1R at the target, -1R at the stop).
+
+History: the same rule (15-min opening range, stop at the opening-range midpoint, 1R target, entries 09:45 to 11:00 New York) on each of those 21 real sessions fired 12 times: 6 target, 6 stop, 0 neither. Average R +0.000.
+
+Close to a coin flip: target first 49.5 % vs stop first 50.5 %.
+
+A simulation built from TSLA's own last 21 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\timemachine.json.
+Next: /trader-budget sizes it to your budget and your max loss per trade.
+[exit 0]
+
+$ python trader-budget/size.py --portfolio $TRADER_HOME/practice/portfolio.json --now "2026-08-25 10:10" --write
+TSLA buy, opening-range breakout, entry 352.49 at 10:10 AM
+Stop 350.72: opening-range midpoint. Target 354.26: 1R (one times the risk).
+Sized at 352.49 (the plan's entry). Risk 1.77 a share (entry 352.49 minus stop 350.72). Reward:risk 1.00.
+
+Limits (whole shares; the smallest one wins):
+  max loss      $50 max loss / 1.77 risk a share                            28 shares
+  position cap  75% of $5,000 = $3,750 / 352.49                             10 shares  <- binds
+  max order     $4,000 / 352.49                                             11 shares
+  cash          budget $5,000 minus the $500 cash buffer = $4,500 / 352.49  12 shares
+
+Size: 10 shares of TSLA = $3,524.90 at 352.49. Max loss at the stop: 10 x 1.77 = $17.70.
+A stop is an order, not a promise: in a fast market it can fill below 350.72.
+
+Proposed bracket order (place_stock_order arguments, nothing has been placed):
+  buy 10 TSLA, market, day, take-profit 354.26, stop-loss 350.72
+Flat by 15:55 New York: anything still open then gets closed (trader-alerts rings, trader-broker flatten).
+
+Next: trader-risk checks it, then trader-broker asks you yes or no.
+Education and tooling, not financial advice.
+Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\orders.json
+[exit 0]
+
+$ python trader-risk/check.py --now "2026-08-25 10:10"
+PASS  #1 buy TSLA 10 shares, entry
+          entry 352.49 (the plan's entry), stop 350.72, target 354.26: risk 1.77 a share
+          max loss $17.70 (limit $50), reward:risk 1.00 (min 1)
+          today before this: 0 of 3 trades, $0 of $150 daily loss
+
+1 passed, 0 blocked at 2026-08-25 10:10 New York. Cash after the passed orders: $1,475.10 (paper account).
+Every order passed. trader-broker still asks you yes or no for each one.
+PRACTICE: the clock is pinned (--now or --today), so trader-broker treats these verdicts as practice, never as a real PASS.
+Education and tooling, not financial advice.
+[exit 0]
+
+$ python trader-broker/ticket.py show --now "2026-08-25 10:10"
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+
+ORDER 1 of 1, PAPER account per your config, Alpaca
+  BUY 10 TSLA, market, good for today
+  stop-loss 350.72
+  take-profit 354.26
+  max loss about $17.70 if the stop fills at 350.72 (it can fill worse in a fast market)
+  why: opening-range breakout on TSLA: 10 shares, bound by your position cap (10 x 1.77 = $17.70 at the stop)
+  READY: trader-risk PASS, waiting for your yes
+  Practice run: in a real one, Claude would call place_stock_order with exactly:
+    {
+      "symbol": "TSLA",
+      "side": "buy",
+      "qty": "10",
+      "type": "market",
+      "time_in_force": "day",
+      "order_class": "bracket",
+      "take_profit_limit_price": "354.26",
+      "stop_loss_stop_price": "350.72"
+    }
+  Alpaca places the entry, then the stop-loss and the take-profit as two orders
+  that cancel each other: when one fills, the other is canceled.
+  Reply "yes" to practice the yes, or "no" to skip it. Nothing is placed.
+
+One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
+[exit 0]
+
+[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "10", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "354.26", "stop_loss_stop_price": "350.72"}
+  10:10 filled: bought 10 TSLA at 352.46 (market: the 10:10 bar's open)
+  bracket legs working: stop-loss 350.72, take-profit 354.26
+  10:10 stop-loss filled: sold 10 at 350.72
+  P&L -17.40; deepest open loss -17.40 at 10:10; best open gain +0.00 at 10:10
+
+====================================================================================================
+Wed 2026-08-26  account cash $4982.60
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-08-26 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Wed 2026-08-26 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $345.41, low $342.53 (1 of 3 bars, still forming).
+ 9:30 bar  closed $343.72  range so far $342.53 to $345.41
+ 9:35 bar  closed $346.59  range so far $342.53 to $346.68
+ 9:40 bar  closed $348.43  opening range set: high $349.20, low $342.53
+ 9:45 bar  closed $348.87  $0.33 under $349.20
+ 9:50 bar  closed $348.23  $0.97 under $349.20
+ 9:55 bar  closed $348.89  $0.31 under $349.20
+10:00 bar  closed $348.49  $0.71 under $349.20
+10:05 bar  closed $348.22  $0.98 under $349.20
+10:10 bar  closed $348.96  $0.24 under $349.20
+10:15 bar  closed $349.17  $0.03 under $349.20
+10:20 bar  closed $346.77  $2.43 under $349.20
+10:25 bar  closed $346.25  $2.95 under $349.20
+10:30 bar  closed $346.12  $3.07 under $349.20
+10:35 bar  closed $346.46  $2.74 under $349.20
+10:40 bar  closed $345.86  $3.34 under $349.20
+10:45 bar  closed $344.90  $4.30 under $349.20
+10:50 bar  closed $343.91  $5.29 under $349.20
+10:55 bar  closed $343.51  $5.69 under $349.20
+EXPIRED  no close above the range high $349.20 by 11:00, the last time for a new entry.
+[exit 1]
+
+====================================================================================================
+Thu 2026-08-27  account cash $4982.60
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-08-27 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Thu 2026-08-27 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $348.24, low $345.45 (1 of 3 bars, still forming).
+ 9:30 bar  closed $347.37  range so far $345.45 to $348.24
+ 9:35 bar  closed $348.28  range so far $345.45 to $348.66
+ 9:40 bar  closed $350.70  opening range set: high $350.75, low $345.45
+ 9:45 bar  closed $347.94  $2.81 under $350.75
+ 9:50 bar  closed $350.58  $0.17 under $350.75
+ 9:55 bar  closed $350.29  $0.46 under $350.75
+10:00 bar  closed $349.83  $0.92 under $350.75
+10:05 bar  closed $350.44  $0.31 under $350.75
+10:10 bar  closed $351.63  TRIGGERED: closed above $350.75 (+0.25%). Get in now if you take it: 10:15 AM, $351.63
+This is the moment to get in, if you take the trade. Nothing was placed.
+Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\entry.json.
+[exit 0]
+
+$ python trader-exit/exit.py plan --now "2026-08-27 10:15" --write --target 1R
+Exit plan: TSLA long, Thu 2026-08-27, opening-range breakout on 5-minute bars
+  Entry         $351.63 at 10:15 AM (bar 8)
+  Stop          $348.10  opening-range midpoint: ($350.75 + $345.45) / 2 = $348.1
+  Target        $355.16  1R (one times the risk)
+  Risk a share  $3.53 (1.00% of the entry)
+  Reward:risk   1.0
+  Flat by       15:55 ET, win or lose: no overnight hold
+Set before the entry. If price hits the stop, you are out; never move it further away.
+A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\plan.json.
+Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
+[exit 0]
+
+$ python trader-timemachine/timemachine.py run --plan $TRADER_HOME/plan.json --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-08-27 10:15" --write
+TSLA buy, Thursday 2026-08-27: entry 351.63 at 10:15 AM (bar 8), stop 348.10, target 355.16 (1R, risk 3.53 a share).
+10,000 replays of the rest of the session, 10:15 AM to 4:00 PM (69 five-minute bars), seed 19.
+Each bar is drawn whole from TSLA's own 5-min bars at the same time of day (+-2 bars) over its last 23 full sessions (2026-07-27 to 2026-08-26).
+
+  target first   53.6 %
+  stop first     40.8 %
+  neither        5.6 %    still open at 4:00 PM
+  green          56.7 %   target first, or above the entry at 4:00 PM
+
+  Price at 4:00 PM: median 352.95, 90 % of replays between 343.91 and 362.29.
+  Average R: +0.130 (R = the 3.53 risk: +1R at the target, -1R at the stop).
+
+History: the same rule (15-min opening range, stop at the opening-range midpoint, 1R target, entries 09:45 to 11:00 New York) on each of those 23 real sessions fired 13 times: 6 target, 7 stop, 0 neither. Average R -0.077.
+
+Leans toward the target: target first 53.6 % vs stop first 40.8 %.
+
+A simulation built from TSLA's own last 23 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\timemachine.json.
+Next: /trader-budget sizes it to your budget and your max loss per trade.
+[exit 0]
+
+$ python trader-budget/size.py --portfolio $TRADER_HOME/practice/portfolio.json --now "2026-08-27 10:15" --write
+TSLA buy, opening-range breakout, entry 351.63 at 10:15 AM
+Stop 348.10: opening-range midpoint. Target 355.16: 1R (one times the risk).
+Sized at 351.63 (the plan's entry). Risk 3.53 a share (entry 351.63 minus stop 348.10). Reward:risk 1.00.
+
+Limits (whole shares; the smallest one wins):
+  max loss      $50 max loss / 3.53 risk a share                            14 shares
+  position cap  75% of $5,000 = $3,750 / 351.63                             10 shares  <- binds
+  max order     $4,000 / 351.63                                             11 shares
+  cash          cash $4,982.60 in trader/portfolio.json minus the $500 buffer = $4,482.60 / 351.63  12 shares
+
+Size: 10 shares of TSLA = $3,516.30 at 351.63. Max loss at the stop: 10 x 3.53 = $35.30.
+A stop is an order, not a promise: in a fast market it can fill below 348.10.
+
+Proposed bracket order (place_stock_order arguments, nothing has been placed):
+  buy 10 TSLA, market, day, take-profit 355.16, stop-loss 348.10
+Flat by 15:55 New York: anything still open then gets closed (trader-alerts rings, trader-broker flatten).
+
+Next: trader-risk checks it, then trader-broker asks you yes or no.
+Education and tooling, not financial advice.
+Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\orders.json
+[exit 0]
+
+$ python trader-risk/check.py --now "2026-08-27 10:15"
+PASS  #1 buy TSLA 10 shares, entry
+          entry 351.63 (the plan's entry), stop 348.10, target 355.16: risk 3.53 a share
+          max loss $35.30 (limit $50), reward:risk 1.00 (min 1)
+          today before this: 0 of 3 trades, $0 of $150 daily loss
+
+1 passed, 0 blocked at 2026-08-27 10:15 New York. Cash after the passed orders: $1,466.30 (paper account).
+Every order passed. trader-broker still asks you yes or no for each one.
+PRACTICE: the clock is pinned (--now or --today), so trader-broker treats these verdicts as practice, never as a real PASS.
+Education and tooling, not financial advice.
+[exit 0]
+
+$ python trader-broker/ticket.py show --now "2026-08-27 10:15"
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+
+ORDER 1 of 1, PAPER account per your config, Alpaca
+  BUY 10 TSLA, market, good for today
+  stop-loss 348.10
+  take-profit 355.16
+  max loss about $35.30 if the stop fills at 348.10 (it can fill worse in a fast market)
+  why: opening-range breakout on TSLA: 10 shares, bound by your position cap (10 x 3.53 = $35.30 at the stop)
+  READY: trader-risk PASS, waiting for your yes
+  Practice run: in a real one, Claude would call place_stock_order with exactly:
+    {
+      "symbol": "TSLA",
+      "side": "buy",
+      "qty": "10",
+      "type": "market",
+      "time_in_force": "day",
+      "order_class": "bracket",
+      "take_profit_limit_price": "355.16",
+      "stop_loss_stop_price": "348.10"
+    }
+  Alpaca places the entry, then the stop-loss and the take-profit as two orders
+  that cancel each other: when one fills, the other is canceled.
+  Reply "yes" to practice the yes, or "no" to skip it. Nothing is placed.
+
+One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
+[exit 0]
+
+[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "10", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "355.16", "stop_loss_stop_price": "348.10"}
+  10:15 filled: bought 10 TSLA at 352.37 (market: the 10:15 bar's open)
+  bracket legs working: stop-loss 348.10, take-profit 355.16
+  13:00 take-profit filled: sold 10 at 355.16
+  P&L +27.90; deepest open loss -19.10 at 10:20; best open gain +27.90 at 13:00
+
+====================================================================================================
+Fri 2026-08-28  account cash $5010.50
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-08-28 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Fri 2026-08-28 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $358.49, low $354.92 (1 of 3 bars, still forming).
+ 9:30 bar  closed $357.74  range so far $354.92 to $358.49
+ 9:35 bar  closed $356.08  range so far $354.92 to $358.80
+ 9:40 bar  closed $356.16  opening range set: high $358.80, low $354.92
+ 9:45 bar  closed $355.91  $2.89 under $358.80
+ 9:50 bar  closed $355.36  $3.44 under $358.80
+ 9:55 bar  closed $354.63  $4.17 under $358.80
+10:00 bar  closed $353.85  $4.95 under $358.80
+10:05 bar  closed $353.02  $5.78 under $358.80
+10:10 bar  closed $352.15  $6.65 under $358.80
+10:15 bar  closed $352.61  $6.19 under $358.80
+10:20 bar  closed $352.36  $6.44 under $358.80
+10:25 bar  closed $352.54  $6.26 under $358.80
+10:30 bar  closed $352.77  $6.03 under $358.80
+10:35 bar  closed $352.76  $6.04 under $358.80
+10:40 bar  closed $352.45  $6.35 under $358.80
+10:45 bar  closed $353.13  $5.67 under $358.80
+10:50 bar  closed $353.98  $4.82 under $358.80
+10:55 bar  closed $354.26  $4.54 under $358.80
+EXPIRED  no close above the range high $358.80 by 11:00, the last time for a new entry.
+[exit 1]
+
+====================================================================================================
+Mon 2026-08-31  account cash $5010.50
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-08-31 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Mon 2026-08-31 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $354.86, low $347.15 (1 of 3 bars, still forming).
+ 9:30 bar  closed $352.56  range so far $347.15 to $354.86
+ 9:35 bar  closed $353.68  range so far $347.15 to $354.86
+ 9:40 bar  closed $355.82  opening range set: high $355.94, low $347.15
+ 9:45 bar  closed $359.42  TRIGGERED: closed above $355.94 (+0.98%). Get in now if you take it: 9:50 AM, $359.42
+This is the moment to get in, if you take the trade. Nothing was placed.
+Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\entry.json.
+[exit 0]
+
+$ python trader-exit/exit.py plan --now "2026-08-31 09:50" --write --target 1R
+Exit plan: TSLA long, Mon 2026-08-31, opening-range breakout on 5-minute bars
+  Entry         $359.42 at 9:50 AM (bar 3)
+  Stop          $351.54  opening-range midpoint: ($355.94 + $347.15) / 2 = $351.545, rounded down
+  Target        $367.30  1R (one times the risk)
+  Risk a share  $7.88 (2.19% of the entry)
+  Reward:risk   1.0
+  Flat by       15:55 ET, win or lose: no overnight hold
+Set before the entry. If price hits the stop, you are out; never move it further away.
+A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\plan.json.
+Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
+[exit 0]
+
+$ python trader-timemachine/timemachine.py run --plan $TRADER_HOME/plan.json --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-08-31 09:50" --write
+TSLA buy, Monday 2026-08-31: entry 359.42 at 9:50 AM (bar 3), stop 351.54, target 367.30 (1R, risk 7.88 a share).
+10,000 replays of the rest of the session, 9:50 AM to 4:00 PM (74 five-minute bars), seed 19.
+Each bar is drawn whole from TSLA's own 5-min bars at the same time of day (+-2 bars) over its last 25 full sessions (2026-07-27 to 2026-08-28).
+
+  target first   26.7 %
+  stop first     16.4 %
+  neither        56.9 %   still open at 4:00 PM
+  green          58.1 %   target first, or above the entry at 4:00 PM
+
+  Price at 4:00 PM: median 360.69, 90 % of replays between 350.61 and 371.38.
+  Average R: +0.133 (R = the 7.88 risk: +1R at the target, -1R at the stop).
+
+History: the same rule (15-min opening range, stop at the opening-range midpoint, 1R target, entries 09:45 to 11:00 New York) on each of those 25 real sessions fired 14 times: 7 target, 7 stop, 0 neither. Average R +0.000.
+
+Leans toward the target: target first 26.7 % vs stop first 16.4 %.
+56.9 % of the replays hit neither by 4:00 PM; the price at 4:00 PM decides those.
+
+A simulation built from TSLA's own last 25 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\timemachine.json.
+Next: /trader-budget sizes it to your budget and your max loss per trade.
+[exit 0]
+
+$ python trader-budget/size.py --portfolio $TRADER_HOME/practice/portfolio.json --now "2026-08-31 09:50" --write
+TSLA buy, opening-range breakout, entry 359.42 at 9:50 AM
+Stop 351.54: opening-range midpoint. Target 367.30: 1R (one times the risk).
+Sized at 359.42 (the plan's entry). Risk 7.88 a share (entry 359.42 minus stop 351.54). Reward:risk 1.00.
+
+Limits (whole shares; the smallest one wins):
+  max loss      $50 max loss / 7.88 risk a share                             6 shares  <- binds
+  position cap  75% of $5,000 = $3,750 / 359.42                             10 shares
+  max order     $4,000 / 359.42                                             11 shares
+  cash          budget $5,000 minus the $500 cash buffer = $4,500 / 359.42  12 shares
+
+Size: 6 shares of TSLA = $2,156.52 at 359.42. Max loss at the stop: 6 x 7.88 = $47.28.
+A stop is an order, not a promise: in a fast market it can fill below 351.54.
+
+Proposed bracket order (place_stock_order arguments, nothing has been placed):
+  buy 6 TSLA, market, day, take-profit 367.30, stop-loss 351.54
+Flat by 15:55 New York: anything still open then gets closed (trader-alerts rings, trader-broker flatten).
+
+Next: trader-risk checks it, then trader-broker asks you yes or no.
+Education and tooling, not financial advice.
+Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\orders.json
+[exit 0]
+
+$ python trader-risk/check.py --now "2026-08-31 09:50"
+PASS  #1 buy TSLA 6 shares, entry
+          entry 359.42 (the plan's entry), stop 351.54, target 367.30: risk 7.88 a share
+          max loss $47.28 (limit $50), reward:risk 1.00 (min 1)
+          today before this: 0 of 3 trades, $0 of $150 daily loss
+
+1 passed, 0 blocked at 2026-08-31 09:50 New York. Cash after the passed orders: $2,853.98 (paper account).
+Every order passed. trader-broker still asks you yes or no for each one.
+PRACTICE: the clock is pinned (--now or --today), so trader-broker treats these verdicts as practice, never as a real PASS.
+Education and tooling, not financial advice.
+[exit 0]
+
+$ python trader-broker/ticket.py show --now "2026-08-31 09:50"
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+
+ORDER 1 of 1, PAPER account per your config, Alpaca
+  BUY 6 TSLA, market, good for today
+  stop-loss 351.54
+  take-profit 367.30
+  max loss about $47.28 if the stop fills at 351.54 (it can fill worse in a fast market)
+  why: opening-range breakout on TSLA: 6 shares, bound by your $50 max loss per trade (6 x 7.88 = $47.28 at the stop)
+  READY: trader-risk PASS, waiting for your yes
+  Practice run: in a real one, Claude would call place_stock_order with exactly:
+    {
+      "symbol": "TSLA",
+      "side": "buy",
+      "qty": "6",
+      "type": "market",
+      "time_in_force": "day",
+      "order_class": "bracket",
+      "take_profit_limit_price": "367.30",
+      "stop_loss_stop_price": "351.54"
+    }
+  Alpaca places the entry, then the stop-loss and the take-profit as two orders
+  that cancel each other: when one fills, the other is canceled.
+  Reply "yes" to practice the yes, or "no" to skip it. Nothing is placed.
+
+One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
+[exit 0]
+
+[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "6", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "367.30", "stop_loss_stop_price": "351.54"}
+  09:50 filled: bought 6 TSLA at 359.42 (market: the 09:50 bar's open)
+  bracket legs working: stop-loss 351.54, take-profit 367.30
+  13:15 take-profit filled: sold 6 at 367.30
+  P&L +47.28; deepest open loss -5.10 at 09:50; best open gain +47.28 at 13:15
+
+====================================================================================================
+Tue 2026-09-01  account cash $5057.78
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-01 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Tue 2026-09-01 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $362.70, low $355.66 (1 of 3 bars, still forming).
+ 9:30 bar  closed $356.14  range so far $355.66 to $362.70
+ 9:35 bar  closed $354.26  range so far $353.82 to $362.70
+ 9:40 bar  closed $355.01  opening range set: high $362.70, low $353.39
+ 9:45 bar  closed $358.20  $4.50 under $362.70
+ 9:50 bar  closed $358.31  $4.39 under $362.70
+ 9:55 bar  closed $358.80  $3.90 under $362.70
+10:00 bar  closed $358.51  $4.19 under $362.70
+10:05 bar  closed $359.23  $3.47 under $362.70
+10:10 bar  closed $359.09  $3.61 under $362.70
+10:15 bar  closed $358.75  $3.95 under $362.70
+10:20 bar  closed $358.40  $4.30 under $362.70
+10:25 bar  closed $358.36  $4.34 under $362.70
+10:30 bar  closed $358.97  $3.73 under $362.70
+10:35 bar  closed $358.65  $4.05 under $362.70
+10:40 bar  closed $359.20  $3.50 under $362.70
+10:45 bar  closed $358.55  $4.15 under $362.70
+10:50 bar  closed $358.03  $4.67 under $362.70
+10:55 bar  closed $357.65  $5.05 under $362.70
+EXPIRED  no close above the range high $362.70 by 11:00, the last time for a new entry.
+[exit 1]
+
+====================================================================================================
+Wed 2026-09-02  account cash $5057.78
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-02 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Wed 2026-09-02 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $360.62, low $355.43 (1 of 3 bars, still forming).
+ 9:30 bar  closed $356.64  range so far $355.43 to $360.62
+ 9:35 bar  closed $352.30  range so far $351.51 to $360.62
+ 9:40 bar  closed $350.71  opening range set: high $360.62, low $350.42
+ 9:45 bar  closed $351.56  $9.06 under $360.62
+ 9:50 bar  closed $352.39  $8.23 under $360.62
+ 9:55 bar  closed $351.80  $8.82 under $360.62
+10:00 bar  closed $351.07  $9.55 under $360.62
+10:05 bar  closed $351.65  $8.97 under $360.62
+10:10 bar  closed $352.82  $7.80 under $360.62
+10:15 bar  closed $354.62  $6.00 under $360.62
+10:20 bar  closed $354.79  $5.83 under $360.62
+10:25 bar  closed $355.02  $5.60 under $360.62
+10:30 bar  closed $355.23  $5.39 under $360.62
+10:35 bar  closed $355.55  $5.07 under $360.62
+10:40 bar  closed $356.25  $4.37 under $360.62
+10:45 bar  closed $353.97  $6.65 under $360.62
+10:50 bar  closed $352.57  $8.05 under $360.62
+10:55 bar  closed $351.37  $9.25 under $360.62
+EXPIRED  no close above the range high $360.62 by 11:00, the last time for a new entry.
+[exit 1]
+
+====================================================================================================
+Thu 2026-09-03  account cash $5057.78
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-03 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Thu 2026-09-03 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $373.51, low $365.91 (1 of 3 bars, still forming).
+ 9:30 bar  closed $370.82  range so far $365.91 to $373.51
+ 9:35 bar  closed $371.94  range so far $365.91 to $373.91
+ 9:40 bar  closed $374.27  opening range set: high $375.18, low $365.91
+ 9:45 bar  closed $377.43  TRIGGERED: closed above $375.18 (+0.60%). Get in now if you take it: 9:50 AM, $377.43
+This is the moment to get in, if you take the trade. Nothing was placed.
+Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\entry.json.
+[exit 0]
+
+$ python trader-exit/exit.py plan --now "2026-09-03 09:50" --write --target 1R
+Exit plan: TSLA long, Thu 2026-09-03, opening-range breakout on 5-minute bars
+  Entry         $377.43 at 9:50 AM (bar 3)
+  Stop          $370.54  opening-range midpoint: ($375.18 + $365.91) / 2 = $370.545, rounded down
+  Target        $384.32  1R (one times the risk)
+  Risk a share  $6.89 (1.83% of the entry)
+  Reward:risk   1.0
+  Flat by       15:55 ET, win or lose: no overnight hold
+Set before the entry. If price hits the stop, you are out; never move it further away.
+A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\plan.json.
+Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
+[exit 0]
+
+$ python trader-timemachine/timemachine.py run --plan $TRADER_HOME/plan.json --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-03 09:50" --write
+TSLA buy, Thursday 2026-09-03: entry 377.43 at 9:50 AM (bar 3), stop 370.54, target 384.32 (1R, risk 6.89 a share).
+10,000 replays of the rest of the session, 9:50 AM to 4:00 PM (74 five-minute bars), seed 19.
+Each bar is drawn whole from TSLA's own 5-min bars at the same time of day (+-2 bars) over its last 28 full sessions (2026-07-27 to 2026-09-02).
+
+  target first   36.8 %
+  stop first     22.7 %
+  neither        40.6 %   still open at 4:00 PM
+  green          59.8 %   target first, or above the entry at 4:00 PM
+
+  Price at 4:00 PM: median 379.03, 90 % of replays between 368.12 and 390.13.
+  Average R: +0.168 (R = the 6.89 risk: +1R at the target, -1R at the stop).
+
+History: the same rule (15-min opening range, stop at the opening-range midpoint, 1R target, entries 09:45 to 11:00 New York) on each of those 28 real sessions fired 15 times: 8 target, 7 stop, 0 neither. Average R +0.067.
+
+Leans toward the target: target first 36.8 % vs stop first 22.7 %.
+40.6 % of the replays hit neither by 4:00 PM; the price at 4:00 PM decides those.
+
+A simulation built from TSLA's own last 28 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\timemachine.json.
+Next: /trader-budget sizes it to your budget and your max loss per trade.
+[exit 0]
+
+$ python trader-budget/size.py --portfolio $TRADER_HOME/practice/portfolio.json --now "2026-09-03 09:50" --write
+TSLA buy, opening-range breakout, entry 377.43 at 9:50 AM
+Stop 370.54: opening-range midpoint. Target 384.32: 1R (one times the risk).
+Sized at 377.43 (the plan's entry). Risk 6.89 a share (entry 377.43 minus stop 370.54). Reward:risk 1.00.
+
+Limits (whole shares; the smallest one wins):
+  max loss      $50 max loss / 6.89 risk a share                             7 shares  <- binds
+  position cap  75% of $5,000 = $3,750 / 377.43                              9 shares
+  max order     $4,000 / 377.43                                             10 shares
+  cash          budget $5,000 minus the $500 cash buffer = $4,500 / 377.43  11 shares
+
+Size: 7 shares of TSLA = $2,642.01 at 377.43. Max loss at the stop: 7 x 6.89 = $48.23.
+A stop is an order, not a promise: in a fast market it can fill below 370.54.
+
+Proposed bracket order (place_stock_order arguments, nothing has been placed):
+  buy 7 TSLA, market, day, take-profit 384.32, stop-loss 370.54
+Flat by 15:55 New York: anything still open then gets closed (trader-alerts rings, trader-broker flatten).
+
+Next: trader-risk checks it, then trader-broker asks you yes or no.
+Education and tooling, not financial advice.
+Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\orders.json
+[exit 0]
+
+$ python trader-risk/check.py --now "2026-09-03 09:50"
+PASS  #1 buy TSLA 7 shares, entry
+          entry 377.43 (the plan's entry), stop 370.54, target 384.32: risk 6.89 a share
+          max loss $48.23 (limit $50), reward:risk 1.00 (min 1)
+          today before this: 0 of 3 trades, $0 of $150 daily loss
+
+1 passed, 0 blocked at 2026-09-03 09:50 New York. Cash after the passed orders: $2,415.77 (paper account).
+Every order passed. trader-broker still asks you yes or no for each one.
+PRACTICE: the clock is pinned (--now or --today), so trader-broker treats these verdicts as practice, never as a real PASS.
+Education and tooling, not financial advice.
+[exit 0]
+
+$ python trader-broker/ticket.py show --now "2026-09-03 09:50"
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+
+ORDER 1 of 1, PAPER account per your config, Alpaca
+  BUY 7 TSLA, market, good for today
+  stop-loss 370.54
+  take-profit 384.32
+  max loss about $48.23 if the stop fills at 370.54 (it can fill worse in a fast market)
+  why: opening-range breakout on TSLA: 7 shares, bound by your $50 max loss per trade (7 x 6.89 = $48.23 at the stop)
+  READY: trader-risk PASS, waiting for your yes
+  Practice run: in a real one, Claude would call place_stock_order with exactly:
+    {
+      "symbol": "TSLA",
+      "side": "buy",
+      "qty": "7",
+      "type": "market",
+      "time_in_force": "day",
+      "order_class": "bracket",
+      "take_profit_limit_price": "384.32",
+      "stop_loss_stop_price": "370.54"
+    }
+  Alpaca places the entry, then the stop-loss and the take-profit as two orders
+  that cancel each other: when one fills, the other is canceled.
+  Reply "yes" to practice the yes, or "no" to skip it. Nothing is placed.
+
+One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
+[exit 0]
+
+[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "7", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "384.32", "stop_loss_stop_price": "370.54"}
+  09:50 filled: bought 7 TSLA at 377.43 (market: the 09:50 bar's open)
+  bracket legs working: stop-loss 370.54, take-profit 384.32
+  10:00 stop-loss filled: sold 7 at 370.54
+  P&L -48.23; deepest open loss -48.23 at 10:00; best open gain +5.60 at 09:50
+
+====================================================================================================
+Fri 2026-09-04  account cash $5009.55
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-04 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Fri 2026-09-04 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $364.69, low $358.56 (1 of 3 bars, still forming).
+ 9:30 bar  closed $359.45  range so far $358.56 to $364.69
+ 9:35 bar  closed $360.27  range so far $358.56 to $364.69
+ 9:40 bar  closed $357.20  opening range set: high $364.69, low $356.67
+ 9:45 bar  closed $357.01  $7.68 under $364.69
+ 9:50 bar  closed $358.28  $6.41 under $364.69
+ 9:55 bar  closed $359.62  $5.07 under $364.69
+10:00 bar  closed $357.02  $7.67 under $364.69
+10:05 bar  closed $355.89  $8.80 under $364.69
+10:10 bar  closed $355.53  $9.16 under $364.69
+10:15 bar  closed $353.48  $11.21 under $364.69
+10:20 bar  closed $353.33  $11.36 under $364.69
+10:25 bar  closed $353.23  $11.46 under $364.69
+10:30 bar  closed $354.05  $10.64 under $364.69
+10:35 bar  closed $353.75  $10.94 under $364.69
+10:40 bar  closed $352.73  $11.96 under $364.69
+10:45 bar  closed $353.71  $10.98 under $364.69
+10:50 bar  closed $353.47  $11.22 under $364.69
+10:55 bar  closed $354.30  $10.39 under $364.69
+EXPIRED  no close above the range high $364.69 by 11:00, the last time for a new entry.
+[exit 1]
+
+====================================================================================================
+Tue 2026-09-08  account cash $5009.55
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-08 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Tue 2026-09-08 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $362.22, low $355.99 (1 of 3 bars, still forming).
+ 9:30 bar  closed $361.36  range so far $355.99 to $362.22
+ 9:35 bar  closed $359.33  range so far $355.99 to $362.42
+ 9:40 bar  closed $357.67  opening range set: high $362.42, low $355.99
+ 9:45 bar  closed $358.48  $3.94 under $362.42
+ 9:50 bar  closed $358.67  $3.75 under $362.42
+ 9:55 bar  closed $360.17  $2.25 under $362.42
+10:00 bar  closed $361.30  $1.12 under $362.42
+10:05 bar  closed $361.55  $0.87 under $362.42
+10:10 bar  closed $361.99  $0.43 under $362.42
+10:15 bar  closed $361.83  $0.59 under $362.42
+10:20 bar  closed $363.96  TRIGGERED: closed above $362.42 (+0.42%). Get in now if you take it: 10:25 AM, $363.96
+This is the moment to get in, if you take the trade. Nothing was placed.
+Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\entry.json.
+[exit 0]
+
+$ python trader-exit/exit.py plan --now "2026-09-08 10:25" --write --target 1R
+Exit plan: TSLA long, Tue 2026-09-08, opening-range breakout on 5-minute bars
+  Entry         $363.96 at 10:25 AM (bar 10)
+  Stop          $359.20  opening-range midpoint: ($362.42 + $355.99) / 2 = $359.205, rounded down
+  Target        $368.72  1R (one times the risk)
+  Risk a share  $4.76 (1.31% of the entry)
+  Reward:risk   1.0
+  Flat by       15:55 ET, win or lose: no overnight hold
+Set before the entry. If price hits the stop, you are out; never move it further away.
+A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\plan.json.
+Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
+[exit 0]
+
+$ python trader-timemachine/timemachine.py run --plan $TRADER_HOME/plan.json --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-08 10:25" --write
+TSLA buy, Tuesday 2026-09-08: entry 363.96 at 10:25 AM (bar 10), stop 359.20, target 368.72 (1R, risk 4.76 a share).
+10,000 replays of the rest of the session, 10:25 AM to 4:00 PM (67 five-minute bars), seed 19.
+Each bar is drawn whole from TSLA's own 5-min bars at the same time of day (+-2 bars) over its last 30 full sessions (2026-07-27 to 2026-09-04).
+
+  target first   47.4 %
+  stop first     29.5 %
+  neither        23.1 %   still open at 4:00 PM
+  green          59.9 %   target first, or above the entry at 4:00 PM
+
+  Price at 4:00 PM: median 365.26, 90 % of replays between 356.33 and 374.48.
+  Average R: +0.189 (R = the 4.76 risk: +1R at the target, -1R at the stop).
+
+History: the same rule (15-min opening range, stop at the opening-range midpoint, 1R target, entries 09:45 to 11:00 New York) on each of those 30 real sessions fired 16 times: 8 target, 8 stop, 0 neither. Average R +0.000.
+
+Leans toward the target: target first 47.4 % vs stop first 29.5 %.
+
+A simulation built from TSLA's own last 30 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\timemachine.json.
+Next: /trader-budget sizes it to your budget and your max loss per trade.
+[exit 0]
+
+$ python trader-budget/size.py --portfolio $TRADER_HOME/practice/portfolio.json --now "2026-09-08 10:25" --write
+TSLA buy, opening-range breakout, entry 363.96 at 10:25 AM
+Stop 359.20: opening-range midpoint. Target 368.72: 1R (one times the risk).
+Sized at 363.96 (the plan's entry). Risk 4.76 a share (entry 363.96 minus stop 359.20). Reward:risk 1.00.
+
+Limits (whole shares; the smallest one wins):
+  max loss      $50 max loss / 4.76 risk a share                            10 shares  <- binds
+  position cap  75% of $5,000 = $3,750 / 363.96                             10 shares
+  max order     $4,000 / 363.96                                             10 shares
+  cash          budget $5,000 minus the $500 cash buffer = $4,500 / 363.96  12 shares
+
+Size: 10 shares of TSLA = $3,639.60 at 363.96. Max loss at the stop: 10 x 4.76 = $47.60.
+A stop is an order, not a promise: in a fast market it can fill below 359.20.
+
+Proposed bracket order (place_stock_order arguments, nothing has been placed):
+  buy 10 TSLA, market, day, take-profit 368.72, stop-loss 359.20
+Flat by 15:55 New York: anything still open then gets closed (trader-alerts rings, trader-broker flatten).
+
+Next: trader-risk checks it, then trader-broker asks you yes or no.
+Education and tooling, not financial advice.
+Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\orders.json
+[exit 0]
+
+$ python trader-risk/check.py --now "2026-09-08 10:25"
+PASS  #1 buy TSLA 10 shares, entry
+          entry 363.96 (the plan's entry), stop 359.20, target 368.72: risk 4.76 a share
+          max loss $47.60 (limit $50), reward:risk 1.00 (min 1)
+          today before this: 0 of 3 trades, $0 of $150 daily loss
+
+1 passed, 0 blocked at 2026-09-08 10:25 New York. Cash after the passed orders: $1,369.95 (paper account).
+Every order passed. trader-broker still asks you yes or no for each one.
+PRACTICE: the clock is pinned (--now or --today), so trader-broker treats these verdicts as practice, never as a real PASS.
+Education and tooling, not financial advice.
+[exit 0]
+
+$ python trader-broker/ticket.py show --now "2026-09-08 10:25"
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+
+ORDER 1 of 1, PAPER account per your config, Alpaca
+  BUY 10 TSLA, market, good for today
+  stop-loss 359.20
+  take-profit 368.72
+  max loss about $47.60 if the stop fills at 359.20 (it can fill worse in a fast market)
+  why: opening-range breakout on TSLA: 10 shares, bound by your $50 max loss per trade (10 x 4.76 = $47.60 at the stop)
+  READY: trader-risk PASS, waiting for your yes
+  Practice run: in a real one, Claude would call place_stock_order with exactly:
+    {
+      "symbol": "TSLA",
+      "side": "buy",
+      "qty": "10",
+      "type": "market",
+      "time_in_force": "day",
+      "order_class": "bracket",
+      "take_profit_limit_price": "368.72",
+      "stop_loss_stop_price": "359.20"
+    }
+  Alpaca places the entry, then the stop-loss and the take-profit as two orders
+  that cancel each other: when one fills, the other is canceled.
+  Reply "yes" to practice the yes, or "no" to skip it. Nothing is placed.
+
+One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
+[exit 0]
+
+[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "10", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "368.72", "stop_loss_stop_price": "359.20"}
+  10:25 filled: bought 10 TSLA at 363.95 (market: the 10:25 bar's open)
+  bracket legs working: stop-loss 359.20, take-profit 368.72
+  12:25 take-profit filled: sold 10 at 368.72
+  P&L +47.70; deepest open loss -18.50 at 10:25; best open gain +47.70 at 12:25
+
+====================================================================================================
+Wed 2026-09-09  account cash $5057.25
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-09 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Wed 2026-09-09 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $375.44, low $367.83 (1 of 3 bars, still forming).
+ 9:30 bar  closed $373.95  range so far $367.83 to $375.44
+ 9:35 bar  closed $371.75  range so far $367.83 to $375.44
+ 9:40 bar  closed $373.62  opening range set: high $375.44, low $367.83
+ 9:45 bar  closed $373.42  $2.02 under $375.44
+ 9:50 bar  closed $371.30  $4.14 under $375.44
+ 9:55 bar  closed $371.08  $4.36 under $375.44
+10:00 bar  closed $371.17  $4.27 under $375.44
+10:05 bar  closed $371.98  $3.46 under $375.44
+10:10 bar  closed $371.25  $4.19 under $375.44
+10:15 bar  closed $371.61  $3.83 under $375.44
+10:20 bar  closed $370.81  $4.63 under $375.44
+10:25 bar  closed $371.27  $4.17 under $375.44
+10:30 bar  closed $372.84  $2.60 under $375.44
+10:35 bar  closed $371.78  $3.66 under $375.44
+10:40 bar  closed $371.76  $3.68 under $375.44
+10:45 bar  closed $373.28  $2.16 under $375.44
+10:50 bar  closed $373.18  $2.26 under $375.44
+10:55 bar  closed $371.31  $4.13 under $375.44
+EXPIRED  no close above the range high $375.44 by 11:00, the last time for a new entry.
+[exit 1]
+
+====================================================================================================
+Thu 2026-09-10  account cash $5057.25
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-10 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Thu 2026-09-10 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $362.01, low $357.68 (1 of 3 bars, still forming).
+ 9:30 bar  closed $360.08  range so far $357.68 to $362.01
+ 9:35 bar  closed $362.68  range so far $357.68 to $362.94
+ 9:40 bar  closed $365.32  opening range set: high $365.39, low $357.68
+ 9:45 bar  closed $366.30  TRIGGERED: closed above $365.39 (+0.25%). Get in now if you take it: 9:50 AM, $366.30
+This is the moment to get in, if you take the trade. Nothing was placed.
+Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\entry.json.
+[exit 0]
+
+$ python trader-exit/exit.py plan --now "2026-09-10 09:50" --write --target 1R
+Exit plan: TSLA long, Thu 2026-09-10, opening-range breakout on 5-minute bars
+  Entry         $366.30 at 9:50 AM (bar 3)
+  Stop          $361.53  opening-range midpoint: ($365.39 + $357.68) / 2 = $361.535, rounded down
+  Target        $371.07  1R (one times the risk)
+  Risk a share  $4.77 (1.30% of the entry)
+  Reward:risk   1.0
+  Flat by       15:55 ET, win or lose: no overnight hold
+Set before the entry. If price hits the stop, you are out; never move it further away.
+A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\plan.json.
+Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
+[exit 0]
+
+$ python trader-timemachine/timemachine.py run --plan $TRADER_HOME/plan.json --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-10 09:50" --write
+TSLA buy, Thursday 2026-09-10: entry 366.30 at 9:50 AM (bar 3), stop 361.53, target 371.07 (1R, risk 4.77 a share).
+10,000 replays of the rest of the session, 9:50 AM to 4:00 PM (74 five-minute bars), seed 19.
+Each bar is drawn whole from TSLA's own 5-min bars at the same time of day (+-2 bars) over its last 32 full sessions (2026-07-27 to 2026-09-09).
+
+  target first   51.5 %
+  stop first     35.2 %
+  neither        13.3 %   still open at 4:00 PM
+  green          58.5 %   target first, or above the entry at 4:00 PM
+
+  Price at 4:00 PM: median 367.81, 90 % of replays between 357.63 and 378.50.
+  Average R: +0.166 (R = the 4.77 risk: +1R at the target, -1R at the stop).
+
+History: the same rule (15-min opening range, stop at the opening-range midpoint, 1R target, entries 09:45 to 11:00 New York) on each of those 32 real sessions fired 17 times: 9 target, 8 stop, 0 neither. Average R +0.059.
+
+Leans toward the target: target first 51.5 % vs stop first 35.2 %.
+
+A simulation built from TSLA's own last 32 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\timemachine.json.
+Next: /trader-budget sizes it to your budget and your max loss per trade.
+[exit 0]
+
+$ python trader-budget/size.py --portfolio $TRADER_HOME/practice/portfolio.json --now "2026-09-10 09:50" --write
+TSLA buy, opening-range breakout, entry 366.30 at 9:50 AM
+Stop 361.53: opening-range midpoint. Target 371.07: 1R (one times the risk).
+Sized at 366.30 (the plan's entry). Risk 4.77 a share (entry 366.30 minus stop 361.53). Reward:risk 1.00.
+
+Limits (whole shares; the smallest one wins):
+  max loss      $50 max loss / 4.77 risk a share                            10 shares  <- binds
+  position cap  75% of $5,000 = $3,750 / 366.30                             10 shares
+  max order     $4,000 / 366.30                                             10 shares
+  cash          budget $5,000 minus the $500 cash buffer = $4,500 / 366.30  12 shares
+
+Size: 10 shares of TSLA = $3,663 at 366.30. Max loss at the stop: 10 x 4.77 = $47.70.
+A stop is an order, not a promise: in a fast market it can fill below 361.53.
+
+Proposed bracket order (place_stock_order arguments, nothing has been placed):
+  buy 10 TSLA, market, day, take-profit 371.07, stop-loss 361.53
+Flat by 15:55 New York: anything still open then gets closed (trader-alerts rings, trader-broker flatten).
+
+Next: trader-risk checks it, then trader-broker asks you yes or no.
+Education and tooling, not financial advice.
+Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\orders.json
+[exit 0]
+
+$ python trader-risk/check.py --now "2026-09-10 09:50"
+PASS  #1 buy TSLA 10 shares, entry
+          entry 366.30 (the plan's entry), stop 361.53, target 371.07: risk 4.77 a share
+          max loss $47.70 (limit $50), reward:risk 1.00 (min 1)
+          today before this: 0 of 3 trades, $0 of $150 daily loss
+
+1 passed, 0 blocked at 2026-09-10 09:50 New York. Cash after the passed orders: $1,394.25 (paper account).
+Every order passed. trader-broker still asks you yes or no for each one.
+PRACTICE: the clock is pinned (--now or --today), so trader-broker treats these verdicts as practice, never as a real PASS.
+Education and tooling, not financial advice.
+[exit 0]
+
+$ python trader-broker/ticket.py show --now "2026-09-10 09:50"
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+
+ORDER 1 of 1, PAPER account per your config, Alpaca
+  BUY 10 TSLA, market, good for today
+  stop-loss 361.53
+  take-profit 371.07
+  max loss about $47.70 if the stop fills at 361.53 (it can fill worse in a fast market)
+  why: opening-range breakout on TSLA: 10 shares, bound by your $50 max loss per trade (10 x 4.77 = $47.70 at the stop)
+  READY: trader-risk PASS, waiting for your yes
+  Practice run: in a real one, Claude would call place_stock_order with exactly:
+    {
+      "symbol": "TSLA",
+      "side": "buy",
+      "qty": "10",
+      "type": "market",
+      "time_in_force": "day",
+      "order_class": "bracket",
+      "take_profit_limit_price": "371.07",
+      "stop_loss_stop_price": "361.53"
+    }
+  Alpaca places the entry, then the stop-loss and the take-profit as two orders
+  that cancel each other: when one fills, the other is canceled.
+  Reply "yes" to practice the yes, or "no" to skip it. Nothing is placed.
+
+One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
+[exit 0]
+
+[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "10", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "371.07", "stop_loss_stop_price": "361.53"}
+  09:50 filled: bought 10 TSLA at 366.37 (market: the 09:50 bar's open)
+  bracket legs working: stop-loss 361.53, take-profit 371.07
+  15:55 flat-by: sold 10 at the open, 363.15
+  P&L -32.20; deepest open loss -36.00 at 15:50; best open gain +28.40 at 10:00
+
+====================================================================================================
+Fri 2026-09-11  account cash $5025.05
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-11 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Fri 2026-09-11 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $366.49, low $361.60 (1 of 3 bars, still forming).
+ 9:30 bar  closed $364.46  range so far $361.60 to $366.49
+ 9:35 bar  closed $366.77  range so far $361.60 to $366.94
+ 9:40 bar  closed $367.08  opening range set: high $368.66, low $361.60
+ 9:45 bar  closed $367.52  $1.14 under $368.66
+ 9:50 bar  closed $364.98  $3.68 under $368.66
+ 9:55 bar  closed $368.40  $0.26 under $368.66
+10:00 bar  closed $366.68  $1.98 under $368.66
+10:05 bar  closed $366.92  $1.74 under $368.66
+10:10 bar  closed $365.08  $3.58 under $368.66
+10:15 bar  closed $364.85  $3.81 under $368.66
+10:20 bar  closed $363.71  $4.95 under $368.66
+10:25 bar  closed $366.43  $2.23 under $368.66
+10:30 bar  closed $365.67  $2.99 under $368.66
+10:35 bar  closed $364.15  $4.51 under $368.66
+10:40 bar  closed $364.78  $3.88 under $368.66
+10:45 bar  closed $366.20  $2.46 under $368.66
+10:50 bar  closed $364.98  $3.68 under $368.66
+10:55 bar  closed $364.91  $3.75 under $368.66
+EXPIRED  no close above the range high $368.66 by 11:00, the last time for a new entry.
+[exit 1]
+
+====================================================================================================
+Mon 2026-09-14  account cash $5025.05
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-14 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Mon 2026-09-14 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $367.73, low $359.08 (1 of 3 bars, still forming).
+ 9:30 bar  closed $365.37  range so far $359.08 to $367.73
+ 9:35 bar  closed $361.67  range so far $359.08 to $367.73
+ 9:40 bar  closed $361.82  opening range set: high $367.73, low $359.08
+ 9:45 bar  closed $360.69  $7.04 under $367.73
+ 9:50 bar  closed $361.86  $5.87 under $367.73
+ 9:55 bar  closed $360.21  $7.52 under $367.73
+10:00 bar  closed $360.20  $7.53 under $367.73
+10:05 bar  closed $360.99  $6.74 under $367.73
+10:10 bar  closed $360.90  $6.83 under $367.73
+10:15 bar  closed $358.83  $8.90 under $367.73
+10:20 bar  closed $357.49  $10.24 under $367.73
+10:25 bar  closed $358.34  $9.39 under $367.73
+10:30 bar  closed $359.00  $8.73 under $367.73
+10:35 bar  closed $358.26  $9.47 under $367.73
+10:40 bar  closed $358.76  $8.97 under $367.73
+10:45 bar  closed $359.22  $8.51 under $367.73
+10:50 bar  closed $358.58  $9.15 under $367.73
+10:55 bar  closed $358.57  $9.16 under $367.73
+EXPIRED  no close above the range high $367.73 by 11:00, the last time for a new entry.
+[exit 1]
+
+====================================================================================================
+Tue 2026-09-15  account cash $5025.05
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-15 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Tue 2026-09-15 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $360.69, low $354.63 (1 of 3 bars, still forming).
+ 9:30 bar  closed $355.48  range so far $354.63 to $360.69
+ 9:35 bar  closed $361.60  range so far $354.63 to $361.72
+ 9:40 bar  closed $361.05  opening range set: high $362.11, low $354.63
+ 9:45 bar  closed $361.48  $0.63 under $362.11
+ 9:50 bar  closed $360.59  $1.52 under $362.11
+ 9:55 bar  closed $359.15  $2.96 under $362.11
+10:00 bar  closed $359.70  $2.41 under $362.11
+10:05 bar  closed $358.35  $3.76 under $362.11
+10:10 bar  closed $359.07  $3.04 under $362.11
+10:15 bar  closed $359.45  $2.66 under $362.11
+10:20 bar  closed $358.93  $3.18 under $362.11
+10:25 bar  closed $359.29  $2.82 under $362.11
+10:30 bar  closed $358.88  $3.24 under $362.11
+10:35 bar  closed $358.42  $3.69 under $362.11
+10:40 bar  closed $357.78  $4.33 under $362.11
+10:45 bar  closed $357.15  $4.96 under $362.11
+10:50 bar  closed $356.05  $6.06 under $362.11
+10:55 bar  closed $357.61  $4.50 under $362.11
+EXPIRED  no close above the range high $362.11 by 11:00, the last time for a new entry.
+[exit 1]
+
+====================================================================================================
+Wed 2026-09-16  account cash $5025.05
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-16 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Wed 2026-09-16 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $358.58, low $354.89 (1 of 3 bars, still forming).
+ 9:30 bar  closed $357.54  range so far $354.89 to $358.58
+ 9:35 bar  closed $357.80  range so far $354.89 to $358.58
+ 9:40 bar  closed $359.29  opening range set: high $359.49, low $354.89
+ 9:45 bar  closed $359.99  TRIGGERED: closed above $359.49 (+0.14%). Get in now if you take it: 9:50 AM, $359.99
+This is the moment to get in, if you take the trade. Nothing was placed.
+Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\entry.json.
+[exit 0]
+
+$ python trader-exit/exit.py plan --now "2026-09-16 09:50" --write --target 1R
+Exit plan: TSLA long, Wed 2026-09-16, opening-range breakout on 5-minute bars
+  Entry         $359.99 at 9:50 AM (bar 3)
+  Stop          $357.19  opening-range midpoint: ($359.49 + $354.89) / 2 = $357.19
+  Target        $362.79  1R (one times the risk)
+  Risk a share  $2.80 (0.78% of the entry)
+  Reward:risk   1.0
+  Flat by       15:55 ET, win or lose: no overnight hold
+Set before the entry. If price hits the stop, you are out; never move it further away.
+A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\plan.json.
+Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
+[exit 0]
+
+$ python trader-timemachine/timemachine.py run --plan $TRADER_HOME/plan.json --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-16 09:50" --write
+TSLA buy, Wednesday 2026-09-16: entry 359.99 at 9:50 AM (bar 3), stop 357.19, target 362.79 (1R, risk 2.80 a share).
+10,000 replays of the rest of the session, 9:50 AM to 4:00 PM (74 five-minute bars), seed 19.
+Each bar is drawn whole from TSLA's own 5-min bars at the same time of day (+-2 bars) over its last 36 full sessions (2026-07-27 to 2026-09-15).
+
+  target first   53.6 %
+  stop first     46.1 %
+  neither        0.2 %    still open at 4:00 PM
+  green          53.7 %   target first, or above the entry at 4:00 PM
+
+  Price at 4:00 PM: median 361.09, 90 % of replays between 350.95 and 371.34.
+  Average R: +0.075 (R = the 2.80 risk: +1R at the target, -1R at the stop).
+
+History: the same rule (15-min opening range, stop at the opening-range midpoint, 1R target, entries 09:45 to 11:00 New York) on each of those 36 real sessions fired 18 times: 9 target, 8 stop, 1 neither. Average R +0.024.
+
+Close to a coin flip: target first 53.6 % vs stop first 46.1 %.
+
+A simulation built from TSLA's own last 36 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\timemachine.json.
+Next: /trader-budget sizes it to your budget and your max loss per trade.
+[exit 0]
+
+$ python trader-budget/size.py --portfolio $TRADER_HOME/practice/portfolio.json --now "2026-09-16 09:50" --write
+TSLA buy, opening-range breakout, entry 359.99 at 9:50 AM
+Stop 357.19: opening-range midpoint. Target 362.79: 1R (one times the risk).
+Sized at 359.99 (the plan's entry). Risk 2.80 a share (entry 359.99 minus stop 357.19). Reward:risk 1.00.
+
+Limits (whole shares; the smallest one wins):
+  max loss      $50 max loss / 2.80 risk a share                            17 shares
+  position cap  75% of $5,000 = $3,750 / 359.99                             10 shares  <- binds
+  max order     $4,000 / 359.99                                             11 shares
+  cash          budget $5,000 minus the $500 cash buffer = $4,500 / 359.99  12 shares
+
+Size: 10 shares of TSLA = $3,599.90 at 359.99. Max loss at the stop: 10 x 2.80 = $28.
+A stop is an order, not a promise: in a fast market it can fill below 357.19.
+
+Proposed bracket order (place_stock_order arguments, nothing has been placed):
+  buy 10 TSLA, market, day, take-profit 362.79, stop-loss 357.19
+Flat by 15:55 New York: anything still open then gets closed (trader-alerts rings, trader-broker flatten).
+
+Next: trader-risk checks it, then trader-broker asks you yes or no.
+Education and tooling, not financial advice.
+Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\orders.json
+[exit 0]
+
+$ python trader-risk/check.py --now "2026-09-16 09:50"
+PASS  #1 buy TSLA 10 shares, entry
+          entry 359.99 (the plan's entry), stop 357.19, target 362.79: risk 2.80 a share
+          max loss $28 (limit $50), reward:risk 1.00 (min 1)
+          today before this: 0 of 3 trades, $0 of $150 daily loss
+
+1 passed, 0 blocked at 2026-09-16 09:50 New York. Cash after the passed orders: $1,425.15 (paper account).
+Every order passed. trader-broker still asks you yes or no for each one.
+PRACTICE: the clock is pinned (--now or --today), so trader-broker treats these verdicts as practice, never as a real PASS.
+Education and tooling, not financial advice.
+[exit 0]
+
+$ python trader-broker/ticket.py show --now "2026-09-16 09:50"
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+
+ORDER 1 of 1, PAPER account per your config, Alpaca
+  BUY 10 TSLA, market, good for today
+  stop-loss 357.19
+  take-profit 362.79
+  max loss about $28 if the stop fills at 357.19 (it can fill worse in a fast market)
+  why: opening-range breakout on TSLA: 10 shares, bound by your position cap (10 x 2.80 = $28 at the stop)
+  READY: trader-risk PASS, waiting for your yes
+  Practice run: in a real one, Claude would call place_stock_order with exactly:
+    {
+      "symbol": "TSLA",
+      "side": "buy",
+      "qty": "10",
+      "type": "market",
+      "time_in_force": "day",
+      "order_class": "bracket",
+      "take_profit_limit_price": "362.79",
+      "stop_loss_stop_price": "357.19"
+    }
+  Alpaca places the entry, then the stop-loss and the take-profit as two orders
+  that cancel each other: when one fills, the other is canceled.
+  Reply "yes" to practice the yes, or "no" to skip it. Nothing is placed.
+
+One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
+[exit 0]
+
+[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "10", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "362.79", "stop_loss_stop_price": "357.19"}
+  09:50 filled: bought 10 TSLA at 359.98 (market: the 09:50 bar's open)
+  bracket legs working: stop-loss 357.19, take-profit 362.79
+  10:10 take-profit filled: sold 10 at 362.79
+  P&L +28.10; deepest open loss -9.80 at 09:55; best open gain +28.10 at 10:10
+
+====================================================================================================
+Thu 2026-09-17  account cash $5053.15
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-17 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Thu 2026-09-17 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $371.29, low $366.33 (1 of 3 bars, still forming).
+ 9:30 bar  closed $369.30  range so far $366.33 to $371.29
+ 9:35 bar  closed $363.96  range so far $363.22 to $371.29
+ 9:40 bar  closed $365.22  opening range set: high $371.29, low $363.22
+ 9:45 bar  closed $364.59  $6.70 under $371.29
+ 9:50 bar  closed $367.16  $4.13 under $371.29
+ 9:55 bar  closed $369.66  $1.63 under $371.29
+10:00 bar  closed $370.62  $0.67 under $371.29
+10:05 bar  closed $372.92  TRIGGERED: closed above $371.29 (+0.44%). Get in now if you take it: 10:10 AM, $372.92
+This is the moment to get in, if you take the trade. Nothing was placed.
+Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\entry.json.
+[exit 0]
+
+$ python trader-exit/exit.py plan --now "2026-09-17 10:10" --write --target 1R
+Exit plan: TSLA long, Thu 2026-09-17, opening-range breakout on 5-minute bars
+  Entry         $372.92 at 10:10 AM (bar 7)
+  Stop          $367.25  opening-range midpoint: ($371.29 + $363.22) / 2 = $367.255, rounded down
+  Target        $378.59  1R (one times the risk)
+  Risk a share  $5.67 (1.52% of the entry)
+  Reward:risk   1.0
+  Flat by       15:55 ET, win or lose: no overnight hold
+Set before the entry. If price hits the stop, you are out; never move it further away.
+A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\plan.json.
+Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
+[exit 0]
+
+$ python trader-timemachine/timemachine.py run --plan $TRADER_HOME/plan.json --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-17 10:10" --write
+TSLA buy, Thursday 2026-09-17: entry 372.92 at 10:10 AM (bar 7), stop 367.25, target 378.59 (1R, risk 5.67 a share).
+10,000 replays of the rest of the session, 10:10 AM to 4:00 PM (70 five-minute bars), seed 19.
+Each bar is drawn whole from TSLA's own 5-min bars at the same time of day (+-2 bars) over its last 37 full sessions (2026-07-27 to 2026-09-16).
+
+  target first   40.5 %
+  stop first     27.3 %
+  neither        32.2 %   still open at 4:00 PM
+  green          56.8 %   target first, or above the entry at 4:00 PM
+
+  Price at 4:00 PM: median 373.79, 90 % of replays between 364.28 and 383.69.
+  Average R: +0.135 (R = the 5.67 risk: +1R at the target, -1R at the stop).
+
+History: the same rule (15-min opening range, stop at the opening-range midpoint, 1R target, entries 09:45 to 11:00 New York) on each of those 37 real sessions fired 19 times: 10 target, 8 stop, 1 neither. Average R +0.076.
+
+Leans toward the target: target first 40.5 % vs stop first 27.3 %.
+
+A simulation built from TSLA's own last 37 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\timemachine.json.
+Next: /trader-budget sizes it to your budget and your max loss per trade.
+[exit 0]
+
+$ python trader-budget/size.py --portfolio $TRADER_HOME/practice/portfolio.json --now "2026-09-17 10:10" --write
+TSLA buy, opening-range breakout, entry 372.92 at 10:10 AM
+Stop 367.25: opening-range midpoint. Target 378.59: 1R (one times the risk).
+Sized at 372.92 (the plan's entry). Risk 5.67 a share (entry 372.92 minus stop 367.25). Reward:risk 1.00.
+
+Limits (whole shares; the smallest one wins):
+  max loss      $50 max loss / 5.67 risk a share                             8 shares  <- binds
+  position cap  75% of $5,000 = $3,750 / 372.92                             10 shares
+  max order     $4,000 / 372.92                                             10 shares
+  cash          budget $5,000 minus the $500 cash buffer = $4,500 / 372.92  12 shares
+
+Size: 8 shares of TSLA = $2,983.36 at 372.92. Max loss at the stop: 8 x 5.67 = $45.36.
+A stop is an order, not a promise: in a fast market it can fill below 367.25.
+
+Proposed bracket order (place_stock_order arguments, nothing has been placed):
+  buy 8 TSLA, market, day, take-profit 378.59, stop-loss 367.25
+Flat by 15:55 New York: anything still open then gets closed (trader-alerts rings, trader-broker flatten).
+
+Next: trader-risk checks it, then trader-broker asks you yes or no.
+Education and tooling, not financial advice.
+Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\orders.json
+[exit 0]
+
+$ python trader-risk/check.py --now "2026-09-17 10:10"
+PASS  #1 buy TSLA 8 shares, entry
+          entry 372.92 (the plan's entry), stop 367.25, target 378.59: risk 5.67 a share
+          max loss $45.36 (limit $50), reward:risk 1.00 (min 1)
+          today before this: 0 of 3 trades, $0 of $150 daily loss
+
+1 passed, 0 blocked at 2026-09-17 10:10 New York. Cash after the passed orders: $2,069.79 (paper account).
+Every order passed. trader-broker still asks you yes or no for each one.
+PRACTICE: the clock is pinned (--now or --today), so trader-broker treats these verdicts as practice, never as a real PASS.
+Education and tooling, not financial advice.
+[exit 0]
+
+$ python trader-broker/ticket.py show --now "2026-09-17 10:10"
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+
+ORDER 1 of 1, PAPER account per your config, Alpaca
+  BUY 8 TSLA, market, good for today
+  stop-loss 367.25
+  take-profit 378.59
+  max loss about $45.36 if the stop fills at 367.25 (it can fill worse in a fast market)
+  why: opening-range breakout on TSLA: 8 shares, bound by your $50 max loss per trade (8 x 5.67 = $45.36 at the stop)
+  READY: trader-risk PASS, waiting for your yes
+  Practice run: in a real one, Claude would call place_stock_order with exactly:
+    {
+      "symbol": "TSLA",
+      "side": "buy",
+      "qty": "8",
+      "type": "market",
+      "time_in_force": "day",
+      "order_class": "bracket",
+      "take_profit_limit_price": "378.59",
+      "stop_loss_stop_price": "367.25"
+    }
+  Alpaca places the entry, then the stop-loss and the take-profit as two orders
+  that cancel each other: when one fills, the other is canceled.
+  Reply "yes" to practice the yes, or "no" to skip it. Nothing is placed.
+
+One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
+[exit 0]
+
+[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "8", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "378.59", "stop_loss_stop_price": "367.25"}
+  10:10 filled: bought 8 TSLA at 372.95 (market: the 10:10 bar's open)
+  bracket legs working: stop-loss 367.25, take-profit 378.59
+  11:00 stop-loss filled: sold 8 at 367.25
+  P&L -45.60; deepest open loss -45.60 at 11:00; best open gain +9.36 at 10:10
+
+====================================================================================================
+Fri 2026-09-18  account cash $5007.55
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-18 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Fri 2026-09-18 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $370.40, low $366.40 (1 of 3 bars, still forming).
+ 9:30 bar  closed $367.14  range so far $366.40 to $370.40
+ 9:35 bar  closed $368.54  range so far $365.60 to $370.40
+ 9:40 bar  closed $369.16  opening range set: high $370.40, low $365.60
+ 9:45 bar  closed $368.79  $1.61 under $370.40
+ 9:50 bar  closed $366.53  $3.87 under $370.40
+ 9:55 bar  closed $365.64  $4.76 under $370.40
+10:00 bar  closed $364.42  $5.98 under $370.40
+10:05 bar  closed $363.15  $7.25 under $370.40
+10:10 bar  closed $361.17  $9.23 under $370.40
+10:15 bar  closed $362.00  $8.40 under $370.40
+10:20 bar  closed $362.88  $7.52 under $370.40
+10:25 bar  closed $365.11  $5.29 under $370.40
+10:30 bar  closed $364.10  $6.30 under $370.40
+10:35 bar  closed $364.58  $5.82 under $370.40
+10:40 bar  closed $366.50  $3.90 under $370.40
+10:45 bar  closed $367.67  $2.73 under $370.40
+10:50 bar  closed $368.45  $1.95 under $370.40
+10:55 bar  closed $367.70  $2.70 under $370.40
+EXPIRED  no close above the range high $370.40 by 11:00, the last time for a new entry.
+[exit 1]
+
+====================================================================================================
+Mon 2026-09-21  account cash $5007.55
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-21 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Mon 2026-09-21 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $376.51, low $371.11 (1 of 3 bars, still forming).
+ 9:30 bar  closed $373.69  range so far $371.11 to $376.51
+ 9:35 bar  closed $373.14  range so far $371.11 to $376.51
+ 9:40 bar  closed $375.44  opening range set: high $376.51, low $371.11
+ 9:45 bar  closed $375.14  $1.37 under $376.51
+ 9:50 bar  closed $377.57  TRIGGERED: closed above $376.51 (+0.28%). Get in now if you take it: 9:55 AM, $377.57
+This is the moment to get in, if you take the trade. Nothing was placed.
+Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\entry.json.
+[exit 0]
+
+$ python trader-exit/exit.py plan --now "2026-09-21 09:55" --write --target 1R
+Exit plan: TSLA long, Mon 2026-09-21, opening-range breakout on 5-minute bars
+  Entry         $377.57 at 9:55 AM (bar 4)
+  Stop          $373.81  opening-range midpoint: ($376.51 + $371.11) / 2 = $373.81
+  Target        $381.33  1R (one times the risk)
+  Risk a share  $3.76 (1.00% of the entry)
+  Reward:risk   1.0
+  Flat by       15:55 ET, win or lose: no overnight hold
+Set before the entry. If price hits the stop, you are out; never move it further away.
+A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\plan.json.
+Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
+[exit 0]
+
+$ python trader-timemachine/timemachine.py run --plan $TRADER_HOME/plan.json --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-21 09:55" --write
+TSLA buy, Monday 2026-09-21: entry 377.57 at 9:55 AM (bar 4), stop 373.81, target 381.33 (1R, risk 3.76 a share).
+10,000 replays of the rest of the session, 9:55 AM to 4:00 PM (73 five-minute bars), seed 19.
+Each bar is drawn whole from TSLA's own 5-min bars at the same time of day (+-2 bars) over its last 39 full sessions (2026-07-27 to 2026-09-18).
+
+  target first   52.0 %
+  stop first     44.8 %
+  neither        3.2 %    still open at 4:00 PM
+  green          53.6 %   target first, or above the entry at 4:00 PM
+
+  Price at 4:00 PM: median 378.23, 90 % of replays between 368.00 and 388.74.
+  Average R: +0.072 (R = the 3.76 risk: +1R at the target, -1R at the stop).
+
+History: the same rule (15-min opening range, stop at the opening-range midpoint, 1R target, entries 09:45 to 11:00 New York) on each of those 39 real sessions fired 20 times: 10 target, 9 stop, 1 neither. Average R +0.022.
+
+Close to a coin flip: target first 52.0 % vs stop first 44.8 %.
+
+A simulation built from TSLA's own last 39 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\timemachine.json.
+Next: /trader-budget sizes it to your budget and your max loss per trade.
+[exit 0]
+
+$ python trader-budget/size.py --portfolio $TRADER_HOME/practice/portfolio.json --now "2026-09-21 09:55" --write
+TSLA buy, opening-range breakout, entry 377.57 at 9:55 AM
+Stop 373.81: opening-range midpoint. Target 381.33: 1R (one times the risk).
+Sized at 377.57 (the plan's entry). Risk 3.76 a share (entry 377.57 minus stop 373.81). Reward:risk 1.00.
+
+Limits (whole shares; the smallest one wins):
+  max loss      $50 max loss / 3.76 risk a share                            13 shares
+  position cap  75% of $5,000 = $3,750 / 377.57                              9 shares  <- binds
+  max order     $4,000 / 377.57                                             10 shares
+  cash          budget $5,000 minus the $500 cash buffer = $4,500 / 377.57  11 shares
+
+Size: 9 shares of TSLA = $3,398.13 at 377.57. Max loss at the stop: 9 x 3.76 = $33.84.
+A stop is an order, not a promise: in a fast market it can fill below 373.81.
+
+Proposed bracket order (place_stock_order arguments, nothing has been placed):
+  buy 9 TSLA, market, day, take-profit 381.33, stop-loss 373.81
+Flat by 15:55 New York: anything still open then gets closed (trader-alerts rings, trader-broker flatten).
+
+Next: trader-risk checks it, then trader-broker asks you yes or no.
+Education and tooling, not financial advice.
+Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\orders.json
+[exit 0]
+
+$ python trader-risk/check.py --now "2026-09-21 09:55"
+PASS  #1 buy TSLA 9 shares, entry
+          entry 377.57 (the plan's entry), stop 373.81, target 381.33: risk 3.76 a share
+          max loss $33.84 (limit $50), reward:risk 1.00 (min 1)
+          today before this: 0 of 3 trades, $0 of $150 daily loss
+
+1 passed, 0 blocked at 2026-09-21 09:55 New York. Cash after the passed orders: $1,609.42 (paper account).
+Every order passed. trader-broker still asks you yes or no for each one.
+PRACTICE: the clock is pinned (--now or --today), so trader-broker treats these verdicts as practice, never as a real PASS.
+Education and tooling, not financial advice.
+[exit 0]
+
+$ python trader-broker/ticket.py show --now "2026-09-21 09:55"
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+
+ORDER 1 of 1, PAPER account per your config, Alpaca
+  BUY 9 TSLA, market, good for today
+  stop-loss 373.81
+  take-profit 381.33
+  max loss about $33.84 if the stop fills at 373.81 (it can fill worse in a fast market)
+  why: opening-range breakout on TSLA: 9 shares, bound by your position cap (9 x 3.76 = $33.84 at the stop)
+  READY: trader-risk PASS, waiting for your yes
+  Practice run: in a real one, Claude would call place_stock_order with exactly:
+    {
+      "symbol": "TSLA",
+      "side": "buy",
+      "qty": "9",
+      "type": "market",
+      "time_in_force": "day",
+      "order_class": "bracket",
+      "take_profit_limit_price": "381.33",
+      "stop_loss_stop_price": "373.81"
+    }
+  Alpaca places the entry, then the stop-loss and the take-profit as two orders
+  that cancel each other: when one fills, the other is canceled.
+  Reply "yes" to practice the yes, or "no" to skip it. Nothing is placed.
+
+One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
+[exit 0]
+
+[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "9", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "381.33", "stop_loss_stop_price": "373.81"}
+  09:55 filled: bought 9 TSLA at 377.60 (market: the 09:55 bar's open)
+  bracket legs working: stop-loss 373.81, take-profit 381.33
+  12:45 stop-loss filled: sold 9 at 373.81
+  P&L -34.11; deepest open loss -34.11 at 12:45; best open gain +6.84 at 10:30
+
+====================================================================================================
+Tue 2026-09-22  account cash $4973.44
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-22 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Tue 2026-09-22 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $379.25, low $374.67 (1 of 3 bars, still forming).
+ 9:30 bar  closed $374.82  range so far $374.67 to $379.25
+ 9:35 bar  closed $376.23  range so far $372.88 to $379.25
+ 9:40 bar  closed $375.32  opening range set: high $379.25, low $372.88
+ 9:45 bar  closed $375.58  $3.67 under $379.25
+ 9:50 bar  closed $376.75  $2.50 under $379.25
+ 9:55 bar  closed $375.58  $3.67 under $379.25
+10:00 bar  closed $376.69  $2.56 under $379.25
+10:05 bar  closed $377.11  $2.14 under $379.25
+10:10 bar  closed $378.39  $0.86 under $379.25
+10:15 bar  closed $377.34  $1.91 under $379.25
+10:20 bar  closed $378.51  $0.74 under $379.25
+10:25 bar  closed $378.17  $1.08 under $379.25
+10:30 bar  closed $378.20  $1.05 under $379.25
+10:35 bar  closed $377.83  $1.42 under $379.25
+10:40 bar  closed $377.30  $1.95 under $379.25
+10:45 bar  closed $377.45  $1.80 under $379.25
+10:50 bar  closed $377.29  $1.96 under $379.25
+10:55 bar  closed $376.24  $3.01 under $379.25
+EXPIRED  no close above the range high $379.25 by 11:00, the last time for a new entry.
+[exit 1]
+
+====================================================================================================
+Wed 2026-09-23  account cash $4973.44
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-23 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Wed 2026-09-23 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $384.76, low $379.93 (1 of 3 bars, still forming).
+ 9:30 bar  closed $381.56  range so far $379.93 to $384.76
+ 9:35 bar  closed $380.76  range so far $378.78 to $384.76
+ 9:40 bar  closed $382.36  opening range set: high $384.76, low $378.78
+ 9:45 bar  closed $384.32  $0.44 under $384.76
+ 9:50 bar  closed $384.22  $0.54 under $384.76
+ 9:55 bar  closed $385.11  TRIGGERED: closed above $384.76 (+0.09%). Get in now if you take it: 10:00 AM, $385.11
+This is the moment to get in, if you take the trade. Nothing was placed.
+Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\entry.json.
+[exit 0]
+
+$ python trader-exit/exit.py plan --now "2026-09-23 10:00" --write --target 1R
+Exit plan: TSLA long, Wed 2026-09-23, opening-range breakout on 5-minute bars
+  Entry         $385.11 at 10:00 AM (bar 5)
+  Stop          $381.77  opening-range midpoint: ($384.76 + $378.78) / 2 = $381.77
+  Target        $388.45  1R (one times the risk)
+  Risk a share  $3.34 (0.87% of the entry)
+  Reward:risk   1.0
+  Flat by       15:55 ET, win or lose: no overnight hold
+Set before the entry. If price hits the stop, you are out; never move it further away.
+A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\plan.json.
+Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
+[exit 0]
+
+$ python trader-timemachine/timemachine.py run --plan $TRADER_HOME/plan.json --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-23 10:00" --write
+TSLA buy, Wednesday 2026-09-23: entry 385.11 at 10:00 AM (bar 5), stop 381.77, target 388.45 (1R, risk 3.34 a share).
+10,000 replays of the rest of the session, 10:00 AM to 4:00 PM (72 five-minute bars), seed 19.
+Each bar is drawn whole from TSLA's own 5-min bars at the same time of day (+-2 bars) over its last 41 full sessions (2026-07-27 to 2026-09-22).
+
+  target first   51.8 %
+  stop first     46.6 %
+  neither        1.6 %    still open at 4:00 PM
+  green          52.7 %   target first, or above the entry at 4:00 PM
+
+  Price at 4:00 PM: median 385.85, 90 % of replays between 375.50 and 396.58.
+  Average R: +0.052 (R = the 3.34 risk: +1R at the target, -1R at the stop).
+
+History: the same rule (15-min opening range, stop at the opening-range midpoint, 1R target, entries 09:45 to 11:00 New York) on each of those 41 real sessions fired 21 times: 10 target, 10 stop, 1 neither. Average R -0.027.
+
+Close to a coin flip: target first 51.8 % vs stop first 46.6 %.
+
+A simulation built from TSLA's own last 41 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\timemachine.json.
+Next: /trader-budget sizes it to your budget and your max loss per trade.
+[exit 0]
+
+$ python trader-budget/size.py --portfolio $TRADER_HOME/practice/portfolio.json --now "2026-09-23 10:00" --write
+TSLA buy, opening-range breakout, entry 385.11 at 10:00 AM
+Stop 381.77: opening-range midpoint. Target 388.45: 1R (one times the risk).
+Sized at 385.11 (the plan's entry). Risk 3.34 a share (entry 385.11 minus stop 381.77). Reward:risk 1.00.
+
+Limits (whole shares; the smallest one wins):
+  max loss      $50 max loss / 3.34 risk a share                            14 shares
+  position cap  75% of $5,000 = $3,750 / 385.11                              9 shares  <- binds
+  max order     $4,000 / 385.11                                             10 shares
+  cash          cash $4,973.44 in trader/portfolio.json minus the $500 buffer = $4,473.44 / 385.11  11 shares
+
+Size: 9 shares of TSLA = $3,465.99 at 385.11. Max loss at the stop: 9 x 3.34 = $30.06.
+A stop is an order, not a promise: in a fast market it can fill below 381.77.
+
+Proposed bracket order (place_stock_order arguments, nothing has been placed):
+  buy 9 TSLA, market, day, take-profit 388.45, stop-loss 381.77
+Flat by 15:55 New York: anything still open then gets closed (trader-alerts rings, trader-broker flatten).
+
+Next: trader-risk checks it, then trader-broker asks you yes or no.
+Education and tooling, not financial advice.
+Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\orders.json
+[exit 0]
+
+$ python trader-risk/check.py --now "2026-09-23 10:00"
+PASS  #1 buy TSLA 9 shares, entry
+          entry 385.11 (the plan's entry), stop 381.77, target 388.45: risk 3.34 a share
+          max loss $30.06 (limit $50), reward:risk 1.00 (min 1)
+          today before this: 0 of 3 trades, $0 of $150 daily loss
+
+1 passed, 0 blocked at 2026-09-23 10:00 New York. Cash after the passed orders: $1,507.45 (paper account).
+Every order passed. trader-broker still asks you yes or no for each one.
+PRACTICE: the clock is pinned (--now or --today), so trader-broker treats these verdicts as practice, never as a real PASS.
+Education and tooling, not financial advice.
+[exit 0]
+
+$ python trader-broker/ticket.py show --now "2026-09-23 10:00"
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+
+ORDER 1 of 1, PAPER account per your config, Alpaca
+  BUY 9 TSLA, market, good for today
+  stop-loss 381.77
+  take-profit 388.45
+  max loss about $30.06 if the stop fills at 381.77 (it can fill worse in a fast market)
+  why: opening-range breakout on TSLA: 9 shares, bound by your position cap (9 x 3.34 = $30.06 at the stop)
+  READY: trader-risk PASS, waiting for your yes
+  Practice run: in a real one, Claude would call place_stock_order with exactly:
+    {
+      "symbol": "TSLA",
+      "side": "buy",
+      "qty": "9",
+      "type": "market",
+      "time_in_force": "day",
+      "order_class": "bracket",
+      "take_profit_limit_price": "388.45",
+      "stop_loss_stop_price": "381.77"
+    }
+  Alpaca places the entry, then the stop-loss and the take-profit as two orders
+  that cancel each other: when one fills, the other is canceled.
+  Reply "yes" to practice the yes, or "no" to skip it. Nothing is placed.
+
+One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
+[exit 0]
+
+[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "9", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "388.45", "stop_loss_stop_price": "381.77"}
+  10:00 filled: bought 9 TSLA at 385.14 (market: the 10:00 bar's open)
+  bracket legs working: stop-loss 381.77, take-profit 388.45
+  10:05 stop-loss filled: sold 9 at 381.77
+  P&L -30.33; deepest open loss -30.33 at 10:05; best open gain +12.24 at 10:00
+
+====================================================================================================
+Thu 2026-09-24  account cash $4943.11
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-24 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Thu 2026-09-24 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $378.75, low $376.13 (1 of 3 bars, still forming).
+ 9:30 bar  closed $376.96  range so far $376.13 to $378.75
+ 9:35 bar  closed $378.36  range so far $376.13 to $378.75
+ 9:40 bar  closed $378.34  opening range set: high $378.75, low $376.13
+ 9:45 bar  closed $377.68  $1.07 under $378.75
+ 9:50 bar  closed $378.66  $0.09 under $378.75
+ 9:55 bar  closed $378.89  TRIGGERED: closed above $378.75 (+0.04%). Get in now if you take it: 10:00 AM, $378.89
+This is the moment to get in, if you take the trade. Nothing was placed.
+Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\entry.json.
+[exit 0]
+
+$ python trader-exit/exit.py plan --now "2026-09-24 10:00" --write --target 1R
+Exit plan: TSLA long, Thu 2026-09-24, opening-range breakout on 5-minute bars
+  Entry         $378.89 at 10:00 AM (bar 5)
+  Stop          $377.44  opening-range midpoint: ($378.75 + $376.13) / 2 = $377.44
+  Target        $380.34  1R (one times the risk)
+  Risk a share  $1.45 (0.38% of the entry)
+  Reward:risk   1.0
+  Flat by       15:55 ET, win or lose: no overnight hold
+Set before the entry. If price hits the stop, you are out; never move it further away.
+A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\plan.json.
+Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
+[exit 0]
+
+$ python trader-timemachine/timemachine.py run --plan $TRADER_HOME/plan.json --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-24 10:00" --write
+TSLA buy, Thursday 2026-09-24: entry 378.89 at 10:00 AM (bar 5), stop 377.44, target 380.34 (1R, risk 1.45 a share).
+10,000 replays of the rest of the session, 10:00 AM to 4:00 PM (72 five-minute bars), seed 19.
+Each bar is drawn whole from TSLA's own 5-min bars at the same time of day (+-2 bars) over its last 42 full sessions (2026-07-27 to 2026-09-23).
+
+  target first   44.5 %
+  stop first     55.5 %
+  neither        0.0 %    still open at 4:00 PM
+  green          44.5 %   target first, or above the entry at 4:00 PM
+
+  Price at 4:00 PM: median 379.44, 90 % of replays between 369.49 and 389.49.
+  Average R: -0.110 (R = the 1.45 risk: +1R at the target, -1R at the stop).
+
+History: the same rule (15-min opening range, stop at the opening-range midpoint, 1R target, entries 09:45 to 11:00 New York) on each of those 42 real sessions fired 22 times: 10 target, 11 stop, 1 neither. Average R -0.071.
+
+Leans toward the stop: target first 44.5 % vs stop first 55.5 %.
+
+A simulation built from TSLA's own last 42 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\timemachine.json.
+Next: /trader-budget sizes it to your budget and your max loss per trade.
+[exit 0]
+
+$ python trader-budget/size.py --portfolio $TRADER_HOME/practice/portfolio.json --now "2026-09-24 10:00" --write
+TSLA buy, opening-range breakout, entry 378.89 at 10:00 AM
+Stop 377.44: opening-range midpoint. Target 380.34: 1R (one times the risk).
+Sized at 378.89 (the plan's entry). Risk 1.45 a share (entry 378.89 minus stop 377.44). Reward:risk 1.00.
+
+Limits (whole shares; the smallest one wins):
+  max loss      $50 max loss / 1.45 risk a share                            34 shares
+  position cap  75% of $5,000 = $3,750 / 378.89                              9 shares  <- binds
+  max order     $4,000 / 378.89                                             10 shares
+  cash          cash $4,943.11 in trader/portfolio.json minus the $500 buffer = $4,443.11 / 378.89  11 shares
+
+Size: 9 shares of TSLA = $3,410.01 at 378.89. Max loss at the stop: 9 x 1.45 = $13.05.
+A stop is an order, not a promise: in a fast market it can fill below 377.44.
+
+Proposed bracket order (place_stock_order arguments, nothing has been placed):
+  buy 9 TSLA, market, day, take-profit 380.34, stop-loss 377.44
+Flat by 15:55 New York: anything still open then gets closed (trader-alerts rings, trader-broker flatten).
+
+Next: trader-risk checks it, then trader-broker asks you yes or no.
+Education and tooling, not financial advice.
+Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\orders.json
+[exit 0]
+
+$ python trader-risk/check.py --now "2026-09-24 10:00"
+PASS  #1 buy TSLA 9 shares, entry
+          entry 378.89 (the plan's entry), stop 377.44, target 380.34: risk 1.45 a share
+          max loss $13.05 (limit $50), reward:risk 1.00 (min 1)
+          today before this: 0 of 3 trades, $0 of $150 daily loss
+
+1 passed, 0 blocked at 2026-09-24 10:00 New York. Cash after the passed orders: $1,533.10 (paper account).
+Every order passed. trader-broker still asks you yes or no for each one.
+PRACTICE: the clock is pinned (--now or --today), so trader-broker treats these verdicts as practice, never as a real PASS.
+Education and tooling, not financial advice.
+[exit 0]
+
+$ python trader-broker/ticket.py show --now "2026-09-24 10:00"
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+
+ORDER 1 of 1, PAPER account per your config, Alpaca
+  BUY 9 TSLA, market, good for today
+  stop-loss 377.44
+  take-profit 380.34
+  max loss about $13.05 if the stop fills at 377.44 (it can fill worse in a fast market)
+  why: opening-range breakout on TSLA: 9 shares, bound by your position cap (9 x 1.45 = $13.05 at the stop)
+  READY: trader-risk PASS, waiting for your yes
+  Practice run: in a real one, Claude would call place_stock_order with exactly:
+    {
+      "symbol": "TSLA",
+      "side": "buy",
+      "qty": "9",
+      "type": "market",
+      "time_in_force": "day",
+      "order_class": "bracket",
+      "take_profit_limit_price": "380.34",
+      "stop_loss_stop_price": "377.44"
+    }
+  Alpaca places the entry, then the stop-loss and the take-profit as two orders
+  that cancel each other: when one fills, the other is canceled.
+  Reply "yes" to practice the yes, or "no" to skip it. Nothing is placed.
+
+One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
+[exit 0]
+
+[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "9", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "380.34", "stop_loss_stop_price": "377.44"}
+  10:00 filled: bought 9 TSLA at 378.87 (market: the 10:00 bar's open)
+  bracket legs working: stop-loss 377.44, take-profit 380.34
+  10:15 stop-loss filled: sold 9 at 377.44
+  P&L -12.87; deepest open loss -12.87 at 10:15; best open gain +9.63 at 10:00
+
+====================================================================================================
+Fri 2026-09-25  account cash $4930.24
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-25 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Fri 2026-09-25 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $386.83, low $370.26 (1 of 3 bars, still forming).
+ 9:30 bar  closed $372.57  range so far $370.26 to $386.83
+ 9:35 bar  closed $372.88  range so far $370.26 to $386.83
+ 9:40 bar  closed $373.68  opening range set: high $386.83, low $369.78
+ 9:45 bar  closed $372.53  $14.30 under $386.83
+ 9:50 bar  closed $375.50  $11.33 under $386.83
+ 9:55 bar  closed $372.53  $14.30 under $386.83
+10:00 bar  closed $371.05  $15.78 under $386.83
+10:05 bar  closed $374.19  $12.64 under $386.83
+10:10 bar  closed $370.19  $16.64 under $386.83
+10:15 bar  closed $371.85  $14.98 under $386.83
+10:20 bar  closed $372.85  $13.98 under $386.83
+10:25 bar  closed $370.48  $16.35 under $386.83
+10:30 bar  closed $369.91  $16.92 under $386.83
+10:35 bar  closed $370.03  $16.80 under $386.83
+10:40 bar  closed $367.83  $19.00 under $386.83
+10:45 bar  closed $370.08  $16.75 under $386.83
+10:50 bar  closed $370.16  $16.67 under $386.83
+10:55 bar  closed $371.54  $15.29 under $386.83
+EXPIRED  no close above the range high $386.83 by 11:00, the last time for a new entry.
+[exit 1]
+
+====================================================================================================
+Mon 2026-09-28  account cash $4930.24
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-28 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Mon 2026-09-28 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $369.42, low $364.71 (1 of 3 bars, still forming).
+ 9:30 bar  closed $366.36  range so far $364.71 to $369.42
+ 9:35 bar  closed $365.04  range so far $364.71 to $369.42
+ 9:40 bar  closed $362.46  opening range set: high $369.42, low $362.11
+ 9:45 bar  closed $362.21  $7.21 under $369.42
+ 9:50 bar  closed $363.35  $6.07 under $369.42
+ 9:55 bar  closed $363.33  $6.09 under $369.42
+10:00 bar  closed $362.36  $7.06 under $369.42
+10:05 bar  closed $361.21  $8.21 under $369.42
+10:10 bar  closed $361.03  $8.39 under $369.42
+10:15 bar  closed $360.95  $8.47 under $369.42
+10:20 bar  closed $361.25  $8.17 under $369.42
+10:25 bar  closed $361.07  $8.35 under $369.42
+10:30 bar  closed $361.46  $7.96 under $369.42
+10:35 bar  closed $360.91  $8.51 under $369.42
+10:40 bar  closed $359.53  $9.89 under $369.42
+10:45 bar  closed $360.19  $9.23 under $369.42
+10:50 bar  closed $359.48  $9.94 under $369.42
+10:55 bar  closed $360.09  $9.33 under $369.42
+EXPIRED  no close above the range high $369.42 by 11:00, the last time for a new entry.
+[exit 1]
+
+====================================================================================================
+Tue 2026-09-29  account cash $4930.24
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-29 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Tue 2026-09-29 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $358.74, low $352.88 (1 of 3 bars, still forming).
+ 9:30 bar  closed $353.10  range so far $352.88 to $358.74
+ 9:35 bar  closed $353.11  range so far $352.01 to $358.74
+ 9:40 bar  closed $352.57  opening range set: high $358.74, low $352.01
+ 9:45 bar  closed $352.33  $6.41 under $358.74
+ 9:50 bar  closed $352.70  $6.04 under $358.74
+ 9:55 bar  closed $352.24  $6.50 under $358.74
+10:00 bar  closed $353.34  $5.40 under $358.74
+10:05 bar  closed $354.26  $4.48 under $358.74
+10:10 bar  closed $354.52  $4.22 under $358.74
+10:15 bar  closed $354.89  $3.85 under $358.74
+10:20 bar  closed $355.09  $3.65 under $358.74
+10:25 bar  closed $354.90  $3.84 under $358.74
+10:30 bar  closed $355.40  $3.34 under $358.74
+10:35 bar  closed $354.79  $3.95 under $358.74
+10:40 bar  closed $355.04  $3.70 under $358.74
+10:45 bar  closed $354.33  $4.41 under $358.74
+10:50 bar  closed $354.69  $4.05 under $358.74
+10:55 bar  closed $354.26  $4.48 under $358.74
+EXPIRED  no close above the range high $358.74 by 11:00, the last time for a new entry.
+[exit 1]
+
+====================================================================================================
+Wed 2026-09-30  account cash $4930.24
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-09-30 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Wed 2026-09-30 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $352.50, low $346.62 (1 of 3 bars, still forming).
+ 9:30 bar  closed $347.23  range so far $346.62 to $352.50
+ 9:35 bar  closed $347.57  range so far $346.43 to $352.50
+ 9:40 bar  closed $347.02  opening range set: high $352.50, low $346.43
+ 9:45 bar  closed $346.96  $5.54 under $352.50
+ 9:50 bar  closed $346.92  $5.58 under $352.50
+ 9:55 bar  closed $346.77  $5.73 under $352.50
+10:00 bar  closed $348.53  $3.97 under $352.50
+10:05 bar  closed $348.82  $3.68 under $352.50
+10:10 bar  closed $349.53  $2.97 under $352.50
+10:15 bar  closed $349.92  $2.58 under $352.50
+10:20 bar  closed $350.36  $2.14 under $352.50
+10:25 bar  closed $350.95  $1.55 under $352.50
+10:30 bar  closed $350.90  $1.60 under $352.50
+10:35 bar  closed $350.55  $1.95 under $352.50
+10:40 bar  closed $349.76  $2.74 under $352.50
+10:45 bar  closed $349.89  $2.61 under $352.50
+10:50 bar  closed $348.80  $3.70 under $352.50
+10:55 bar  closed $349.03  $3.47 under $352.50
+EXPIRED  no close above the range high $352.50 by 11:00, the last time for a new entry.
+[exit 1]
+
+====================================================================================================
+Thu 2026-10-01  account cash $4930.24
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-10-01 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Thu 2026-10-01 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $358.40, low $355.32 (1 of 3 bars, still forming).
+ 9:30 bar  closed $356.80  range so far $355.32 to $358.40
+ 9:35 bar  closed $355.62  range so far $355.32 to $358.40
+ 9:40 bar  closed $357.42  opening range set: high $358.40, low $355.32
+ 9:45 bar  closed $356.29  $2.11 under $358.40
+ 9:50 bar  closed $356.26  $2.14 under $358.40
+ 9:55 bar  closed $355.88  $2.52 under $358.40
+10:00 bar  closed $354.58  $3.82 under $358.40
+10:05 bar  closed $356.50  $1.90 under $358.40
+10:10 bar  closed $355.71  $2.69 under $358.40
+10:15 bar  closed $355.41  $2.99 under $358.40
+10:20 bar  closed $354.62  $3.78 under $358.40
+10:25 bar  closed $355.13  $3.27 under $358.40
+10:30 bar  closed $356.14  $2.26 under $358.40
+10:35 bar  closed $357.70  $0.70 under $358.40
+10:40 bar  closed $358.25  $0.15 under $358.40
+10:45 bar  closed $358.66  TRIGGERED: closed above $358.40 (+0.07%). Get in now if you take it: 10:50 AM, $358.66
+This is the moment to get in, if you take the trade. Nothing was placed.
+Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\entry.json.
+[exit 0]
+
+$ python trader-exit/exit.py plan --now "2026-10-01 10:50" --write --target 1R
+Exit plan: TSLA long, Thu 2026-10-01, opening-range breakout on 5-minute bars
+  Entry         $358.66 at 10:50 AM (bar 15)
+  Stop          $356.86  opening-range midpoint: ($358.40 + $355.32) / 2 = $356.86
+  Target        $360.46  1R (one times the risk)
+  Risk a share  $1.80 (0.50% of the entry)
+  Reward:risk   1.0
+  Flat by       15:55 ET, win or lose: no overnight hold
+Set before the entry. If price hits the stop, you are out; never move it further away.
+A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\plan.json.
+Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
+[exit 0]
+
+$ python trader-timemachine/timemachine.py run --plan $TRADER_HOME/plan.json --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-10-01 10:50" --write
+TSLA buy, Thursday 2026-10-01: entry 358.66 at 10:50 AM (bar 15), stop 356.86, target 360.46 (1R, risk 1.80 a share).
+10,000 replays of the rest of the session, 10:50 AM to 4:00 PM (62 five-minute bars), seed 19.
+Each bar is drawn whole from TSLA's own 5-min bars at the same time of day (+-2 bars) over its last 47 full sessions (2026-07-27 to 2026-09-30).
+
+  target first   51.8 %
+  stop first     48.2 %
+  neither        0.0 %    still open at 4:00 PM
+  green          51.8 %   target first, or above the entry at 4:00 PM
+
+  Price at 4:00 PM: median 358.99, 90 % of replays between 351.24 and 366.71.
+  Average R: +0.036 (R = the 1.80 risk: +1R at the target, -1R at the stop).
+
+History: the same rule (15-min opening range, stop at the opening-range midpoint, 1R target, entries 09:45 to 11:00 New York) on each of those 47 real sessions fired 23 times: 10 target, 12 stop, 1 neither. Average R -0.111.
+
+Close to a coin flip: target first 51.8 % vs stop first 48.2 %.
+
+A simulation built from TSLA's own last 47 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\timemachine.json.
+Next: /trader-budget sizes it to your budget and your max loss per trade.
+[exit 0]
+
+$ python trader-budget/size.py --portfolio $TRADER_HOME/practice/portfolio.json --now "2026-10-01 10:50" --write
+TSLA buy, opening-range breakout, entry 358.66 at 10:50 AM
+Stop 356.86: opening-range midpoint. Target 360.46: 1R (one times the risk).
+Sized at 358.66 (the plan's entry). Risk 1.80 a share (entry 358.66 minus stop 356.86). Reward:risk 1.00.
+
+Limits (whole shares; the smallest one wins):
+  max loss      $50 max loss / 1.80 risk a share                            27 shares
+  position cap  75% of $5,000 = $3,750 / 358.66                             10 shares  <- binds
+  max order     $4,000 / 358.66                                             11 shares
+  cash          cash $4,930.24 in trader/portfolio.json minus the $500 buffer = $4,430.24 / 358.66  12 shares
+
+Size: 10 shares of TSLA = $3,586.60 at 358.66. Max loss at the stop: 10 x 1.80 = $18.
+A stop is an order, not a promise: in a fast market it can fill below 356.86.
+
+Proposed bracket order (place_stock_order arguments, nothing has been placed):
+  buy 10 TSLA, market, day, take-profit 360.46, stop-loss 356.86
+Flat by 15:55 New York: anything still open then gets closed (trader-alerts rings, trader-broker flatten).
+
+Next: trader-risk checks it, then trader-broker asks you yes or no.
+Education and tooling, not financial advice.
+Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\orders.json
+[exit 0]
+
+$ python trader-risk/check.py --now "2026-10-01 10:50"
+PASS  #1 buy TSLA 10 shares, entry
+          entry 358.66 (the plan's entry), stop 356.86, target 360.46: risk 1.80 a share
+          max loss $18 (limit $50), reward:risk 1.00 (min 1)
+          today before this: 0 of 3 trades, $0 of $150 daily loss
+
+1 passed, 0 blocked at 2026-10-01 10:50 New York. Cash after the passed orders: $1,343.64 (paper account).
+Every order passed. trader-broker still asks you yes or no for each one.
+PRACTICE: the clock is pinned (--now or --today), so trader-broker treats these verdicts as practice, never as a real PASS.
+Education and tooling, not financial advice.
+[exit 0]
+
+$ python trader-broker/ticket.py show --now "2026-10-01 10:50"
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+
+ORDER 1 of 1, PAPER account per your config, Alpaca
+  BUY 10 TSLA, market, good for today
+  stop-loss 356.86
+  take-profit 360.46
+  max loss about $18 if the stop fills at 356.86 (it can fill worse in a fast market)
+  why: opening-range breakout on TSLA: 10 shares, bound by your position cap (10 x 1.80 = $18 at the stop)
+  READY: trader-risk PASS, waiting for your yes
+  Practice run: in a real one, Claude would call place_stock_order with exactly:
+    {
+      "symbol": "TSLA",
+      "side": "buy",
+      "qty": "10",
+      "type": "market",
+      "time_in_force": "day",
+      "order_class": "bracket",
+      "take_profit_limit_price": "360.46",
+      "stop_loss_stop_price": "356.86"
+    }
+  Alpaca places the entry, then the stop-loss and the take-profit as two orders
+  that cancel each other: when one fills, the other is canceled.
+  Reply "yes" to practice the yes, or "no" to skip it. Nothing is placed.
+
+One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
+[exit 0]
+
+[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "10", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "360.46", "stop_loss_stop_price": "356.86"}
+  10:50 filled: bought 10 TSLA at 358.64 (market: the 10:50 bar's open)
+  bracket legs working: stop-loss 356.86, take-profit 360.46
+  11:05 stop-loss filled: sold 10 at 356.86
+  P&L -17.80; deepest open loss -17.80 at 11:05; best open gain +8.60 at 10:55
+
+====================================================================================================
+Fri 2026-10-02  account cash $4912.44
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-10-02 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Fri 2026-10-02 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $368.39, low $359.41 (1 of 3 bars, still forming).
+ 9:30 bar  closed $367.74  range so far $359.41 to $368.39
+ 9:35 bar  closed $369.49  range so far $359.41 to $369.69
+ 9:40 bar  closed $369.20  opening range set: high $371.33, low $359.41
+ 9:45 bar  closed $368.80  $2.53 under $371.33
+ 9:50 bar  closed $369.31  $2.02 under $371.33
+ 9:55 bar  closed $368.81  $2.52 under $371.33
+10:00 bar  closed $371.34  TRIGGERED: closed above $371.33 (+0.00%). Get in now if you take it: 10:05 AM, $371.34
+This is the moment to get in, if you take the trade. Nothing was placed.
+Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\entry.json.
+[exit 0]
+
+$ python trader-exit/exit.py plan --now "2026-10-02 10:05" --write --target 1R
+Exit plan: TSLA long, Fri 2026-10-02, opening-range breakout on 5-minute bars
+  Entry         $371.34 at 10:05 AM (bar 6)
+  Stop          $365.37  opening-range midpoint: ($371.33 + $359.41) / 2 = $365.37
+  Target        $377.31  1R (one times the risk)
+  Risk a share  $5.97 (1.61% of the entry)
+  Reward:risk   1.0
+  Flat by       15:55 ET, win or lose: no overnight hold
+Set before the entry. If price hits the stop, you are out; never move it further away.
+A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\plan.json.
+Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
+[exit 0]
+
+$ python trader-timemachine/timemachine.py run --plan $TRADER_HOME/plan.json --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-10-02 10:05" --write
+TSLA buy, Friday 2026-10-02: entry 371.34 at 10:05 AM (bar 6), stop 365.37, target 377.31 (1R, risk 5.97 a share).
+10,000 replays of the rest of the session, 10:05 AM to 4:00 PM (71 five-minute bars), seed 19.
+Each bar is drawn whole from TSLA's own 5-min bars at the same time of day (+-2 bars) over its last 48 full sessions (2026-07-27 to 2026-10-01).
+
+  target first   34.3 %
+  stop first     27.3 %
+  neither        38.4 %   still open at 4:00 PM
+  green          53.6 %   target first, or above the entry at 4:00 PM
+
+  Price at 4:00 PM: median 371.78, 90 % of replays between 362.42 and 381.67.
+  Average R: +0.071 (R = the 5.97 risk: +1R at the target, -1R at the stop).
+
+History: the same rule (15-min opening range, stop at the opening-range midpoint, 1R target, entries 09:45 to 11:00 New York) on each of those 48 real sessions fired 24 times: 10 target, 13 stop, 1 neither. Average R -0.148.
+
+Leans toward the target: target first 34.3 % vs stop first 27.3 %.
+
+A simulation built from TSLA's own last 48 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\timemachine.json.
+Next: /trader-budget sizes it to your budget and your max loss per trade.
+[exit 0]
+
+$ python trader-budget/size.py --portfolio $TRADER_HOME/practice/portfolio.json --now "2026-10-02 10:05" --write
+TSLA buy, opening-range breakout, entry 371.34 at 10:05 AM
+Stop 365.37: opening-range midpoint. Target 377.31: 1R (one times the risk).
+Sized at 371.34 (the plan's entry). Risk 5.97 a share (entry 371.34 minus stop 365.37). Reward:risk 1.00.
+
+Limits (whole shares; the smallest one wins):
+  max loss      $50 max loss / 5.97 risk a share                             8 shares  <- binds
+  position cap  75% of $5,000 = $3,750 / 371.34                             10 shares
+  max order     $4,000 / 371.34                                             10 shares
+  cash          cash $4,912.44 in trader/portfolio.json minus the $500 buffer = $4,412.44 / 371.34  11 shares
+
+Size: 8 shares of TSLA = $2,970.72 at 371.34. Max loss at the stop: 8 x 5.97 = $47.76.
+A stop is an order, not a promise: in a fast market it can fill below 365.37.
+
+Proposed bracket order (place_stock_order arguments, nothing has been placed):
+  buy 8 TSLA, market, day, take-profit 377.31, stop-loss 365.37
+Flat by 15:55 New York: anything still open then gets closed (trader-alerts rings, trader-broker flatten).
+
+Next: trader-risk checks it, then trader-broker asks you yes or no.
+Education and tooling, not financial advice.
+Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\orders.json
+[exit 0]
+
+$ python trader-risk/check.py --now "2026-10-02 10:05"
+PASS  #1 buy TSLA 8 shares, entry
+          entry 371.34 (the plan's entry), stop 365.37, target 377.31: risk 5.97 a share
+          max loss $47.76 (limit $50), reward:risk 1.00 (min 1)
+          today before this: 0 of 3 trades, $0 of $150 daily loss
+
+1 passed, 0 blocked at 2026-10-02 10:05 New York. Cash after the passed orders: $1,941.72 (paper account).
+Every order passed. trader-broker still asks you yes or no for each one.
+PRACTICE: the clock is pinned (--now or --today), so trader-broker treats these verdicts as practice, never as a real PASS.
+Education and tooling, not financial advice.
+[exit 0]
+
+$ python trader-broker/ticket.py show --now "2026-10-02 10:05"
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+
+ORDER 1 of 1, PAPER account per your config, Alpaca
+  BUY 8 TSLA, market, good for today
+  stop-loss 365.37
+  take-profit 377.31
+  max loss about $47.76 if the stop fills at 365.37 (it can fill worse in a fast market)
+  why: opening-range breakout on TSLA: 8 shares, bound by your $50 max loss per trade (8 x 5.97 = $47.76 at the stop)
+  READY: trader-risk PASS, waiting for your yes
+  Practice run: in a real one, Claude would call place_stock_order with exactly:
+    {
+      "symbol": "TSLA",
+      "side": "buy",
+      "qty": "8",
+      "type": "market",
+      "time_in_force": "day",
+      "order_class": "bracket",
+      "take_profit_limit_price": "377.31",
+      "stop_loss_stop_price": "365.37"
+    }
+  Alpaca places the entry, then the stop-loss and the take-profit as two orders
+  that cancel each other: when one fills, the other is canceled.
+  Reply "yes" to practice the yes, or "no" to skip it. Nothing is placed.
+
+One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
+[exit 0]
+
+[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "8", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "377.31", "stop_loss_stop_price": "365.37"}
+  10:05 filled: bought 8 TSLA at 371.37 (market: the 10:05 bar's open)
+  bracket legs working: stop-loss 365.37, take-profit 377.31
+  15:55 flat-by: sold 8 at the open, 371.32
+  P&L -0.40; deepest open loss -10.56 at 11:10; best open gain +25.84 at 15:45
+
+====================================================================================================
+Mon 2026-10-05  account cash $4912.04
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-10-05 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Mon 2026-10-05 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $369.30, low $364.91 (1 of 3 bars, still forming).
+ 9:30 bar  closed $366.95  range so far $364.91 to $369.30
+ 9:35 bar  closed $370.95  range so far $364.91 to $371.51
+ 9:40 bar  closed $371.73  opening range set: high $371.83, low $364.91
+ 9:45 bar  closed $374.13  TRIGGERED: closed above $371.83 (+0.62%). Get in now if you take it: 9:50 AM, $374.13
+This is the moment to get in, if you take the trade. Nothing was placed.
+Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\entry.json.
+[exit 0]
+
+$ python trader-exit/exit.py plan --now "2026-10-05 09:50" --write --target 1R
+Exit plan: TSLA long, Mon 2026-10-05, opening-range breakout on 5-minute bars
+  Entry         $374.13 at 9:50 AM (bar 3)
+  Stop          $368.37  opening-range midpoint: ($371.83 + $364.91) / 2 = $368.37
+  Target        $379.89  1R (one times the risk)
+  Risk a share  $5.76 (1.54% of the entry)
+  Reward:risk   1.0
+  Flat by       15:55 ET, win or lose: no overnight hold
+Set before the entry. If price hits the stop, you are out; never move it further away.
+A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\plan.json.
+Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
+[exit 0]
+
+$ python trader-timemachine/timemachine.py run --plan $TRADER_HOME/plan.json --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-10-05 09:50" --write
+TSLA buy, Monday 2026-10-05: entry 374.13 at 9:50 AM (bar 3), stop 368.37, target 379.89 (1R, risk 5.76 a share).
+10,000 replays of the rest of the session, 9:50 AM to 4:00 PM (74 five-minute bars), seed 19.
+Each bar is drawn whole from TSLA's own 5-min bars at the same time of day (+-2 bars) over its last 49 full sessions (2026-07-27 to 2026-10-02).
+
+  target first   42.1 %
+  stop first     30.4 %
+  neither        27.5 %   still open at 4:00 PM
+  green          55.8 %   target first, or above the entry at 4:00 PM
+
+  Price at 4:00 PM: median 374.85, 90 % of replays between 364.32 and 385.36.
+  Average R: +0.117 (R = the 5.76 risk: +1R at the target, -1R at the stop).
+
+History: the same rule (15-min opening range, stop at the opening-range midpoint, 1R target, entries 09:45 to 11:00 New York) on each of those 49 real sessions fired 25 times: 10 target, 13 stop, 2 neither. Average R -0.147.
+
+Leans toward the target: target first 42.1 % vs stop first 30.4 %.
+
+A simulation built from TSLA's own last 49 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\timemachine.json.
+Next: /trader-budget sizes it to your budget and your max loss per trade.
+[exit 0]
+
+$ python trader-budget/size.py --portfolio $TRADER_HOME/practice/portfolio.json --now "2026-10-05 09:50" --write
+TSLA buy, opening-range breakout, entry 374.13 at 9:50 AM
+Stop 368.37: opening-range midpoint. Target 379.89: 1R (one times the risk).
+Sized at 374.13 (the plan's entry). Risk 5.76 a share (entry 374.13 minus stop 368.37). Reward:risk 1.00.
+
+Limits (whole shares; the smallest one wins):
+  max loss      $50 max loss / 5.76 risk a share                             8 shares  <- binds
+  position cap  75% of $5,000 = $3,750 / 374.13                             10 shares
+  max order     $4,000 / 374.13                                             10 shares
+  cash          cash $4,912.04 in trader/portfolio.json minus the $500 buffer = $4,412.04 / 374.13  11 shares
+
+Size: 8 shares of TSLA = $2,993.04 at 374.13. Max loss at the stop: 8 x 5.76 = $46.08.
+A stop is an order, not a promise: in a fast market it can fill below 368.37.
+
+Proposed bracket order (place_stock_order arguments, nothing has been placed):
+  buy 8 TSLA, market, day, take-profit 379.89, stop-loss 368.37
+Flat by 15:55 New York: anything still open then gets closed (trader-alerts rings, trader-broker flatten).
+
+Next: trader-risk checks it, then trader-broker asks you yes or no.
+Education and tooling, not financial advice.
+Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\orders.json
+[exit 0]
+
+$ python trader-risk/check.py --now "2026-10-05 09:50"
+PASS  #1 buy TSLA 8 shares, entry
+          entry 374.13 (the plan's entry), stop 368.37, target 379.89: risk 5.76 a share
+          max loss $46.08 (limit $50), reward:risk 1.00 (min 1)
+          today before this: 0 of 3 trades, $0 of $150 daily loss
+
+1 passed, 0 blocked at 2026-10-05 09:50 New York. Cash after the passed orders: $1,919 (paper account).
+Every order passed. trader-broker still asks you yes or no for each one.
+PRACTICE: the clock is pinned (--now or --today), so trader-broker treats these verdicts as practice, never as a real PASS.
+Education and tooling, not financial advice.
+[exit 0]
+
+$ python trader-broker/ticket.py show --now "2026-10-05 09:50"
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+
+ORDER 1 of 1, PAPER account per your config, Alpaca
+  BUY 8 TSLA, market, good for today
+  stop-loss 368.37
+  take-profit 379.89
+  max loss about $46.08 if the stop fills at 368.37 (it can fill worse in a fast market)
+  why: opening-range breakout on TSLA: 8 shares, bound by your $50 max loss per trade (8 x 5.76 = $46.08 at the stop)
+  READY: trader-risk PASS, waiting for your yes
+  Practice run: in a real one, Claude would call place_stock_order with exactly:
+    {
+      "symbol": "TSLA",
+      "side": "buy",
+      "qty": "8",
+      "type": "market",
+      "time_in_force": "day",
+      "order_class": "bracket",
+      "take_profit_limit_price": "379.89",
+      "stop_loss_stop_price": "368.37"
+    }
+  Alpaca places the entry, then the stop-loss and the take-profit as two orders
+  that cancel each other: when one fills, the other is canceled.
+  Reply "yes" to practice the yes, or "no" to skip it. Nothing is placed.
+
+One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
+[exit 0]
+
+[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "8", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "379.89", "stop_loss_stop_price": "368.37"}
+  09:50 filled: bought 8 TSLA at 374.10 (market: the 09:50 bar's open)
+  bracket legs working: stop-loss 368.37, take-profit 379.89
+  13:20 take-profit filled: sold 8 at 379.89
+  P&L +46.32; deepest open loss -8.96 at 09:50; best open gain +46.32 at 13:20
+
+====================================================================================================
+Tue 2026-10-06  account cash $4958.36
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-10-06 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Tue 2026-10-06 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $382.94, low $378.52 (1 of 3 bars, still forming).
+ 9:30 bar  closed $382.70  range so far $378.52 to $382.94
+ 9:35 bar  closed $380.60  range so far $378.52 to $383.33
+ 9:40 bar  closed $379.69  opening range set: high $383.33, low $378.52
+ 9:45 bar  closed $379.77  $3.56 under $383.33
+ 9:50 bar  closed $380.20  $3.13 under $383.33
+ 9:55 bar  closed $380.27  $3.06 under $383.33
+10:00 bar  closed $379.99  $3.34 under $383.33
+10:05 bar  closed $381.52  $1.81 under $383.33
+10:10 bar  closed $381.72  $1.61 under $383.33
+10:15 bar  closed $381.34  $1.99 under $383.33
+10:20 bar  closed $381.54  $1.79 under $383.33
+10:25 bar  closed $380.85  $2.48 under $383.33
+10:30 bar  closed $380.98  $2.35 under $383.33
+10:35 bar  closed $380.96  $2.37 under $383.33
+10:40 bar  closed $380.60  $2.73 under $383.33
+10:45 bar  closed $380.66  $2.67 under $383.33
+10:50 bar  closed $381.01  $2.32 under $383.33
+10:55 bar  closed $380.90  $2.43 under $383.33
+EXPIRED  no close above the range high $383.33 by 11:00, the last time for a new entry.
+[exit 1]
+
+====================================================================================================
+Wed 2026-10-07  account cash $4958.36
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-10-07 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Wed 2026-10-07 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $382.35, low $378.09 (1 of 3 bars, still forming).
+ 9:30 bar  closed $379.75  range so far $378.09 to $382.35
+ 9:35 bar  closed $379.27  range so far $377.81 to $382.35
+ 9:40 bar  closed $378.07  opening range set: high $382.35, low $377.05
+ 9:45 bar  closed $376.83  $5.52 under $382.35
+ 9:50 bar  closed $377.61  $4.74 under $382.35
+ 9:55 bar  closed $377.64  $4.71 under $382.35
+10:00 bar  closed $375.98  $6.37 under $382.35
+10:05 bar  closed $375.66  $6.69 under $382.35
+10:10 bar  closed $375.45  $6.90 under $382.35
+10:15 bar  closed $374.62  $7.73 under $382.35
+10:20 bar  closed $375.39  $6.96 under $382.35
+10:25 bar  closed $374.97  $7.38 under $382.35
+10:30 bar  closed $376.17  $6.18 under $382.35
+10:35 bar  closed $375.91  $6.44 under $382.35
+10:40 bar  closed $375.33  $7.02 under $382.35
+10:45 bar  closed $375.62  $6.73 under $382.35
+10:50 bar  closed $375.43  $6.92 under $382.35
+10:55 bar  closed $375.69  $6.66 under $382.35
+EXPIRED  no close above the range high $382.35 by 11:00, the last time for a new entry.
+[exit 1]
+
+====================================================================================================
+Thu 2026-10-08  account cash $4958.36
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-10-08 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Thu 2026-10-08 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $375.00, low $372.43 (1 of 3 bars, still forming).
+ 9:30 bar  closed $372.92  range so far $372.43 to $375.00
+ 9:35 bar  closed $374.99  range so far $372.43 to $375.30
+ 9:40 bar  closed $374.61  opening range set: high $375.96, low $372.43
+ 9:45 bar  closed $373.25  $2.71 under $375.96
+ 9:50 bar  closed $372.47  $3.49 under $375.96
+ 9:55 bar  closed $371.88  $4.08 under $375.96
+10:00 bar  closed $372.20  $3.76 under $375.96
+10:05 bar  closed $372.90  $3.06 under $375.96
+10:10 bar  closed $372.45  $3.51 under $375.96
+10:15 bar  closed $372.23  $3.73 under $375.96
+10:20 bar  closed $372.23  $3.73 under $375.96
+10:25 bar  closed $372.83  $3.13 under $375.96
+10:30 bar  closed $373.32  $2.64 under $375.96
+10:35 bar  closed $373.70  $2.26 under $375.96
+10:40 bar  closed $373.10  $2.86 under $375.96
+10:45 bar  closed $373.21  $2.75 under $375.96
+10:50 bar  closed $372.44  $3.52 under $375.96
+10:55 bar  closed $373.04  $2.92 under $375.96
+EXPIRED  no close above the range high $375.96 by 11:00, the last time for a new entry.
+[exit 1]
+
+====================================================================================================
+Fri 2026-10-09  account cash $4958.36
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-10-09 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Fri 2026-10-09 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $385.74, low $381.24 (1 of 3 bars, still forming).
+ 9:30 bar  closed $384.79  range so far $381.24 to $385.74
+ 9:35 bar  closed $384.82  range so far $381.24 to $385.91
+ 9:40 bar  closed $386.68  opening range set: high $387.27, low $381.24
+ 9:45 bar  closed $387.58  TRIGGERED: closed above $387.27 (+0.08%). Get in now if you take it: 9:50 AM, $387.58
+This is the moment to get in, if you take the trade. Nothing was placed.
+Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\entry.json.
+[exit 0]
+
+$ python trader-exit/exit.py plan --now "2026-10-09 09:50" --write --target 1R
+Exit plan: TSLA long, Fri 2026-10-09, opening-range breakout on 5-minute bars
+  Entry         $387.58 at 9:50 AM (bar 3)
+  Stop          $384.25  opening-range midpoint: ($387.27 + $381.24) / 2 = $384.255, rounded down
+  Target        $390.91  1R (one times the risk)
+  Risk a share  $3.33 (0.86% of the entry)
+  Reward:risk   1.0
+  Flat by       15:55 ET, win or lose: no overnight hold
+Set before the entry. If price hits the stop, you are out; never move it further away.
+A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\plan.json.
+Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
+[exit 0]
+
+$ python trader-timemachine/timemachine.py run --plan $TRADER_HOME/plan.json --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-10-09 09:50" --write
+TSLA buy, Friday 2026-10-09: entry 387.58 at 9:50 AM (bar 3), stop 384.25, target 390.91 (1R, risk 3.33 a share).
+10,000 replays of the rest of the session, 9:50 AM to 4:00 PM (74 five-minute bars), seed 19.
+Each bar is drawn whole from TSLA's own 5-min bars at the same time of day (+-2 bars) over its last 53 full sessions (2026-07-27 to 2026-10-08).
+
+  target first   54.6 %
+  stop first     44.2 %
+  neither        1.2 %    still open at 4:00 PM
+  green          55.1 %   target first, or above the entry at 4:00 PM
+
+  Price at 4:00 PM: median 388.28, 90 % of replays between 377.71 and 399.15.
+  Average R: +0.103 (R = the 3.33 risk: +1R at the target, -1R at the stop).
+
+History: the same rule (15-min opening range, stop at the opening-range midpoint, 1R target, entries 09:45 to 11:00 New York) on each of those 53 real sessions fired 26 times: 11 target, 13 stop, 2 neither. Average R -0.103.
+
+Leans toward the target: target first 54.6 % vs stop first 44.2 %.
+
+A simulation built from TSLA's own last 53 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\timemachine.json.
+Next: /trader-budget sizes it to your budget and your max loss per trade.
+[exit 0]
+
+$ python trader-budget/size.py --portfolio $TRADER_HOME/practice/portfolio.json --now "2026-10-09 09:50" --write
+TSLA buy, opening-range breakout, entry 387.58 at 9:50 AM
+Stop 384.25: opening-range midpoint. Target 390.91: 1R (one times the risk).
+Sized at 387.58 (the plan's entry). Risk 3.33 a share (entry 387.58 minus stop 384.25). Reward:risk 1.00.
+
+Limits (whole shares; the smallest one wins):
+  max loss      $50 max loss / 3.33 risk a share                            15 shares
+  position cap  75% of $5,000 = $3,750 / 387.58                              9 shares  <- binds
+  max order     $4,000 / 387.58                                             10 shares
+  cash          cash $4,958.36 in trader/portfolio.json minus the $500 buffer = $4,458.36 / 387.58  11 shares
+
+Size: 9 shares of TSLA = $3,488.22 at 387.58. Max loss at the stop: 9 x 3.33 = $29.97.
+A stop is an order, not a promise: in a fast market it can fill below 384.25.
+
+Proposed bracket order (place_stock_order arguments, nothing has been placed):
+  buy 9 TSLA, market, day, take-profit 390.91, stop-loss 384.25
+Flat by 15:55 New York: anything still open then gets closed (trader-alerts rings, trader-broker flatten).
+
+Next: trader-risk checks it, then trader-broker asks you yes or no.
+Education and tooling, not financial advice.
+Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\orders.json
+[exit 0]
+
+$ python trader-risk/check.py --now "2026-10-09 09:50"
+PASS  #1 buy TSLA 9 shares, entry
+          entry 387.58 (the plan's entry), stop 384.25, target 390.91: risk 3.33 a share
+          max loss $29.97 (limit $50), reward:risk 1.00 (min 1)
+          today before this: 0 of 3 trades, $0 of $150 daily loss
+
+1 passed, 0 blocked at 2026-10-09 09:50 New York. Cash after the passed orders: $1,470.14 (paper account).
+Every order passed. trader-broker still asks you yes or no for each one.
+PRACTICE: the clock is pinned (--now or --today), so trader-broker treats these verdicts as practice, never as a real PASS.
+Education and tooling, not financial advice.
+[exit 0]
+
+$ python trader-broker/ticket.py show --now "2026-10-09 09:50"
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+
+ORDER 1 of 1, PAPER account per your config, Alpaca
+  BUY 9 TSLA, market, good for today
+  stop-loss 384.25
+  take-profit 390.91
+  max loss about $29.97 if the stop fills at 384.25 (it can fill worse in a fast market)
+  why: opening-range breakout on TSLA: 9 shares, bound by your position cap (9 x 3.33 = $29.97 at the stop)
+  READY: trader-risk PASS, waiting for your yes
+  Practice run: in a real one, Claude would call place_stock_order with exactly:
+    {
+      "symbol": "TSLA",
+      "side": "buy",
+      "qty": "9",
+      "type": "market",
+      "time_in_force": "day",
+      "order_class": "bracket",
+      "take_profit_limit_price": "390.91",
+      "stop_loss_stop_price": "384.25"
+    }
+  Alpaca places the entry, then the stop-loss and the take-profit as two orders
+  that cancel each other: when one fills, the other is canceled.
+  Reply "yes" to practice the yes, or "no" to skip it. Nothing is placed.
+
+One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
+[exit 0]
+
+[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "9", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "390.91", "stop_loss_stop_price": "384.25"}
+  09:50 filled: bought 9 TSLA at 387.54 (market: the 09:50 bar's open)
+  bracket legs working: stop-loss 384.25, take-profit 390.91
+  10:00 stop-loss filled: sold 9 at 384.25
+  P&L -29.61; deepest open loss -29.61 at 10:00; best open gain +9.18 at 09:50
+
+====================================================================================================
+Mon 2026-10-12  account cash $4928.75
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-10-12 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Mon 2026-10-12 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $382.61, low $378.57 (1 of 3 bars, still forming).
+ 9:30 bar  closed $379.16  range so far $378.57 to $382.61
+ 9:35 bar  closed $380.65  range so far $378.54 to $382.61
+ 9:40 bar  closed $380.70  opening range set: high $382.61, low $378.54
+ 9:45 bar  closed $382.06  $0.55 under $382.61
+ 9:50 bar  closed $380.52  $2.09 under $382.61
+ 9:55 bar  closed $380.03  $2.58 under $382.61
+10:00 bar  closed $379.80  $2.81 under $382.61
+10:05 bar  closed $379.48  $3.13 under $382.61
+10:10 bar  closed $379.64  $2.97 under $382.61
+10:15 bar  closed $379.99  $2.62 under $382.61
+10:20 bar  closed $379.77  $2.84 under $382.61
+10:25 bar  closed $380.77  $1.84 under $382.61
+10:30 bar  closed $379.75  $2.86 under $382.61
+10:35 bar  closed $380.49  $2.12 under $382.61
+10:40 bar  closed $379.85  $2.76 under $382.61
+10:45 bar  closed $379.57  $3.04 under $382.61
+10:50 bar  closed $379.46  $3.15 under $382.61
+10:55 bar  closed $379.82  $2.79 under $382.61
+EXPIRED  no close above the range high $382.61 by 11:00, the last time for a new entry.
+[exit 1]
+
+====================================================================================================
+Tue 2026-10-13  account cash $4928.75
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-10-13 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Tue 2026-10-13 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $373.65, low $371.30 (1 of 3 bars, still forming).
+ 9:30 bar  closed $372.36  range so far $371.30 to $373.65
+ 9:35 bar  closed $373.51  range so far $371.30 to $374.00
+ 9:40 bar  closed $374.53  opening range set: high $374.90, low $371.30
+ 9:45 bar  closed $374.81  $0.09 under $374.90
+ 9:50 bar  closed $374.40  $0.50 under $374.90
+ 9:55 bar  closed $373.83  $1.07 under $374.90
+10:00 bar  closed $373.77  $1.13 under $374.90
+10:05 bar  closed $373.89  $1.01 under $374.90
+10:10 bar  closed $373.80  $1.10 under $374.90
+10:15 bar  closed $374.24  $0.66 under $374.90
+10:20 bar  closed $374.55  $0.35 under $374.90
+10:25 bar  closed $374.39  $0.51 under $374.90
+10:30 bar  closed $374.10  $0.80 under $374.90
+10:35 bar  closed $374.67  $0.23 under $374.90
+10:40 bar  closed $375.52  TRIGGERED: closed above $374.90 (+0.17%). Get in now if you take it: 10:45 AM, $375.52
+This is the moment to get in, if you take the trade. Nothing was placed.
+Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\entry.json.
+[exit 0]
+
+$ python trader-exit/exit.py plan --now "2026-10-13 10:45" --write --target 1R
+Exit plan: TSLA long, Tue 2026-10-13, opening-range breakout on 5-minute bars
+  Entry         $375.52 at 10:45 AM (bar 14)
+  Stop          $373.10  opening-range midpoint: ($374.90 + $371.30) / 2 = $373.1
+  Target        $377.94  1R (one times the risk)
+  Risk a share  $2.42 (0.64% of the entry)
+  Reward:risk   1.0
+  Flat by       15:55 ET, win or lose: no overnight hold
+Set before the entry. If price hits the stop, you are out; never move it further away.
+A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\plan.json.
+Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
+[exit 0]
+
+$ python trader-timemachine/timemachine.py run --plan $TRADER_HOME/plan.json --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-10-13 10:45" --write
+TSLA buy, Tuesday 2026-10-13: entry 375.52 at 10:45 AM (bar 14), stop 373.10, target 377.94 (1R, risk 2.42 a share).
+10,000 replays of the rest of the session, 10:45 AM to 4:00 PM (63 five-minute bars), seed 19.
+Each bar is drawn whole from TSLA's own 5-min bars at the same time of day (+-2 bars) over its last 55 full sessions (2026-07-27 to 2026-10-12).
+
+  target first   51.4 %
+  stop first     47.6 %
+  neither        1.0 %    still open at 4:00 PM
+  green          51.9 %   target first, or above the entry at 4:00 PM
+
+  Price at 4:00 PM: median 375.77, 90 % of replays between 367.74 and 383.78.
+  Average R: +0.038 (R = the 2.42 risk: +1R at the target, -1R at the stop).
+
+History: the same rule (15-min opening range, stop at the opening-range midpoint, 1R target, entries 09:45 to 11:00 New York) on each of those 55 real sessions fired 27 times: 11 target, 14 stop, 2 neither. Average R -0.136.
+
+Close to a coin flip: target first 51.4 % vs stop first 47.6 %.
+
+A simulation built from TSLA's own last 55 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\timemachine.json.
+Next: /trader-budget sizes it to your budget and your max loss per trade.
+[exit 0]
+
+$ python trader-budget/size.py --portfolio $TRADER_HOME/practice/portfolio.json --now "2026-10-13 10:45" --write
+TSLA buy, opening-range breakout, entry 375.52 at 10:45 AM
+Stop 373.10: opening-range midpoint. Target 377.94: 1R (one times the risk).
+Sized at 375.52 (the plan's entry). Risk 2.42 a share (entry 375.52 minus stop 373.10). Reward:risk 1.00.
+
+Limits (whole shares; the smallest one wins):
+  max loss      $50 max loss / 2.42 risk a share                            20 shares
+  position cap  75% of $5,000 = $3,750 / 375.52                              9 shares  <- binds
+  max order     $4,000 / 375.52                                             10 shares
+  cash          cash $4,928.75 in trader/portfolio.json minus the $500 buffer = $4,428.75 / 375.52  11 shares
+
+Size: 9 shares of TSLA = $3,379.68 at 375.52. Max loss at the stop: 9 x 2.42 = $21.78.
+A stop is an order, not a promise: in a fast market it can fill below 373.10.
+
+Proposed bracket order (place_stock_order arguments, nothing has been placed):
+  buy 9 TSLA, market, day, take-profit 377.94, stop-loss 373.10
+Flat by 15:55 New York: anything still open then gets closed (trader-alerts rings, trader-broker flatten).
+
+Next: trader-risk checks it, then trader-broker asks you yes or no.
+Education and tooling, not financial advice.
+Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\orders.json
+[exit 0]
+
+$ python trader-risk/check.py --now "2026-10-13 10:45"
+PASS  #1 buy TSLA 9 shares, entry
+          entry 375.52 (the plan's entry), stop 373.10, target 377.94: risk 2.42 a share
+          max loss $21.78 (limit $50), reward:risk 1.00 (min 1)
+          today before this: 0 of 3 trades, $0 of $150 daily loss
+
+1 passed, 0 blocked at 2026-10-13 10:45 New York. Cash after the passed orders: $1,549.07 (paper account).
+Every order passed. trader-broker still asks you yes or no for each one.
+PRACTICE: the clock is pinned (--now or --today), so trader-broker treats these verdicts as practice, never as a real PASS.
+Education and tooling, not financial advice.
+[exit 0]
+
+$ python trader-broker/ticket.py show --now "2026-10-13 10:45"
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+
+ORDER 1 of 1, PAPER account per your config, Alpaca
+  BUY 9 TSLA, market, good for today
+  stop-loss 373.10
+  take-profit 377.94
+  max loss about $21.78 if the stop fills at 373.10 (it can fill worse in a fast market)
+  why: opening-range breakout on TSLA: 9 shares, bound by your position cap (9 x 2.42 = $21.78 at the stop)
+  READY: trader-risk PASS, waiting for your yes
+  Practice run: in a real one, Claude would call place_stock_order with exactly:
+    {
+      "symbol": "TSLA",
+      "side": "buy",
+      "qty": "9",
+      "type": "market",
+      "time_in_force": "day",
+      "order_class": "bracket",
+      "take_profit_limit_price": "377.94",
+      "stop_loss_stop_price": "373.10"
+    }
+  Alpaca places the entry, then the stop-loss and the take-profit as two orders
+  that cancel each other: when one fills, the other is canceled.
+  Reply "yes" to practice the yes, or "no" to skip it. Nothing is placed.
+
+One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
+[exit 0]
+
+[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "9", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "377.94", "stop_loss_stop_price": "373.10"}
+  10:45 filled: bought 9 TSLA at 375.49 (market: the 10:45 bar's open)
+  bracket legs working: stop-loss 373.10, take-profit 377.94
+  14:50 stop-loss filled: sold 9 at 373.10
+  P&L -21.51; deepest open loss -21.51 at 14:50; best open gain +13.41 at 11:30
+
+====================================================================================================
+Wed 2026-10-14  account cash $4907.24
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-10-14 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Wed 2026-10-14 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $371.39, low $368.10 (1 of 3 bars, still forming).
+ 9:30 bar  closed $369.04  range so far $368.10 to $371.39
+ 9:35 bar  closed $367.60  range so far $367.30 to $371.39
+ 9:40 bar  closed $367.59  opening range set: high $371.39, low $367.22
+ 9:45 bar  closed $368.21  $3.18 under $371.39
+ 9:50 bar  closed $366.55  $4.84 under $371.39
+ 9:55 bar  closed $364.94  $6.45 under $371.39
+10:00 bar  closed $365.53  $5.86 under $371.39
+10:05 bar  closed $366.60  $4.79 under $371.39
+10:10 bar  closed $366.98  $4.41 under $371.39
+10:15 bar  closed $366.70  $4.69 under $371.39
+10:20 bar  closed $367.60  $3.79 under $371.39
+10:25 bar  closed $367.73  $3.66 under $371.39
+10:30 bar  closed $367.91  $3.48 under $371.39
+10:35 bar  closed $367.55  $3.84 under $371.39
+10:40 bar  closed $368.13  $3.26 under $371.39
+10:45 bar  closed $368.90  $2.49 under $371.39
+10:50 bar  closed $368.86  $2.53 under $371.39
+10:55 bar  closed $368.66  $2.73 under $371.39
+EXPIRED  no close above the range high $371.39 by 11:00, the last time for a new entry.
+[exit 1]
+
+====================================================================================================
+Thu 2026-10-15  account cash $4907.24
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-10-15 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Thu 2026-10-15 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $360.58, low $357.31 (1 of 3 bars, still forming).
+ 9:30 bar  closed $358.06  range so far $357.31 to $360.58
+ 9:35 bar  closed $359.88  range so far $357.31 to $360.58
+ 9:40 bar  closed $359.88  opening range set: high $360.58, low $357.31
+ 9:45 bar  closed $359.22  $1.36 under $360.58
+ 9:50 bar  closed $356.36  $4.22 under $360.58
+ 9:55 bar  closed $355.79  $4.79 under $360.58
+10:00 bar  closed $356.68  $3.90 under $360.58
+10:05 bar  closed $357.38  $3.20 under $360.58
+10:10 bar  closed $355.70  $4.88 under $360.58
+10:15 bar  closed $357.36  $3.22 under $360.58
+10:20 bar  closed $356.61  $3.97 under $360.58
+10:25 bar  closed $357.08  $3.50 under $360.58
+10:30 bar  closed $358.40  $2.18 under $360.58
+10:35 bar  closed $359.82  $0.76 under $360.58
+10:40 bar  closed $360.77  TRIGGERED: closed above $360.58 (+0.05%). Get in now if you take it: 10:45 AM, $360.77
+This is the moment to get in, if you take the trade. Nothing was placed.
+Next: set the stop and target BEFORE you buy: /trader-exit (exit.py plan --from trader/entry.json).
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\entry.json.
+[exit 0]
+
+$ python trader-exit/exit.py plan --now "2026-10-15 10:45" --write --target 1R
+Exit plan: TSLA long, Thu 2026-10-15, opening-range breakout on 5-minute bars
+  Entry         $360.77 at 10:45 AM (bar 14)
+  Stop          $358.94  opening-range midpoint: ($360.58 + $357.31) / 2 = $358.945, rounded down
+  Target        $362.60  1R (one times the risk)
+  Risk a share  $1.83 (0.51% of the entry)
+  Reward:risk   1.0
+  Flat by       15:55 ET, win or lose: no overnight hold
+Set before the entry. If price hits the stop, you are out; never move it further away.
+A stop is a plan, not a guarantee: a gap or a fast market can fill past it.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\plan.json.
+Next: /trader-timemachine replays it, then /trader-budget sizes it to your max loss. Nothing was placed.
+[exit 0]
+
+$ python trader-timemachine/timemachine.py run --plan $TRADER_HOME/plan.json --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-10-15 10:45" --write
+TSLA buy, Thursday 2026-10-15: entry 360.77 at 10:45 AM (bar 14), stop 358.94, target 362.60 (1R, risk 1.83 a share).
+10,000 replays of the rest of the session, 10:45 AM to 4:00 PM (63 five-minute bars), seed 19.
+Each bar is drawn whole from TSLA's own 5-min bars at the same time of day (+-2 bars) over its last 57 full sessions (2026-07-27 to 2026-10-14).
+
+  target first   51.9 %
+  stop first     48.1 %
+  neither        0.1 %    still open at 4:00 PM
+  green          51.9 %   target first, or above the entry at 4:00 PM
+
+  Price at 4:00 PM: median 361.01, 90 % of replays between 353.42 and 368.85.
+  Average R: +0.038 (R = the 1.83 risk: +1R at the target, -1R at the stop).
+
+History: the same rule (15-min opening range, stop at the opening-range midpoint, 1R target, entries 09:45 to 11:00 New York) on each of those 57 real sessions fired 28 times: 11 target, 15 stop, 2 neither. Average R -0.167.
+
+Close to a coin flip: target first 51.9 % vs stop first 48.1 %.
+
+A simulation built from TSLA's own last 57 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers. Repeat this run with --seed 19.
+Wrote C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\timemachine.json.
+Next: /trader-budget sizes it to your budget and your max loss per trade.
+[exit 0]
+
+$ python trader-budget/size.py --portfolio $TRADER_HOME/practice/portfolio.json --now "2026-10-15 10:45" --write
+TSLA buy, opening-range breakout, entry 360.77 at 10:45 AM
+Stop 358.94: opening-range midpoint. Target 362.60: 1R (one times the risk).
+Sized at 360.77 (the plan's entry). Risk 1.83 a share (entry 360.77 minus stop 358.94). Reward:risk 1.00.
+
+Limits (whole shares; the smallest one wins):
+  max loss      $50 max loss / 1.83 risk a share                            27 shares
+  position cap  75% of $5,000 = $3,750 / 360.77                             10 shares  <- binds
+  max order     $4,000 / 360.77                                             11 shares
+  cash          cash $4,907.24 in trader/portfolio.json minus the $500 buffer = $4,407.24 / 360.77  12 shares
+
+Size: 10 shares of TSLA = $3,607.70 at 360.77. Max loss at the stop: 10 x 1.83 = $18.30.
+A stop is an order, not a promise: in a fast market it can fill below 358.94.
+
+Proposed bracket order (place_stock_order arguments, nothing has been placed):
+  buy 10 TSLA, market, day, take-profit 362.60, stop-loss 358.94
+Flat by 15:55 New York: anything still open then gets closed (trader-alerts rings, trader-broker flatten).
+
+Next: trader-risk checks it, then trader-broker asks you yes or no.
+Education and tooling, not financial advice.
+Wrote 1 proposed bracket order to C:\Users\gurka\Desktop\day-trader-skill-main\paper-trading-scenarios\S12-morning-only\trader-home\orders.json
+[exit 0]
+
+$ python trader-risk/check.py --now "2026-10-15 10:45"
+PASS  #1 buy TSLA 10 shares, entry
+          entry 360.77 (the plan's entry), stop 358.94, target 362.60: risk 1.83 a share
+          max loss $18.30 (limit $50), reward:risk 1.00 (min 1)
+          today before this: 0 of 3 trades, $0 of $150 daily loss
+
+1 passed, 0 blocked at 2026-10-15 10:45 New York. Cash after the passed orders: $1,299.54 (paper account).
+Every order passed. trader-broker still asks you yes or no for each one.
+PRACTICE: the clock is pinned (--now or --today), so trader-broker treats these verdicts as practice, never as a real PASS.
+Education and tooling, not financial advice.
+[exit 0]
+
+$ python trader-broker/ticket.py show --now "2026-10-15 10:45"
+PRACTICE RUN: the clock is pinned with --now or --today, so nothing here goes to the broker and a yes here is not an order. Run check.py and ticket.py without them for a real order.
+
+ORDER 1 of 1, PAPER account per your config, Alpaca
+  BUY 10 TSLA, market, good for today
+  stop-loss 358.94
+  take-profit 362.60
+  max loss about $18.30 if the stop fills at 358.94 (it can fill worse in a fast market)
+  why: opening-range breakout on TSLA: 10 shares, bound by your position cap (10 x 1.83 = $18.30 at the stop)
+  READY: trader-risk PASS, waiting for your yes
+  Practice run: in a real one, Claude would call place_stock_order with exactly:
+    {
+      "symbol": "TSLA",
+      "side": "buy",
+      "qty": "10",
+      "type": "market",
+      "time_in_force": "day",
+      "order_class": "bracket",
+      "take_profit_limit_price": "362.60",
+      "stop_loss_stop_price": "358.94"
+    }
+  Alpaca places the entry, then the stop-loss and the take-profit as two orders
+  that cancel each other: when one fills, the other is canceled.
+  Reply "yes" to practice the yes, or "no" to skip it. Nothing is placed.
+
+One order at a time: a yes covers one ticket, never the batch. Education and tooling, not financial advice.
+[exit 0]
+
+[paper broker, simulated] nobody typed yes: this stands in for the yes, Allow once and Alpaca paper.
+place_stock_order {"symbol": "TSLA", "side": "buy", "qty": "10", "type": "market", "time_in_force": "day", "order_class": "bracket", "take_profit_limit_price": "362.60", "stop_loss_stop_price": "358.94"}
+  10:45 filled: bought 10 TSLA at 360.75 (market: the 10:45 bar's open)
+  bracket legs working: stop-loss 358.94, take-profit 362.60
+  11:05 take-profit filled: sold 10 at 362.60
+  P&L +18.50; deepest open loss -6.00 at 10:45; best open gain +18.50 at 11:05
+
+====================================================================================================
+Fri 2026-10-16  account cash $4925.74
+====================================================================================================
+$ python trader-entry/entry.py watch TSLA --offline tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz --now "2026-10-16 09:30" --until 11:00
+09:30 ET  open, no bar closed yet: watching from the first bar's close at 9:35.
+TSLA  Fri 2026-10-16 09:35 ET  opening-range breakout (15-minute range) on 5-minute bars (Yahoo, free, can lag)
+Opening range 9:30-9:45: high $370.58, low $364.15 (1 of 3 bars, still forming).
+ 9:30 bar  closed $366.52  range so far $364.15 to $370.58
+ 9:35 bar  closed $368.30  range so far $364.15 to $370.58
+ 9:40 bar  closed $368.85  opening range set: high $370.58, low $364.15
+ 9:45 bar  closed $367.03  $3.55 under $370.58
+ 9:50 bar  closed $364.48  $6.10 under $370.58
+ 9:55 bar  closed $366.74  $3.84 under $370.58
+10:00 bar  closed $368.23  $2.35 under $370.58
+10:05 bar  closed $368.66  $1.92 under $370.58
+10:10 bar  closed $368.68  $1.90 under $370.58
+10:15 bar  closed $366.45  $4.13 under $370.58
+10:20 bar  closed $363.99  $6.59 under $370.58
+10:25 bar  closed $364.52  $6.06 under $370.58
+10:30 bar  closed $364.74  $5.84 under $370.58
+10:35 bar  closed $364.62  $5.96 under $370.58
+10:40 bar  closed $363.94  $6.64 under $370.58
+10:45 bar  closed $364.93  $5.65 under $370.58
+10:50 bar  closed $360.33  $10.25 under $370.58
+10:55 bar  closed $361.33  $9.25 under $370.58
+EXPIRED  no close above the range high $370.58 by 11:00, the last time for a new entry.
+[exit 1]
+

@@ -1,0 +1,40 @@
+date,weekday,action,reason,signal_time,signal_price,or_high,or_low,level,plan_entry,stop,target,reward_risk,tm_p_target,tm_p_stop,tm_p_neither,tm_verdict,order_type,limit_price,shares,limit_binding,risk_verdict,gate_max_loss,ticket_status,fill_time,fill_price,fill_minus_plan,exit_time,exit_price,exit_reason,stop_and_target_same_bar,pnl,r_multiple,loss_at_stop_after_fill,max_open_loss,max_open_loss_time,max_open_gain,cash_after
+2026-08-24,Mon,no signal,"EXPIRED  no close above the range high $363.24 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,5000.0
+2026-08-25,Tue,no signal,"EXPIRED  no close above the range high $352.24 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,5000.0
+2026-08-26,Wed,no signal,"EXPIRED  no close above the range high $349.20 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,5000.0
+2026-08-27,Thu,no signal,"EXPIRED  no close above the range high $350.75 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,5000.0
+2026-08-28,Fri,no signal,"EXPIRED  no close above the range high $358.80 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,5000.0
+2026-08-31,Mon,no signal,"EXPIRED  no close above the range high $355.94 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,5000.0
+2026-09-01,Tue,no signal,"EXPIRED  no close above the range high $362.70 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,5000.0
+2026-09-02,Wed,no signal,"EXPIRED  no close above the range high $360.62 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,5000.0
+2026-09-03,Thu,no signal,"EXPIRED  no close above the range high $375.18 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,5000.0
+2026-09-04,Fri,no signal,"EXPIRED  no close above the range high $364.69 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,5000.0
+2026-09-08,Tue,no signal,"EXPIRED  no close above the range high $362.42 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,5000.0
+2026-09-09,Wed,no signal,"EXPIRED  no close above the range high $375.44 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,5000.0
+2026-09-10,Thu,traded,,10:20,365.45,365.39,357.68,,365.45,361.53,369.37,1.0,0.5285,0.372,0.0995,Leans toward the target: target first 52.8 % vs stop first 37.2 %.,market,,10,position cap,PASS,39.2,"READY: trader-risk PASS, waiting for your yes",10:20,365.45,0.0,15:55,363.15,flat by,False,-23.0,-0.587,-39.2,-26.8,15:50,34.0,4977.0
+2026-09-11,Fri,no signal,"EXPIRED  no close above the range high $368.66 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,4977.0
+2026-09-14,Mon,no signal,"EXPIRED  no close above the range high $367.73 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,4977.0
+2026-09-15,Tue,no signal,"EXPIRED  no close above the range high $362.11 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,4977.0
+2026-09-16,Wed,no signal,"EXPIRED  no close above the range high $359.49 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,4977.0
+2026-09-17,Thu,no signal,"EXPIRED  no close above the range high $371.29 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,4977.0
+2026-09-18,Fri,no signal,"EXPIRED  no close above the range high $370.40 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,4977.0
+2026-09-21,Mon,no signal,"EXPIRED  no close above the range high $376.51 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,4977.0
+2026-09-22,Tue,no signal,"EXPIRED  no close above the range high $379.25 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,4977.0
+2026-09-23,Wed,no signal,"EXPIRED  no close above the range high $384.76 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,4977.0
+2026-09-24,Thu,no signal,"EXPIRED  no close above the range high $378.75 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,4977.0
+2026-09-25,Fri,no signal,"EXPIRED  no close above the range high $386.83 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,4977.0
+2026-09-28,Mon,no signal,"EXPIRED  no close above the range high $369.42 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,4977.0
+2026-09-29,Tue,no signal,"EXPIRED  no close above the range high $358.74 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,4977.0
+2026-09-30,Wed,no signal,"EXPIRED  no close above the range high $352.50 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,4977.0
+2026-10-01,Thu,no signal,"EXPIRED  no close above the range high $358.40 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,4977.0
+2026-10-02,Fri,no signal,"EXPIRED  no close above the range high $371.33 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,4977.0
+2026-10-05,Mon,no signal,"EXPIRED  no close above the range high $371.83 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,4977.0
+2026-10-06,Tue,no signal,"EXPIRED  no close above the range high $383.33 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,4977.0
+2026-10-07,Wed,no signal,"EXPIRED  no close above the range high $382.35 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,4977.0
+2026-10-08,Thu,no signal,"EXPIRED  no close above the range high $375.96 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,4977.0
+2026-10-09,Fri,no signal,"EXPIRED  no close above the range high $387.27 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,4977.0
+2026-10-12,Mon,no signal,"EXPIRED  no close above the range high $382.61 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,4977.0
+2026-10-13,Tue,traded,,11:00,375.25,374.9,371.3,,375.25,373.1,377.4,1.0,0.4744,0.5203,0.0053,Close to a coin flip: target first 47.4 % vs stop first 52.0 %.,market,,9,position cap,PASS,19.35,"READY: trader-risk PASS, waiting for your yes",11:00,375.29,0.04,14:50,373.1,stop,False,-19.71,-1.019,-19.71,-19.71,14:50,15.21,4957.29
+2026-10-14,Wed,no signal,"EXPIRED  no close above the range high $371.39 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,4957.29
+2026-10-15,Thu,no signal,"EXPIRED  no close above the range high $360.58 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,4957.29
+2026-10-16,Fri,no signal,"EXPIRED  no close above the range high $370.58 by 15:30, the last time for a new entry.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,4957.29

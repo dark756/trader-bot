@@ -1,0 +1,30 @@
+{
+  "created_by": "trader-exit",
+  "symbol": "TSLA",
+  "side": "buy",
+  "date": "2026-09-23",
+  "setup": "orb",
+  "entry": 385.11,
+  "entry_time": "10:00 AM",
+  "entry_bar": 5,
+  "interval": "5m",
+  "opening_range": {
+    "high": 384.76,
+    "low": 378.78,
+    "minutes": 15
+  },
+  "stop": 380.72,
+  "stop_rule": "atr",
+  "stop_label": "1.5 x ATR(6) under the entry",
+  "target": 389.5,
+  "target_r": 1.0,
+  "target_label": "1R (one times the risk)",
+  "risk_per_share": 4.39,
+  "reward_risk": 1.0,
+  "flat_by": "15:55",
+  "stop_detail": "ATR $2.9242 over the 6 bars to the entry (fewer than 14 so far), rounded down",
+  "created_at": "2026-09-23T14:00:00Z",
+  "note": "A stop is a plan, not a guarantee: a gap or a fast market can fill past it.",
+  "atr": 2.9242,
+  "atr_bars": 6
+}

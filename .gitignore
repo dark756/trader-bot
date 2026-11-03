@@ -1,0 +1,7 @@
+# Your trading data: account, positions, every yes and order, and the name and
+# email the SEC tools send. It stays on your computer, never in a commit.
+trader/
+
+# Python's byte-code cache
+__pycache__/
+*.pyc

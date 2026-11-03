@@ -1,0 +1,200 @@
+{
+  "data": "tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz",
+  "symbol": "TSLA",
+  "sessions": [
+    "2026-08-24",
+    "2026-08-25",
+    "2026-08-26",
+    "2026-08-27",
+    "2026-08-28",
+    "2026-08-31",
+    "2026-09-01",
+    "2026-09-02",
+    "2026-09-03",
+    "2026-09-04",
+    "2026-09-08",
+    "2026-09-09",
+    "2026-09-10",
+    "2026-09-11",
+    "2026-09-14",
+    "2026-09-15",
+    "2026-09-16",
+    "2026-09-17",
+    "2026-09-18",
+    "2026-09-21",
+    "2026-09-22",
+    "2026-09-23",
+    "2026-09-24",
+    "2026-09-25",
+    "2026-09-28",
+    "2026-09-29",
+    "2026-09-30",
+    "2026-10-01",
+    "2026-10-02",
+    "2026-10-05",
+    "2026-10-06",
+    "2026-10-07",
+    "2026-10-08",
+    "2026-10-09",
+    "2026-10-12",
+    "2026-10-13",
+    "2026-10-14",
+    "2026-10-15",
+    "2026-10-16"
+  ],
+  "start_cash": 5000.0,
+  "scenarios": [
+    {
+      "id": "S01-baseline",
+      "feature": "Baseline",
+      "choice": "The README's rules: 15-minute range, stop at the range midpoint, 1R target, market entry, $50 a trade",
+      "exit": [
+        "--target",
+        "1R"
+      ]
+    },
+    {
+      "id": "S02-stop-range-low",
+      "feature": "Stop rule",
+      "choice": "Stop at the opening-range low (wider)",
+      "exit": [
+        "--stop",
+        "or-low",
+        "--target",
+        "1R"
+      ]
+    },
+    {
+      "id": "S03-stop-atr",
+      "feature": "Stop rule",
+      "choice": "Stop 1.5 x ATR(14) of the 5-minute bars under the entry",
+      "exit": [
+        "--stop",
+        "atr:1.5",
+        "--target",
+        "1R",
+        "--offline",
+        "tests/fixtures/trader-timemachine/TSLA-60d5m.json.gz"
+      ]
+    },
+    {
+      "id": "S04-stop-1pct",
+      "feature": "Stop rule",
+      "choice": "Stop 1 % under the entry",
+      "exit": [
+        "--stop",
+        "pct:1",
+        "--target",
+        "1R"
+      ]
+    },
+    {
+      "id": "S05-target-1.5R",
+      "feature": "Target",
+      "choice": "Target at 1.5R",
+      "exit": [
+        "--target",
+        "1.5R"
+      ]
+    },
+    {
+      "id": "S06-target-2R",
+      "feature": "Target",
+      "choice": "Target at 2R (trader-exit's own default)",
+      "exit": [
+        "--target",
+        "2R"
+      ]
+    },
+    {
+      "id": "S07-limit-entry",
+      "feature": "Entry order",
+      "choice": "Limit entry at the cap (size.py --limit cap)",
+      "exit": [
+        "--target",
+        "1R"
+      ],
+      "size": [
+        "--limit",
+        "cap"
+      ]
+    },
+    {
+      "id": "S08-30min-range",
+      "feature": "Opening range",
+      "choice": "30-minute opening range",
+      "entry": [
+        "--or-minutes",
+        "30"
+      ],
+      "exit": [
+        "--target",
+        "1R"
+      ]
+    },
+    {
+      "id": "S09-volume-check",
+      "feature": "Volume check",
+      "choice": "Breakout bar needs 1.5 x the range bars' average volume",
+      "entry": [
+        "--min-volume-x",
+        "1.5"
+      ],
+      "exit": [
+        "--target",
+        "1R"
+      ],
+      "tm": [
+        "--min-volume-x",
+        "1.5"
+      ]
+    },
+    {
+      "id": "S10-prior-day-high",
+      "feature": "Setup",
+      "choice": "Level setup: a close above the previous session's high, stop 1 % under",
+      "level": "prior_high",
+      "exit": [
+        "--stop",
+        "pct:1",
+        "--target",
+        "1R"
+      ]
+    },
+    {
+      "id": "S11-risk-100",
+      "feature": "Risk per trade",
+      "choice": "$100 max loss a trade ($300 a day)",
+      "exit": [
+        "--target",
+        "1R"
+      ],
+      "config": {
+        "max_loss_per_trade_usd": 100,
+        "max_daily_loss_usd": 300
+      }
+    },
+    {
+      "id": "S12-morning-only",
+      "feature": "Entry window",
+      "choice": "No new entries after 11:00 (morning only)",
+      "exit": [
+        "--target",
+        "1R"
+      ],
+      "config": {
+        "no_entries_after": "11:00"
+      }
+    },
+    {
+      "id": "S13-time-machine-filter",
+      "feature": "Time Machine filter",
+      "choice": "Trade only when the Time Machine has target-first above stop-first",
+      "exit": [
+        "--target",
+        "1R"
+      ],
+      "tm_filter": true
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "id": "S12-morning-only",
+  "feature": "Entry window",
+  "choice": "No new entries after 11:00 (morning only)",
+  "config_changes": {
+    "no_entries_after": "11:00"
+  },
+  "sessions": 39,
+  "signals": 17,
+  "no_signal": 22,
+  "no_plan": 0,
+  "skipped_by_filter": 0,
+  "not_sized": 0,
+  "blocked_by_risk": 0,
+  "ticket_not_ready": 0,
+  "not_filled": 0,
+  "trades": 17,
+  "targets": 6,
+  "stops": 9,
+  "flat_by": 2,
+  "stop_and_target_same_bar": 0,
+  "wins": 6,
+  "losses": 11,
+  "win_rate": 0.353,
+  "net_pnl": -74.26,
+  "avg_pnl": -4.37,
+  "avg_win": 35.97,
+  "avg_loss": -26.37,
+  "avg_r": -0.225,
+  "avg_shares": 8.94,
+  "avg_position_usd": 3296.05,
+  "avg_gate_max_loss": 33.88,
+  "avg_fill_minus_plan": 0.042,
+  "worst_trade": {
+    "date": "2026-09-03",
+    "pnl": -48.23,
+    "exit_reason": "stop",
+    "gate_max_loss": 48.23
+  },
+  "best_trade": 47.7,
+  "deepest_open_loss": {
+    "date": "2026-09-03",
+    "time": "10:00",
+    "loss": -48.23,
+    "trade_pnl": -48.23,
+    "exit_reason": "stop",
+    "shares": 7,
+    "gate_max_loss": 48.23
+  },
+  "widest_loss_at_stop_after_fill": {
+    "date": "2026-09-10",
+    "loss": -48.4,
+    "gate_max_loss": 47.7
+  },
+  "losses_over_gate_max_loss": 3,
+  "losses_over_config_limit": 0,
+  "max_drawdown": {
+    "amount": 150.54,
+    "from": "2026-08-31",
+    "to": "2026-10-13"
+  },
+  "longest_losing_streak": 6,
+  "end_cash": 4925.74,
+  "tm_avg_p_target": 0.467,
+  "tm_avg_p_stop": 0.389,
+  "actual_target_share": 0.4
+}

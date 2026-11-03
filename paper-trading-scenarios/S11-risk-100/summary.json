@@ -1,0 +1,68 @@
+{
+  "id": "S11-risk-100",
+  "feature": "Risk per trade",
+  "choice": "$100 max loss a trade ($300 a day)",
+  "config_changes": {
+    "max_loss_per_trade_usd": 100,
+    "max_daily_loss_usd": 300
+  },
+  "sessions": 39,
+  "signals": 19,
+  "no_signal": 20,
+  "no_plan": 0,
+  "skipped_by_filter": 0,
+  "not_sized": 0,
+  "blocked_by_risk": 2,
+  "ticket_not_ready": 0,
+  "not_filled": 0,
+  "trades": 17,
+  "targets": 5,
+  "stops": 9,
+  "flat_by": 3,
+  "stop_and_target_same_bar": 0,
+  "wins": 7,
+  "losses": 10,
+  "win_rate": 0.412,
+  "net_pnl": -102.1,
+  "avg_pnl": -6.01,
+  "avg_win": 30.39,
+  "avg_loss": -31.48,
+  "avg_r": -0.262,
+  "avg_shares": 9.59,
+  "avg_position_usd": 3526.32,
+  "avg_gate_max_loss": 35.28,
+  "avg_fill_minus_plan": 0.042,
+  "worst_trade": {
+    "date": "2026-09-03",
+    "pnl": -62.01,
+    "exit_reason": "stop",
+    "gate_max_loss": 62.01
+  },
+  "best_trade": 78.8,
+  "deepest_open_loss": {
+    "date": "2026-09-03",
+    "time": "10:00",
+    "loss": -62.01,
+    "trade_pnl": -62.01,
+    "exit_reason": "stop",
+    "shares": 9,
+    "gate_max_loss": 62.01
+  },
+  "widest_loss_at_stop_after_fill": {
+    "date": "2026-08-31",
+    "loss": -78.8,
+    "gate_max_loss": 78.8
+  },
+  "losses_over_gate_max_loss": 3,
+  "losses_over_config_limit": 0,
+  "max_drawdown": {
+    "amount": 209.9,
+    "from": "2026-08-31",
+    "to": "2026-10-14"
+  },
+  "longest_losing_streak": 3,
+  "end_cash": 4897.9,
+  "tm_avg_p_target": 0.455,
+  "tm_avg_p_stop": 0.387,
+  "actual_target_share": 0.357
+}

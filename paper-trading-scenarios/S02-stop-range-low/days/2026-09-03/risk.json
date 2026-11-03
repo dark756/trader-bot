@@ -1,0 +1,45 @@
+{
+  "date": "2026-09-03",
+  "now_new_york": "2026-09-03 09:50",
+  "now_utc": "2026-09-03T13:50:00Z",
+  "paper": true,
+  "results": [
+    {
+      "index": 1,
+      "symbol": "TSLA",
+      "side": "buy",
+      "kind": "entry",
+      "amount": "4 shares",
+      "value_usd": 1509.72,
+      "entry_ref": 377.43,
+      "entry_ref_from": "plan",
+      "stop": 365.91,
+      "target": 388.95,
+      "risk_per_share": 11.52,
+      "max_loss": 46.08,
+      "reward_risk": 1.0,
+      "fingerprint": "8fe86395fcebcfdb",
+      "verdict": "PASS",
+      "reasons": [],
+      "warnings": [],
+      "info": [
+        "entry 377.43 (the plan's entry), stop 365.91, target 388.95: risk 11.52 a share",
+        "max loss $46.08 (limit $50), reward:risk 1.00 (min 1)",
+        "today before this: 0 of 3 trades, $0 of $150 daily loss"
+      ]
+    }
+  ],
+  "pass": 1,
+  "block": 0,
+  "warnings": [],
+  "cash_after": 3582.32,
+  "today": {
+    "orders_placed": 0,
+    "entries_placed": 0,
+    "loss_at_risk": 0.0,
+    "day_trades_5d": null
+  },
+  "clock": "pinned",
+  "checked_at": "2026-11-01T21:05:46Z",
+  "orders_file": "C:\\Users\\gurka\\Desktop\\day-trader-skill-main\\paper-trading-scenarios\\S02-stop-range-low\\trader-home\\orders.json"
+}

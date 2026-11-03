@@ -1,0 +1,22 @@
+{
+  "created_by": "trader-entry",
+  "symbol": "TSLA",
+  "setup": "orb",
+  "side": "buy",
+  "date": "2026-08-25",
+  "status": "triggered",
+  "time": "10:10 AM",
+  "bar_start": "10:05",
+  "bar_index": 7,
+  "price": 352.49,
+  "level": 352.24,
+  "interval": "5m",
+  "opening_range": {
+    "high": 352.24,
+    "low": 349.2,
+    "minutes": 15
+  },
+  "source": "yahoo",
+  "checked_at": "2026-08-25T14:10:02Z",
+  "reason": "the 10:05 bar closed above the range high"
+}

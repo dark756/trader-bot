@@ -1,0 +1,95 @@
+{
+  "filled": true,
+  "qty": 7,
+  "fill_time": "10:00",
+  "fill_price": 385.14,
+  "stop": 378.78,
+  "target": 391.44,
+  "exit_time": "10:30",
+  "exit_price": 378.78,
+  "exit_reason": "stop",
+  "stop_and_target_same_bar": false,
+  "pnl": -44.52,
+  "max_open_loss": -44.52,
+  "max_open_loss_time": "10:30",
+  "max_open_gain": 10.92,
+  "loss_at_stop_after_fill": -44.52,
+  "events": [
+    "10:00 filled: bought 7 TSLA at 385.14 (market: the 10:00 bar's open)",
+    "bracket legs working: stop-loss 378.78, take-profit 391.44",
+    "10:30 stop-loss filled: sold 7 at 378.78",
+    "P&L -44.52; deepest open loss -44.52 at 10:30; best open gain +10.92 at 10:05"
+  ],
+  "marks": [
+    {
+      "time": "10:00",
+      "low": 383.92999267578125,
+      "high": 386.5,
+      "close": 386.1000061035156,
+      "worst": 383.93,
+      "best": 386.5,
+      "open_pnl_worst": -8.47,
+      "open_pnl_best": 9.52
+    },
+    {
+      "time": "10:05",
+      "low": 381.6200866699219,
+      "high": 386.70001220703125,
+      "close": 381.8450012207031,
+      "worst": 381.62,
+      "best": 386.7,
+      "open_pnl_worst": -24.64,
+      "open_pnl_best": 10.92
+    },
+    {
+      "time": "10:10",
+      "low": 381.0194091796875,
+      "high": 382.38720703125,
+      "close": 381.7550048828125,
+      "worst": 381.02,
+      "best": 382.39,
+      "open_pnl_worst": -28.84,
+      "open_pnl_best": -19.25
+    },
+    {
+      "time": "10:15",
+      "low": 380.659912109375,
+      "high": 381.84991455078125,
+      "close": 381.0660095214844,
+      "worst": 380.66,
+      "best": 381.85,
+      "open_pnl_worst": -31.36,
+      "open_pnl_best": -23.03
+    },
+    {
+      "time": "10:20",
+      "low": 379.7900085449219,
+      "high": 381.29998779296875,
+      "close": 380.2749938964844,
+      "worst": 379.79,
+      "best": 381.3,
+      "open_pnl_worst": -37.45,
+      "open_pnl_best": -26.88
+    },
+    {
+      "time": "10:25",
+      "low": 379.6499938964844,
+      "high": 380.9200134277344,
+      "close": 379.7442932128906,
+      "worst": 379.65,
+      "best": 380.92,
+      "open_pnl_worst": -38.43,
+      "open_pnl_best": -29.54
+    },
+    {
+      "time": "10:30",
+      "low": 378.55999755859375,
+      "high": 379.95001220703125,
+      "close": 379.70001220703125,
+      "worst": 378.78,
+      "best": 379.06,
+      "open_pnl_worst": -44.52,
+      "open_pnl_best": -42.56
+    }
+  ]
+}

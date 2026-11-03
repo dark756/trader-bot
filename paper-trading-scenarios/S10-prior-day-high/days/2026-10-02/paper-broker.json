@@ -1,0 +1,85 @@
+{
+  "filled": true,
+  "qty": 10,
+  "fill_time": "09:45",
+  "fill_price": 369.17,
+  "stop": 365.5,
+  "target": 372.9,
+  "exit_time": "10:10",
+  "exit_price": 372.9,
+  "exit_reason": "target",
+  "stop_and_target_same_bar": false,
+  "pnl": 37.3,
+  "max_open_loss": -12.8,
+  "max_open_loss_time": "09:45",
+  "max_open_gain": 37.3,
+  "loss_at_stop_after_fill": -36.7,
+  "events": [
+    "09:45 filled: bought 10 TSLA at 369.17 (market: the 09:45 bar's open)",
+    "bracket legs working: stop-loss 365.50, take-profit 372.90",
+    "10:10 take-profit filled: sold 10 at 372.90",
+    "P&L +37.30; deepest open loss -12.80 at 09:45; best open gain +37.30 at 10:10"
+  ],
+  "marks": [
+    {
+      "time": "09:45",
+      "low": 367.8900146484375,
+      "high": 370.9700012207031,
+      "close": 368.80499267578125,
+      "worst": 367.89,
+      "best": 370.97,
+      "open_pnl_worst": -12.8,
+      "open_pnl_best": 18.0
+    },
+    {
+      "time": "09:50",
+      "low": 368.6600036621094,
+      "high": 370.7900085449219,
+      "close": 369.30999755859375,
+      "worst": 368.66,
+      "best": 370.79,
+      "open_pnl_worst": -5.1,
+      "open_pnl_best": 16.2
+    },
+    {
+      "time": "09:55",
+      "low": 368.510498046875,
+      "high": 370.0404968261719,
+      "close": 368.80999755859375,
+      "worst": 368.51,
+      "best": 370.04,
+      "open_pnl_worst": -6.6,
+      "open_pnl_best": 8.7
+    },
+    {
+      "time": "10:00",
+      "low": 368.6000061035156,
+      "high": 371.7799987792969,
+      "close": 371.3399963378906,
+      "worst": 368.6,
+      "best": 371.78,
+      "open_pnl_worst": -5.7,
+      "open_pnl_best": 26.1
+    },
+    {
+      "time": "10:05",
+      "low": 370.92999267578125,
+      "high": 372.3398132324219,
+      "close": 372.0899963378906,
+      "worst": 370.93,
+      "best": 372.34,
+      "open_pnl_worst": 17.6,
+      "open_pnl_best": 31.7
+    },
+    {
+      "time": "10:10",
+      "low": 371.70001220703125,
+      "high": 373.2099914550781,
+      "close": 373.0791931152344,
+      "worst": 371.7,
+      "best": 372.9,
+      "open_pnl_worst": 25.3,
+      "open_pnl_best": 37.3
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "filled": true,
+  "qty": 10,
+  "fill_time": "09:45",
+  "fill_price": 356.74,
+  "stop": 353.84,
+  "target": 361.0,
+  "exit_time": "10:00",
+  "exit_price": 353.84,
+  "exit_reason": "stop",
+  "stop_and_target_same_bar": false,
+  "pnl": -29.0,
+  "max_open_loss": -29.0,
+  "max_open_loss_time": "10:00",
+  "max_open_gain": 9.0,
+  "loss_at_stop_after_fill": -29.0,
+  "events": [
+    "09:45 filled: bought 10 TSLA at 356.74 (market: the 09:45 bar's open)",
+    "bracket legs working: stop-loss 353.84, take-profit 361.00",
+    "10:00 stop-loss filled: sold 10 at 353.84",
+    "P&L -29.00; deepest open loss -29.00 at 10:00; best open gain +9.00 at 09:45"
+  ],
+  "marks": [
+    {
+      "time": "09:45",
+      "low": 355.6188049316406,
+      "high": 357.6369934082031,
+      "close": 356.2850036621094,
+      "worst": 355.62,
+      "best": 357.64,
+      "open_pnl_worst": -11.2,
+      "open_pnl_best": 9.0
+    },
+    {
+      "time": "09:50",
+      "low": 355.9800109863281,
+      "high": 357.42181396484375,
+      "close": 356.2571105957031,
+      "worst": 355.98,
+      "best": 357.42,
+      "open_pnl_worst": -7.6,
+      "open_pnl_best": 6.8
+    },
+    {
+      "time": "09:55",
+      "low": 355.75,
+      "high": 356.64990234375,
+      "close": 355.8800048828125,
+      "worst": 355.75,
+      "best": 356.65,
+      "open_pnl_worst": -9.9,
+      "open_pnl_best": -0.9
+    },
+    {
+      "time": "10:00",
+      "low": 353.79998779296875,
+      "high": 356.1000061035156,
+      "close": 354.5799865722656,
+      "worst": 353.84,
+      "best": 356.02,
+      "open_pnl_worst": -29.0,
+      "open_pnl_best": -7.2
+    }
+  ]
+}

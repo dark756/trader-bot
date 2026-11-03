@@ -1,0 +1,85 @@
+{
+  "filled": true,
+  "qty": 10,
+  "fill_time": "09:45",
+  "fill_price": 373.64,
+  "stop": 369.88,
+  "target": 377.36,
+  "exit_time": "10:10",
+  "exit_price": 369.88,
+  "exit_reason": "stop",
+  "stop_and_target_same_bar": false,
+  "pnl": -37.6,
+  "max_open_loss": -37.6,
+  "max_open_loss_time": "10:10",
+  "max_open_gain": 10.9,
+  "loss_at_stop_after_fill": -37.6,
+  "events": [
+    "09:45 filled: bought 10 TSLA at 373.64 (market: the 09:45 bar's open)",
+    "bracket legs working: stop-loss 369.88, take-profit 377.36",
+    "10:10 stop-loss filled: sold 10 at 369.88",
+    "P&L -37.60; deepest open loss -37.60 at 10:10; best open gain +10.90 at 09:45"
+  ],
+  "marks": [
+    {
+      "time": "09:45",
+      "low": 372.40740966796875,
+      "high": 374.7300109863281,
+      "close": 373.4200134277344,
+      "worst": 372.41,
+      "best": 374.73,
+      "open_pnl_worst": -12.3,
+      "open_pnl_best": 10.9
+    },
+    {
+      "time": "09:50",
+      "low": 371.1000061035156,
+      "high": 373.739990234375,
+      "close": 371.29998779296875,
+      "worst": 371.1,
+      "best": 373.74,
+      "open_pnl_worst": -25.4,
+      "open_pnl_best": 1.0
+    },
+    {
+      "time": "09:55",
+      "low": 370.67999267578125,
+      "high": 371.94970703125,
+      "close": 371.0799865722656,
+      "worst": 370.68,
+      "best": 371.95,
+      "open_pnl_worst": -29.6,
+      "open_pnl_best": -16.9
+    },
+    {
+      "time": "10:00",
+      "low": 369.95001220703125,
+      "high": 371.6698913574219,
+      "close": 371.1700134277344,
+      "worst": 369.95,
+      "best": 371.67,
+      "open_pnl_worst": -36.9,
+      "open_pnl_best": -19.7
+    },
+    {
+      "time": "10:05",
+      "low": 370.8599853515625,
+      "high": 373.130615234375,
+      "close": 371.9849853515625,
+      "worst": 370.86,
+      "best": 373.13,
+      "open_pnl_worst": -27.8,
+      "open_pnl_best": -5.1
+    },
+    {
+      "time": "10:10",
+      "low": 369.80999755859375,
+      "high": 372.1730041503906,
+      "close": 371.25,
+      "worst": 369.88,
+      "best": 371.98,
+      "open_pnl_worst": -37.6,
+      "open_pnl_best": -16.6
+    }
+  ]
+}

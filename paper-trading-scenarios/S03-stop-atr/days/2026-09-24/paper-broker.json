@@ -1,0 +1,175 @@
+{
+  "filled": true,
+  "qty": 9,
+  "fill_time": "10:00",
+  "fill_price": 378.87,
+  "stop": 376.18,
+  "target": 381.6,
+  "exit_time": "11:10",
+  "exit_price": 376.18,
+  "exit_reason": "stop",
+  "stop_and_target_same_bar": false,
+  "pnl": -24.21,
+  "max_open_loss": -24.21,
+  "max_open_loss_time": "11:10",
+  "max_open_gain": 9.63,
+  "loss_at_stop_after_fill": -24.21,
+  "events": [
+    "10:00 filled: bought 9 TSLA at 378.87 (market: the 10:00 bar's open)",
+    "bracket legs working: stop-loss 376.18, take-profit 381.60",
+    "11:10 stop-loss filled: sold 9 at 376.18",
+    "P&L -24.21; deepest open loss -24.21 at 11:10; best open gain +9.63 at 10:00"
+  ],
+  "marks": [
+    {
+      "time": "10:00",
+      "low": 378.6300048828125,
+      "high": 379.94000244140625,
+      "close": 379.1099853515625,
+      "worst": 378.63,
+      "best": 379.94,
+      "open_pnl_worst": -2.16,
+      "open_pnl_best": 9.63
+    },
+    {
+      "time": "10:05",
+      "low": 378.75,
+      "high": 379.739013671875,
+      "close": 379.25,
+      "worst": 378.75,
+      "best": 379.74,
+      "open_pnl_worst": -1.08,
+      "open_pnl_best": 7.83
+    },
+    {
+      "time": "10:10",
+      "low": 378.93011474609375,
+      "high": 379.75,
+      "close": 379.55999755859375,
+      "worst": 378.93,
+      "best": 379.75,
+      "open_pnl_worst": 0.54,
+      "open_pnl_best": 7.92
+    },
+    {
+      "time": "10:15",
+      "low": 377.3399963378906,
+      "high": 379.6199951171875,
+      "close": 377.45001220703125,
+      "worst": 377.34,
+      "best": 379.62,
+      "open_pnl_worst": -13.77,
+      "open_pnl_best": 6.75
+    },
+    {
+      "time": "10:20",
+      "low": 376.260009765625,
+      "high": 378.3900146484375,
+      "close": 378.2749938964844,
+      "worst": 376.26,
+      "best": 378.39,
+      "open_pnl_worst": -23.49,
+      "open_pnl_best": -4.32
+    },
+    {
+      "time": "10:25",
+      "low": 377.9202880859375,
+      "high": 379.239990234375,
+      "close": 378.2799987792969,
+      "worst": 377.92,
+      "best": 379.24,
+      "open_pnl_worst": -8.55,
+      "open_pnl_best": 3.33
+    },
+    {
+      "time": "10:30",
+      "low": 377.29998779296875,
+      "high": 378.9100036621094,
+      "close": 378.698486328125,
+      "worst": 377.3,
+      "best": 378.91,
+      "open_pnl_worst": -14.13,
+      "open_pnl_best": 0.36
+    },
+    {
+      "time": "10:35",
+      "low": 377.9100036621094,
+      "high": 379.0539855957031,
+      "close": 378.1000061035156,
+      "worst": 377.91,
+      "best": 379.05,
+      "open_pnl_worst": -8.64,
+      "open_pnl_best": 1.62
+    },
+    {
+      "time": "10:40",
+      "low": 377.2099914550781,
+      "high": 378.2799987792969,
+      "close": 377.3500061035156,
+      "worst": 377.21,
+      "best": 378.28,
+      "open_pnl_worst": -14.94,
+      "open_pnl_best": -5.31
+    },
+    {
+      "time": "10:45",
+      "low": 376.9750061035156,
+      "high": 377.8900146484375,
+      "close": 377.5299987792969,
+      "worst": 376.98,
+      "best": 377.89,
+      "open_pnl_worst": -17.01,
+      "open_pnl_best": -8.82
+    },
+    {
+      "time": "10:50",
+      "low": 377.1618957519531,
+      "high": 378.0,
+      "close": 377.2550048828125,
+      "worst": 377.16,
+      "best": 378.0,
+      "open_pnl_worst": -15.39,
+      "open_pnl_best": -7.83
+    },
+    {
+      "time": "10:55",
+      "low": 376.510009765625,
+      "high": 377.2799987792969,
+      "close": 376.82501220703125,
+      "worst": 376.51,
+      "best": 377.28,
+      "open_pnl_worst": -21.24,
+      "open_pnl_best": -14.31
+    },
+    {
+      "time": "11:00",
+      "low": 376.7001037597656,
+      "high": 377.3900146484375,
+      "close": 376.8976135253906,
+      "worst": 376.7,
+      "best": 377.39,
+      "open_pnl_worst": -19.53,
+      "open_pnl_best": -13.32
+    },
+    {
+      "time": "11:05",
+      "low": 376.3399963378906,
+      "high": 377.1199951171875,
+      "close": 376.3999938964844,
+      "worst": 376.34,
+      "best": 377.12,
+      "open_pnl_worst": -22.77,
+      "open_pnl_best": -15.75
+    },
+    {
+      "time": "11:10",
+      "low": 376.010009765625,
+      "high": 376.66351318359375,
+      "close": 376.301513671875,
+      "worst": 376.18,
+      "best": 376.4,
+      "open_pnl_worst": -24.21,
+      "open_pnl_best": -22.23
+    }
+  ]
+}

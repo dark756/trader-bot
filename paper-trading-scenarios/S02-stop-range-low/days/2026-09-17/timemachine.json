@@ -1,0 +1,276 @@
+{
+  "created_by": "trader-timemachine",
+  "created_at": "2026-09-17T14:10:00Z",
+  "source": "offline",
+  "data": {
+    "symbol": "TSLA",
+    "interval": "5m",
+    "range": "60d",
+    "last_bar": "2026-09-17 10:05 ET",
+    "dropped": {
+      "no_price": 0,
+      "off_grid": 1,
+      "not_complete": 1724,
+      "outside_hours": 0
+    },
+    "short_sessions_left_out": []
+  },
+  "plan": {
+    "symbol": "TSLA",
+    "side": "buy",
+    "date": "2026-09-17",
+    "setup": "orb",
+    "entry": 372.92,
+    "entry_time": "10:10 AM",
+    "entry_bar": 7,
+    "stop": 363.22,
+    "target": 382.62,
+    "risk_per_share": 9.7,
+    "target_r": 1.0,
+    "opening_range": {
+      "high": 371.29,
+      "low": 363.22,
+      "minutes": 15
+    },
+    "stop_rule": "or_low",
+    "interval": "5m",
+    "flat_by": "15:55",
+    "from": "C:\\Users\\gurka\\Desktop\\day-trader-skill-main\\paper-trading-scenarios\\S02-stop-range-low\\trader-home/plan.json"
+  },
+  "mc": {
+    "replays": 10000,
+    "seed": 19,
+    "window": 2,
+    "block": 1,
+    "bars_left": 70,
+    "p_target": 0.1427,
+    "p_stop": 0.0737,
+    "p_neither": 0.7836,
+    "p_green": 0.5595,
+    "median_close": 373.79,
+    "p5_close": 364.28,
+    "p95_close": 383.69,
+    "avg_R": 0.096,
+    "r_at_target": 1.0,
+    "band_paths": 2000,
+    "until": "16:00",
+    "pool_sessions": 37,
+    "pool_from": "2026-07-27",
+    "pool_to": "2026-09-16"
+  },
+  "history": {
+    "sessions": 37,
+    "triggered": 21,
+    "target": 5,
+    "stop": 2,
+    "close": 14,
+    "green": 12,
+    "avg_R": 0.174,
+    "rule": {
+      "setup": "orb",
+      "or_minutes": 15,
+      "stop_rule": "or_low",
+      "target_r": 1.0
+    },
+    "entry_window": "09:45 to 15:30",
+    "min_volume_x": null,
+    "trades": [
+      {
+        "date": "2026-07-28",
+        "time": "11:50 AM",
+        "entry": 307.97,
+        "stop": 302.6,
+        "target": 313.34,
+        "outcome": "close",
+        "R": -0.09
+      },
+      {
+        "date": "2026-07-30",
+        "time": "10:05 AM",
+        "entry": 307.79,
+        "stop": 301.35,
+        "target": 314.23,
+        "outcome": "close",
+        "R": 0.17
+      },
+      {
+        "date": "2026-08-03",
+        "time": "10:00 AM",
+        "entry": 318.9,
+        "stop": 310.42,
+        "target": 327.38,
+        "outcome": "close",
+        "R": 0.38
+      },
+      {
+        "date": "2026-08-04",
+        "time": "1:25 PM",
+        "entry": 327.31,
+        "stop": 321.04,
+        "target": 333.58,
+        "outcome": "close",
+        "R": 0.02
+      },
+      {
+        "date": "2026-08-05",
+        "time": "10:10 AM",
+        "entry": 326.38,
+        "stop": 320.42,
+        "target": 332.34,
+        "outcome": "stop",
+        "R": -1.0
+      },
+      {
+        "date": "2026-08-06",
+        "time": "10:00 AM",
+        "entry": 320.23,
+        "stop": 315.52,
+        "target": 324.94,
+        "outcome": "close",
+        "R": -0.13
+      },
+      {
+        "date": "2026-08-07",
+        "time": "9:50 AM",
+        "entry": 326.99,
+        "stop": 321.25,
+        "target": 332.73,
+        "outcome": "target",
+        "R": 1.0
+      },
+      {
+        "date": "2026-08-10",
+        "time": "10:00 AM",
+        "entry": 329.45,
+        "stop": 326.14,
+        "target": 332.76,
+        "outcome": "close",
+        "R": 0.42
+      },
+      {
+        "date": "2026-08-11",
+        "time": "10:05 AM",
+        "entry": 334.86,
+        "stop": 329.52,
+        "target": 340.2,
+        "outcome": "close",
+        "R": -0.39
+      },
+      {
+        "date": "2026-08-13",
+        "time": "9:55 AM",
+        "entry": 332.46,
+        "stop": 325.23,
+        "target": 339.69,
+        "outcome": "target",
+        "R": 1.0
+      },
+      {
+        "date": "2026-08-14",
+        "time": "9:50 AM",
+        "entry": 348.29,
+        "stop": 342.01,
+        "target": 354.57,
+        "outcome": "stop",
+        "R": -1.0
+      },
+      {
+        "date": "2026-08-17",
+        "time": "9:50 AM",
+        "entry": 342.69,
+        "stop": 337.48,
+        "target": 347.9,
+        "outcome": "close",
+        "R": -0.64
+      },
+      {
+        "date": "2026-08-19",
+        "time": "10:30 AM",
+        "entry": 342.34,
+        "stop": 337.52,
+        "target": 347.16,
+        "outcome": "target",
+        "R": 1.0
+      },
+      {
+        "date": "2026-08-21",
+        "time": "10:00 AM",
+        "entry": 354.36,
+        "stop": 346.89,
+        "target": 361.83,
+        "outcome": "target",
+        "R": 1.0
+      },
+      {
+        "date": "2026-08-25",
+        "time": "10:10 AM",
+        "entry": 352.49,
+        "stop": 349.2,
+        "target": 355.78,
+        "outcome": "target",
+        "R": 1.0
+      },
+      {
+        "date": "2026-08-27",
+        "time": "10:15 AM",
+        "entry": 351.63,
+        "stop": 345.45,
+        "target": 357.81,
+        "outcome": "close",
+        "R": 0.48
+      },
+      {
+        "date": "2026-08-31",
+        "time": "9:50 AM",
+        "entry": 359.42,
+        "stop": 347.14,
+        "target": 371.7,
+        "outcome": "close",
+        "R": 0.69
+      },
+      {
+        "date": "2026-09-03",
+        "time": "9:50 AM",
+        "entry": 377.43,
+        "stop": 365.91,
+        "target": 388.95,
+        "outcome": "close",
+        "R": -0.09
+      },
+      {
+        "date": "2026-09-08",
+        "time": "10:25 AM",
+        "entry": 363.96,
+        "stop": 355.98,
+        "target": 371.94,
+        "outcome": "close",
+        "R": 0.51
+      },
+      {
+        "date": "2026-09-10",
+        "time": "9:50 AM",
+        "entry": 366.3,
+        "stop": 357.67,
+        "target": 374.93,
+        "outcome": "close",
+        "R": -0.31
+      },
+      {
+        "date": "2026-09-16",
+        "time": "9:50 AM",
+        "entry": 359.99,
+        "stop": 354.89,
+        "target": 365.09,
+        "outcome": "close",
+        "R": -0.36
+      }
+    ]
+  },
+  "verdict": "Strongly toward the target: target first 14.3 % vs stop first 7.4 %.",
+  "verdict_notes": [
+    "78.4 % of the replays hit neither by 4:00 PM; the price at 4:00 PM decides those."
+  ],
+  "warnings": [],
+  "note": "A simulation built from TSLA's own last 37 full sessions. It is not a prediction: earnings, news and halts can do things those sessions never did. Same seed, same numbers.",
+  "trimmed": "mc.bands, mc.band_times, mc.sample_paths and mc.hist removed to save space"
+}

@@ -1,0 +1,14 @@
+id,feature,choice,sessions,signals,trades,targets,stops,flat_by,not_filled,skipped_by_filter,blocked_by_risk,win_rate,net_pnl,avg_pnl,avg_r,avg_shares,avg_gate_max_loss,worst_trade_pnl,deepest_open_loss,max_drawdown,longest_losing_streak,losses_over_gate_max_loss,end_cash
+S01-baseline,Baseline,"The README's rules: 15-minute range, stop at the range midpoint, 1R target, market entry, $50 a trade",39,19,19,6,9,4,0,0,0,0.421,-62.52,-3.29,-0.182,9.0,33.52,-48.23,-48.23,138.8,2,3,4937.48
+S02-stop-range-low,Stop rule,Stop at the opening-range low (wider),39,19,19,1,4,14,0,0,0,0.526,-49.53,-2.61,-0.077,7.05,42.94,-44.52,-44.82,205.04,4,1,4950.47
+S03-stop-atr,Stop rule,Stop 1.5 x ATR(14) of the 5-minute bars under the entry,39,19,19,9,7,3,0,0,0,0.474,-33.78,-1.78,0.022,9.16,34.55,-49.6,-49.6,164.86,2,2,4966.22
+S04-stop-1pct,Stop rule,Stop 1 % under the entry,39,19,19,7,6,6,0,0,0,0.579,50.74,2.67,0.071,9.63,35.51,-37.6,-37.6,106.36,2,3,5050.74
+S05-target-1.5R,Target,Target at 1.5R,39,19,19,2,9,8,0,0,0,0.421,-47.9,-2.52,-0.138,9.0,33.52,-48.23,-48.23,142.17,2,3,4952.1
+S06-target-2R,Target,Target at 2R (trader-exit's own default),39,19,19,0,10,9,0,0,0,0.368,-119.5,-6.29,-0.274,9.0,33.52,-48.23,-48.23,210.7,4,3,4880.5
+S07-limit-entry,Entry order,Limit entry at the cap (size.py --limit cap),39,19,19,6,9,4,0,0,0,0.421,-53.4,-2.81,-0.168,9.0,33.52,-48.23,-48.23,137.08,2,0,4946.6
+S08-30min-range,Opening range,30-minute opening range,39,17,17,2,7,8,0,0,0,0.412,-88.32,-5.2,-0.21,8.88,36.86,-48.6,-48.6,194.22,3,2,4911.68
+S09-volume-check,Volume check,Breakout bar needs 1.5 x the range bars' average volume,39,2,2,0,1,1,0,0,0,0.0,-42.71,-21.36,-0.803,9.5,29.28,-23.0,-26.8,42.71,2,1,4957.29
+S10-prior-day-high,Setup,"Level setup: a close above the previous session's high, stop 1 % under",39,17,17,8,6,3,0,0,0,0.529,59.42,3.5,0.098,9.65,35.69,-37.6,-37.6,81.04,3,2,5059.42
+S11-risk-100,Risk per trade,$100 max loss a trade ($300 a day),39,19,17,5,9,3,0,0,2,0.412,-102.1,-6.01,-0.262,9.59,35.28,-62.01,-62.01,209.9,3,3,4897.9
+S12-morning-only,Entry window,No new entries after 11:00 (morning only),39,17,17,6,9,2,0,0,0,0.353,-74.26,-4.37,-0.225,8.94,33.88,-48.23,-48.23,150.54,6,3,4925.74
+S13-time-machine-filter,Time Machine filter,Trade only when the Time Machine has target-first above stop-first,39,19,17,6,7,4,0,2,0,0.471,-32.25,-1.9,-0.087,8.94,35.66,-48.23,-48.23,125.93,2,3,4967.75

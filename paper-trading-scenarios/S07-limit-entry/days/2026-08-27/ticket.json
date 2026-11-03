@@ -1,0 +1,29 @@
+[
+  {
+    "index": 1,
+    "ready": true,
+    "status": "READY: trader-risk PASS, waiting for your yes",
+    "plain": "BUY 10 TSLA, limit 351.63, good for today / stop-loss 348.10 / take-profit 355.16 / max loss about $35.30 if the stop fills at 348.10 (it can fill worse in a fast market)",
+    "fingerprint": "1e80f9e82494f419",
+    "paper": true,
+    "broker": "alpaca",
+    "tool": "place_stock_order",
+    "tool_input": {
+      "symbol": "TSLA",
+      "side": "buy",
+      "qty": "10",
+      "type": "limit",
+      "time_in_force": "day",
+      "limit_price": "351.63",
+      "order_class": "bracket",
+      "take_profit_limit_price": "355.16",
+      "stop_loss_stop_price": "348.10"
+    },
+    "why": "opening-range breakout on TSLA: 10 shares, bound by your position cap (10 x 3.53 = $35.30 at the stop)",
+    "bracket": true,
+    "max_loss": 35.3,
+    "stop": 348.1,
+    "practice": true,
+    "account": null
+  }
+]

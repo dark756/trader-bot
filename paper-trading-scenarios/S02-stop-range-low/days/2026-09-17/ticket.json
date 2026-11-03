@@ -1,0 +1,28 @@
+[
+  {
+    "index": 1,
+    "ready": true,
+    "status": "READY: trader-risk PASS, waiting for your yes",
+    "plain": "BUY 5 TSLA, market, good for today / stop-loss 363.22 / take-profit 382.62 / max loss about $48.50 if the stop fills at 363.22 (it can fill worse in a fast market)",
+    "fingerprint": "3dbfeadbaa432258",
+    "paper": true,
+    "broker": "alpaca",
+    "tool": "place_stock_order",
+    "tool_input": {
+      "symbol": "TSLA",
+      "side": "buy",
+      "qty": "5",
+      "type": "market",
+      "time_in_force": "day",
+      "order_class": "bracket",
+      "take_profit_limit_price": "382.62",
+      "stop_loss_stop_price": "363.22"
+    },
+    "why": "opening-range breakout on TSLA: 5 shares, bound by your $50 max loss per trade (5 x 9.70 = $48.50 at the stop)",
+    "bracket": true,
+    "max_loss": 48.5,
+    "stop": 363.22,
+    "practice": true,
+    "account": null
+  }
+]
