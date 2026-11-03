@@ -14,7 +14,7 @@ HOLDOUT = ("2024-01-02", "2026-08-07")
 
 # ---------------------------------------------------------------- the universe
 
-EXCHANGES = ("NYSE", "NASDAQ", "AMEX", "ARCA", "BATS")
+EXCHANGES = ("NYSE", "NASDAQ", "AMEX", "ARCA", "NYSEARCA", "BATS")   # for active assets; inactive ones on any
 SYMBOL_PATTERN = r"^[A-Z]{1,5}(\.[A-Z])?$"                 # no warrants (.WS), units (.U) or preferreds
 NAME_EXCLUDE = r"\b(warrants?|rights?|units?|preferred)\b|%"
 LOOKBACK = 14                    # sessions, for the ATR, the average volume and the relative volume
@@ -42,7 +42,11 @@ CONFIGS = {
           "stop": "atr-daily:0.1", "target": "100R", "entry": "market", "volume": None, "cutoff": "15:30",
           "risk": 50},
 }
-# The no-signal twin of each: buy at 9:45 (the first entry the config allows) with the same exits
+# The no-signal twin of each: buy every stock at 9:45 (the first entry the config allows). B0 keeps B's exits.
+# A0 keeps A's opening range and 1R target but stops at the range's low: A's stop, the range's middle, can sit
+# above the 9:45 price, and buying only when it doesn't would be a signal of its own.
+CONFIGS["A0"] = dict(CONFIGS["A"], name="no signal, A's range and target", stop="or-low")
+CONFIGS["B0"] = dict(CONFIGS["B"], name="no signal, B's exits")
 BASELINE_OF = {"A": "A0", "B": "B0"}
 UNIVERSES = {"IN": "stocks in play", "FX": "the fixed list of 30"}
 TESTED = ["A-IN", "A-FX", "B-IN", "B-FX"]

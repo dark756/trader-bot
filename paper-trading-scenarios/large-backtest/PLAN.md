@@ -33,7 +33,7 @@ Bars are raw (as traded, not adjusted). The daily statistics come from split-adj
   2. score each by its **relative volume**: the dollar volume of today's 9:30 to 9:35 bar over its average for the same bar in the 14 sessions before (at least 10 of them needed);
   3. keep the 20 highest, if their relative volume is at least 1.
 
-  Everything it uses is known at 9:35: nothing from later in the day. Dollar volume, not shares, so a split doesn't change it. Delisted stocks are included where Alpaca still lists them (as inactive), so the test isn't only of the survivors.
+  Everything it uses is known at 9:35: nothing from later in the day. Dollar volume, not shares, so a split doesn't change it. Delisted stocks are included where Alpaca still lists them (as inactive, on any exchange, since a delisted stock often moves to OTC), so the test isn't only of the survivors. Where two symbols carry the same 9:30 bar (one company under an old and a new ticker), only the first counts.
 - **The fixed list (FX).** The feature search's 30 large stocks and ETFs, every session. This is the control: does picking the day's active stocks matter?
 
 ## Two rules, and their no-signal twins
@@ -44,7 +44,7 @@ Both are the pack's own tools (`entry.evaluate`, `exit.compute`, `size.size_trad
 | --- | --- | --- |
 | **A** | the README rules: a 15-minute opening range, the stop at its middle, a 1R target | the pack's own example, on far more data than before |
 | **B** | a 5-minute opening range, the stop at 10 % of the 14-session daily ATR under the signal, no real target (100R), held to 15:55 | the idea from published opening-range research: many small losses and a few trend days that pay for them |
-| **A0, B0** | no signal at all: buy at 9:45 with A's or B's exits | the twin each rule has to beat, or its signal adds nothing |
+| **A0, B0** | no signal at all: buy every stock at 9:45. B0 keeps B's exits. A0 keeps A's 15-minute range and 1R target but stops at the range's low, because A's stop (the range's middle) can sit above the 9:45 price, and buying only when it doesn't would be a signal of its own | the twin each rule has to beat, or its signal adds nothing |
 
 A 2024 paper by Zarattini, Barbon and Aziz reported rule B's kind of trade on stocks in play. B is not a copy of their method (they also traded short, and entered differently); it is the closest the pack's long-only tools can come.
 
@@ -67,9 +67,9 @@ A tested run passes development only if all five hold, at 1 cent a share:
 4. it still makes money at **3 cents** a share;
 5. its R per trade beats its no-signal twin's.
 
-**The walk-forward.** One more procedure, scored the same way from 2020 on (rules 1 to 4): each month, trade whichever of the 4 tested runs had the best R per trade over the 12 months before (at least 30 trades, else stay out that month). This is the honest version of "pick the best": it only ever chooses from the past.
+**The walk-forward.** One more procedure, scored the same way from 2020 on (rules 1 to 4, with rule 3 as at least 3 of its 4 years): each month, trade whichever of the 4 tested runs had the best R per trade over the 12 months before (at least 30 trades, else stay out that month). This is the honest version of "pick the best": it only ever chooses from the past.
 
-**The holdout** opens only if a run or the walk-forward passes. It runs once, and the code logs every time it is opened. A passing run holds up if, on the holdout, at 1 cent a share, its net is above zero and its t-stat is at least **2.0**. If nothing passes development, the holdout stays locked, and fresh for the next plan.
+**The holdout** opens only if a run or the walk-forward passes. It runs once, and the code logs every time it is opened. It also refuses if `plan.py` changed after the development run, so the rules can't be adjusted between the two. A passing run holds up if, on the holdout, at 1 cent a share, its net is above zero and its t-stat is at least **2.0**. If nothing passes development, the holdout stays locked, and fresh for the next plan.
 
 ## Reported but not judged
 
